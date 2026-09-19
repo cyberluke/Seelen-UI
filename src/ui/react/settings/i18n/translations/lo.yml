@@ -260,14 +260,21 @@ shortcuts:
   enable_tooltip: ປິດການໃຊ້ງານຖ້າທ່ານຈະປະຕິບັດລະບົບທາງລັດຂອງທ່ານເອງໂດຍໃຊ້ລູກຄ້າ Setelen Ui
   labels:
     create_new_workspace: ສ້າງພື້ນທີ່ເຮັດວຽກໃຫມ່
+    create_new_workspace_row: ສ້າງແຖວບ່ອນເຮັດວຽກໃໝ່
     destroy_current_workspace: ທໍາລາຍພື້ນທີ່ເຮັດວຽກໃນປະຈຸບັນ
     misc_force_quit: ບັງຄັບໃຫ້ເຊົາ
     misc_force_restart: ບັງຄັບໃຫ້ Restart
     move_to_workspace: ຍ້າຍໄປເຮັດວຽກ {{0}}
     pause_toggle: ຢຸດຊົ່ວຄາວ/ສືບຕໍ່ທາງລັດ
+    send_to_next_workspace: ສົ່ງປ່ອງຢ້ຽມໄປຫາບ່ອນເຮັດວຽກຕໍ່ໄປ
+    send_to_previous_workspace: ສົ່ງປ່ອງຢ້ຽມໄປຫາພື້ນທີ່ເຮັດວຽກທີ່ຜ່ານມາ
     send_to_workspace: ສົ່ງໄປທີ່ Workspace {{0}}
+    send_to_workspace_down: ສົ່ງປ່ອງຢ້ຽມໄປຫາພື້ນທີ່ເຮັດວຽກຂ້າງລຸ່ມນີ້
+    send_to_workspace_up: ສົ່ງປ່ອງຢ້ຽມໄປຫາບ່ອນເຮັດວຽກຂ້າງເທິງ
     switch_to_next_workspace: ປ່ຽນໄປເຮັດວຽກຢູ່ຫນ້າທໍາອິດ
     switch_to_previous_workspace: ປ່ຽນເປັນບ່ອນເຮັດວຽກທີ່ຜ່ານມາ
+    switch_to_workspace_down: ສະຫຼັບໄປບ່ອນເຮັດວຽກດ້ານລຸ່ມ
+    switch_to_workspace_up: ສະຫຼັບໄປບ່ອນເຮັດວຽກຂ້າງເທິງ
     switch_workspace: ປ່ຽນໄປເຮັດວຽກຢູ່ Workspace {{0}}
   readonly_tooltip: ນີ້ແມ່ນທາງລັດທີ່ອ່ານເທົ່ານັ້ນ
   reset: ຕັ້ງຄ່າຄືນໃຫມ່
@@ -294,8 +301,8 @@ toolbar:
   placeholder: {}
 update:
   available: ປັບປຸງໃຫ້ທັນສະໄຫມ!
-  channel: ຊ່ອງທາງການປັບປຸງ
   downloading: ການດາວໂຫລດ ...
+  channel: ຊ່ອງທາງການປັບປຸງ
 wall:
   blur: ມົວ
   cancel: ຍົກເລີກ
@@ -357,6 +364,13 @@ wall:
 weg:
   auto_hide: ເຊື່ອງອັດຕະໂນມັດ
   auto_hide_touch_disabled: ການເຊື່ອງອັດຕະໂນມັດບໍ່ສາມາດໃຊ້ໄດ້ໃນອຸປະກອນໜ້າຈໍສໍາຜັດ
+  automation:
+    enabled: ເປີດໃຊ້ຍົນຄວບຄຸມ
+    flight_recorder: ເຄື່ອງບັນທຶກຖ້ຽວບິນ
+    label: ອັດຕະໂນມັດ (MCP / REST / CLI)
+    mcp_enabled: ເຊີບເວີ MCP
+    rest_enabled: ອະແດັບເຕີ REST
+    rest_port: ຜອດ REST (0 = ອັດຕະໂນມັດ)
   delay_to_hide: ຊັກຊ້າເພື່ອຊ່ອນ
   delay_to_show: ຊັກຊ້າໃນການສະແດງ
   dock_side: ຕໍາແຫນ່ງ
@@ -366,6 +380,12 @@ weg:
     always: ສະເໝີ
     never: ບໍ່ເຄີຍ
     on_overlap: ທັບຊ້ອນກັນ
+  import_error: ລົ້ມເຫລວໃນການນໍາເຂົ້າລາຍການແຖບຫນ້າວຽກ
+  import_from_taskbar:
+    button: ນຳເຂົ້າຈາກແຖບໜ້າວຽກຂອງ Windows
+    label: ນຳເຂົ້າລາຍການທີ່ປັກໝຸດ
+  import_no_items: ບໍ່ພົບລາຍການທີ່ປັກໝຸດຢູ່ໃນແຖບໜ້າວຽກຂອງ Windows
+  import_success: ນຳເຂົ້າ {{count}} ລາຍການສຳເລັດແລ້ວຈາກແຖບໜ້າວຽກຂອງ Windows
   items:
     gap: ຊ່ອງຫວ່າງລະຫວ່າງລາຍການ
     label: ລາຍການ
@@ -391,6 +411,56 @@ weg:
     full_width: ຄວາມກວ້າງເຕັມຈໍ
     min_content: ຂະຫນາດນ້ອຍເທົ່າທີ່ສາມາດເຮັດໄດ້
   padding: padding
+  preview:
+    animated: ມີການເຄື່ອນໄຫວ
+    animation_duration: ໄລຍະເວລາອະນິເມຊັນ (ms)
+    app_aware_titles: ຊື່ແອັບພລິເຄຊັນທີ່ຮູ້ຈັກ
+    aspect_fixed: ແກ້ໄຂ
+    aspect_mode: ໂໝດອັດຕາສ່ວນ
+    aspect_ratio: ອັດຕາສ່ວນຄົງທີ່ (ຕົວເລກ)
+    aspect_source: ປ່ອງຢ້ຽມແຫຼ່ງ
+    auto_grid: ຕາໜ່າງອັດຕະໂນມັດ
+    cache_enabled: ເບິ່ງຕົວຢ່າງ cache
+    card_height: ຄວາມສູງຂອງບັດ (px, 0 = ອັດຕະໂນມັດ)
+    card_width: ຄວາມກວ້າງຂອງບັດ (px)
+    columns: ຖັນ
+    compact_titles: ຫົວຂໍ້ກະທັດຮັດ
+    gap: ຊ່ອງຫວ່າງລະຫວ່າງບັດ (px)
+    grace_region: ພາກພື້ນ Grace ຕົວຊີ້ (px)
+    grouped_click_label: ຄລິກໄອຄອນກຸ່ມ
+    grouped_click_last_used: ເປີດໃຊ້ຫຼ້າສຸດທີ່ໃຊ້
+    grouped_click_minimize_restore: ຫຍໍ້/ຟື້ນຟູກຸ່ມ
+    grouped_click_preview: ເປີດຕົວຢ່າງ
+    hover_close_delay: ເລື່ອນປິດການຊັກຊ້າ (ms)
+    hover_open_delay: ເລື່ອນເປີດເລື່ອນ (ms)
+    keep_open: ສືບຕໍ່ເປີດໃນການເດີນທາງ
+    label: ໜ້າຈໍສະແດງຕົວຢ່າງ
+    max_columns: ຖັນສູງສຸດ
+    max_height: ຄວາມສູງສູງສຸດຂອງປັອບອັບ (px)
+    max_rows: ສູງສຸດແຖວກ່ອນເລື່ອນ
+    max_width: ຄວາມກວ້າງສູງສຸດຂອງປັອບອັບ (px)
+    min_columns: ຖັນຕ່ຳສຸດ
+    nearest_first: ການຄາດຄະເນທີ່ໃກ້ທີ່ສຸດ - ທໍາອິດ
+    ordering: ການສັ່ງຊື້
+    ordering_alphabetical: ຕົວອັກສອນ
+    ordering_application_defined: ຄໍາຮ້ອງສະຫມັກທີ່ກໍານົດໄວ້
+    ordering_hybrid: ປະສົມ (ຄູ່ມືທໍາອິດ)
+    ordering_manual: ຄູ່ມື
+    ordering_mru: MRU
+    ordering_stable: ໝັ້ນຄົງ
+    padding: ປັອບອັບ padding (px)
+    prepared_entries: ງົບປະມານຄວາມຈໍາ (KiB)
+    prewarm: ທັດສະນະທີ່ອົບອຸ່ນ
+    radius: ລັດສະໝີຂອບ (px)
+    stale_while_refresh: ເຊົາໃນຂະນະທີ່ໂຫຼດຂໍ້ມູນຄືນໃໝ່
+    titles: ຫົວຂໍ້
+    titles_hidden: ເຊື່ອງໄວ້
+    titles_one_line: ຫນຶ່ງແຖວ
+    titles_two_lines: ສອງສາຍ
+    trigger: ຕົວຢ່າງຕົວກະຕຸ້ນ
+    trigger_click: ກົດ
+    trigger_hover: ເລື່ອນ
+    trigger_hover_and_click: Hover + ກົດ
   show_end_task: ສະແດງວຽກທີ່ສຸດໃນຫນ້າວຽກ
   width: ກວ້າງ
 welcome:
@@ -429,6 +499,10 @@ wm:
   drag_behavior_options:
     sort: ຈັດຮຽງ (ຈັດຮຽງໜ້າຕ່າງໃໝ່ໃນຂະນະທີ່ລາກ)
     swap: Swap (ສະຫຼັບປ່ອງຢ້ຽມຢູ່ປາຍລາກ)
+  floating:
+    height: ຄວາມສູງຂອງ Windows ທີ່ເລື່ອນໄດ້
+    title: ຂະໜາດ Windows ທີ່ເລື່ອນໄດ້
+    width: ຄວາມກວ້າງຂອງ Windows ທີ່ເລື່ອນໄດ້
   layout: ແຜນຜັງ
   resize_delta: ປັບຂະໜາດ Delta (%)
   space_between_containers: ຊ່ອງຫວ່າງລະຫວ່າງບັນຈຸ

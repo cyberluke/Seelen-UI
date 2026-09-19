@@ -242,14 +242,21 @@ shortcuts:
   enable_tooltip: Seelen UI 클라이언트를 사용하여 자신의 바로 가기 시스템을 구현하는 경우 비활성화하십시오.
   labels:
     create_new_workspace: 새 작업 공간을 만듭니다
+    create_new_workspace_row: 새 작업공간 행 생성
     destroy_current_workspace: 현재 작업 공간을 파괴하십시오
     misc_force_quit: 힘을 끊으십시오
     misc_force_restart: 강제 재시작
     move_to_workspace: 작업 공간으로 이동 {{0}}
     pause_toggle: 일시중지/재개 바로가기
+    send_to_next_workspace: 창을 다음 작업 공간으로 보내기
+    send_to_previous_workspace: 이전 작업 공간으로 창 보내기
     send_to_workspace: 작업 공간으로 보내 {{0}}
+    send_to_workspace_down: 창을 아래 작업 공간으로 보내기
+    send_to_workspace_up: 창을 위의 작업 공간으로 보내기
     switch_to_next_workspace: 다음 작업 공간으로 전환하십시오
     switch_to_previous_workspace: 이전 작업 공간으로 전환하십시오
+    switch_to_workspace_down: 아래 작업공간으로 전환
+    switch_to_workspace_up: 위 작업공간으로 전환
     switch_workspace: 작업 공간으로 전환 {{0}}
   readonly_tooltip: 이것은 읽기 전용 단축키입니다
   reset: 기본값으로 재설정하십시오
@@ -276,8 +283,8 @@ toolbar:
   placeholder: {}
 update:
   available: 사용 가능한 업데이트가 존재합니다!
-  channel: 업데이트 채널
   downloading: 다운로드 중...
+  channel: 업데이트 채널
 wall:
   blur: 블러
   cancel: 취소
@@ -339,6 +346,13 @@ wall:
 weg:
   auto_hide: 자동 숨기기
   auto_hide_touch_disabled: 터치 스크린 장치에서는 자동 숨기기를 사용할 수 없습니다.
+  automation:
+    enabled: 제어 영역 활성화
+    flight_recorder: 비행 기록 장치
+    label: 자동화(MCP/REST/CLI)
+    mcp_enabled: MCP 서버
+    rest_enabled: REST 어댑터
+    rest_port: REST 포트(0 = 자동)
   delay_to_hide: 숨기기 지연
   delay_to_show: 표시 지연
   dock_side: 위치
@@ -348,6 +362,12 @@ weg:
     always: 항상
     never: 안 함
     on_overlap: 오버랩 시
+  import_error: 작업 표시줄 항목을 가져오지 못했습니다.
+  import_from_taskbar:
+    button: Windows 작업 표시줄에서 가져오기
+    label: 고정된 항목 가져오기
+  import_no_items: Windows 작업 표시줄에 고정된 항목이 없습니다.
+  import_success: Windows 작업 표시줄에서 {{count}}개 항목을 성공적으로 가져왔습니다.
   items:
     gap: 항목 간 간격
     label: 항목
@@ -373,6 +393,56 @@ weg:
     full_width: 전체 화면 너비
     min_content: 최대한 작게
   padding: 안쪽 여백
+  preview:
+    animated: 생기 있는
+    animation_duration: 애니메이션 기간(ms)
+    app_aware_titles: 애플리케이션 인식 타이틀
+    aspect_fixed: 결정된
+    aspect_mode: 종횡비 모드
+    aspect_ratio: 고정 비율(분자)
+    aspect_source: 소스 창
+    auto_grid: 자동 그리드
+    cache_enabled: 미리보기 캐시
+    card_height: 카드 높이(px, 0 = 자동)
+    card_width: 카드 너비(px)
+    columns: 열
+    compact_titles: 간결한 제목
+    gap: 카드 간 간격(px)
+    grace_region: 포인터 유예 영역(px)
+    grouped_click_label: 그룹화된 아이콘 클릭
+    grouped_click_last_used: 마지막으로 사용한 활성화
+    grouped_click_minimize_restore: 그룹 최소화/복원
+    grouped_click_preview: 미리보기 열기
+    hover_close_delay: 호버 닫기 지연(ms)
+    hover_open_delay: 호버 열기 지연(ms)
+    keep_open: 순회 시 열린 상태 유지
+    label: 창 미리보기
+    max_columns: 최대 열
+    max_height: 최대 팝업 높이(px)
+    max_rows: 스크롤 전 최대 행 수
+    max_width: 최대 팝업 너비(px)
+    min_columns: 최소 열
+    nearest_first: 가장 가까운 첫 번째 투영
+    ordering: 주문
+    ordering_alphabetical: 알파벳순
+    ordering_application_defined: 정의된 애플리케이션
+    ordering_hybrid: 하이브리드(수동 우선)
+    ordering_manual: 수동
+    ordering_mru: MRU
+    ordering_stable: 안정적인
+    padding: 팝업 패딩(px)
+    prepared_entries: 메모리 예산(KiB)
+    prewarm: 예열보기
+    radius: 테두리 반경(px)
+    stale_while_refresh: 새로 고치는 동안 오래된 것
+    titles: 제목
+    titles_hidden: 숨겨진
+    titles_one_line: 한 줄
+    titles_two_lines: 두 줄
+    trigger: 미리보기 트리거
+    trigger_click: 딸깍 하는 소리
+    trigger_hover: 호버
+    trigger_hover_and_click: 호버 + 클릭
   show_end_task: 작업 표시줄에 종료 작업 표시
   width: 너비
 welcome:
@@ -407,6 +477,10 @@ wm:
   drag_behavior_options:
     sort: 정렬(드래그하는 동안 창 재정렬)
     swap: 교환(드래그 끝에서 창 교환)
+  floating:
+    height: 부동 창 높이
+    title: 부동 창 크기
+    width: 부동 창 너비
   layout: 레이아웃
   resize_delta: 크기 조정 수치 (%)
   space_between_containers: 컨테이너 간 간격

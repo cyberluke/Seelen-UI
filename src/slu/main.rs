@@ -62,6 +62,16 @@ async fn send_to_main_instance(cli: AppCli) -> Result<()> {
         println!("Sending {args:#?}");
     }
 
-    AppIpc::send(AppMessage::Cli(args)).await?;
+    let payload = AppIpc::send_for_payload(AppMessage::Cli(args)).await?;
+    if let Some(data) = payload {
+        if cli.json {
+            println!("{data}");
+        } else {
+            match serde_json::from_str::<serde_json::Value>(&data) {
+                Ok(value) => println!("{}", serde_json::to_string_pretty(&value)?),
+                Err(_) => println!("{data}"),
+            }
+        }
+    }
     Ok(())
 }

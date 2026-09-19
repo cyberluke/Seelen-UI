@@ -274,14 +274,21 @@ shortcuts:
     parancsikonjait
   labels:
     create_new_workspace: Hozzon létre új munkaterületet
+    create_new_workspace_row: Új munkaterület-sor létrehozása
     destroy_current_workspace: Pusztítsd el az aktuális munkaterületet
     misc_force_quit: Erőt hagy
     misc_force_restart: Újraindítás kikényszerítése
     move_to_workspace: Költözni a munkaterületre {{0}}
     pause_toggle: Parancsikonok szüneteltetése/folytatása
+    send_to_next_workspace: Ablak küldése a következő munkaterületre
+    send_to_previous_workspace: Ablak küldése az előző munkaterületre
     send_to_workspace: Küldje el a munkaterületre {{0}}
+    send_to_workspace_down: Küldje el az ablakot az alábbi munkaterületre
+    send_to_workspace_up: Küldje el az ablakot a fenti munkaterületre
     switch_to_next_workspace: Váltás a következő munkaterületre
     switch_to_previous_workspace: Váltás az előző munkaterületre
+    switch_to_workspace_down: Váltson az alábbi munkaterületre
+    switch_to_workspace_up: Váltson a fenti munkaterületre
     switch_workspace: Váltás a munkaterületre {{0}}
   readonly_tooltip: Ez egy csak olvasható parancsikon
   reset: Alapértelmezés visszaállítása az alapértelmezésekre
@@ -308,8 +315,8 @@ toolbar:
   placeholder: {}
 update:
   available: A frissítés elérhető!
-  channel: Frissítési csatorna
   downloading: Letöltés ...
+  channel: Frissítési csatorna
 wall:
   blur: Elmosódás
   cancel: Mégsem
@@ -375,6 +382,13 @@ wall:
 weg:
   auto_hide: Automatikus elrejtés
   auto_hide_touch_disabled: Az automatikus elrejtés nem érhető el érintőképernyős eszközökön
+  automation:
+    enabled: Vezérlősíkok engedélyezése
+    flight_recorder: Fedélzeti adatrögzítő
+    label: Automatizálás (MCP / REST / CLI)
+    mcp_enabled: MCP szerver
+    rest_enabled: REST adapter
+    rest_port: REST port (0 = automatikus)
   delay_to_hide: Késleltesse az elrejtést
   delay_to_show: Megjelenítés késleltetése
   dock_side: Pozíció
@@ -384,6 +398,12 @@ weg:
     always: Mindig
     never: Soha
     on_overlap: Az átfedésben
+  import_error: Nem sikerült importálni a tálca elemeit
+  import_from_taskbar:
+    button: Importálás a Windows tálcáról
+    label: Rögzített elemek importálása
+  import_no_items: Nem található rögzített elem a Windows tálcán
+  import_success: Sikeresen importált {{count}} elemet a Windows tálcájáról
   items:
     gap: Hely az elemek között
     label: Tárgyak
@@ -409,6 +429,56 @@ weg:
     full_width: Teljes képernyő szélesség
     min_content: Amennyire csak lehet
   padding: Párnázás
+  preview:
+    animated: Élénk
+    animation_duration: Animáció időtartama (ms)
+    app_aware_titles: Alkalmazás-tudatos címek
+    aspect_fixed: Rögzített
+    aspect_mode: Képarány mód
+    aspect_ratio: Rögzített arány (számláló)
+    aspect_source: Forrás ablak
+    auto_grid: Automatikus rács
+    cache_enabled: Előnézet gyorsítótár
+    card_height: Kártya magassága (px, 0 = automatikus)
+    card_width: Kártya szélessége (px)
+    columns: Oszlopok
+    compact_titles: Kompakt címek
+    gap: Hézag a kártyák között (px)
+    grace_region: A mutató türelmi régiója (px)
+    grouped_click_label: Csoportosított ikon kattintás
+    grouped_click_last_used: Aktiválja az utolsó használatot
+    grouped_click_minimize_restore: Csoport kicsinyítése/visszaállítása
+    grouped_click_preview: Előnézet megnyitása
+    hover_close_delay: Mutató bezárási késleltetése (ms)
+    hover_open_delay: Mutató nyitási késleltetése (ms)
+    keep_open: Maradjon nyitva a bejáráskor
+    label: Ablak előnézete
+    max_columns: Max oszlopok
+    max_height: Maximális felugró magasság (px)
+    max_rows: Max sorok száma görgetés előtt
+    max_width: Maximális előugró ablak szélessége (px)
+    min_columns: Min. oszlopok
+    nearest_first: Legközelebbi-első vetítés
+    ordering: Rendelés
+    ordering_alphabetical: Betűrendes
+    ordering_application_defined: Alkalmazás meghatározva
+    ordering_hybrid: Hibrid (először kézi)
+    ordering_manual: Kézikönyv
+    ordering_mru: MRU
+    ordering_stable: Stabil
+    padding: Felugró kitöltés (px)
+    prepared_entries: Memória költségkeret (KiB)
+    prewarm: Előmelegített kilátás
+    radius: Szegély sugara (px)
+    stale_while_refresh: Állott-frissítés közben
+    titles: Címek
+    titles_hidden: Rejtett
+    titles_one_line: Egy sor
+    titles_two_lines: Két sor
+    trigger: Előnézeti trigger
+    trigger_click: Kattintson
+    trigger_hover: Lebeg
+    trigger_hover_and_click: Mutasd az egérmutatót + kattintás
   show_end_task: A feladat befejezésének megjelenítése a feladatsorban
   width: Szélesség
 welcome:
@@ -447,6 +517,10 @@ wm:
   drag_behavior_options:
     sort: Rendezés (ablakok átrendezése húzás közben)
     swap: Csere (ablak cseréje a húzás végén)
+  floating:
+    height: Lebegő ablakmagasság
+    title: Lebegő Windows-méret
+    width: Lebegő ablakszélesség
   layout: Elrendezés
   resize_delta: Átméretezze a DELTA -t (%)
   space_between_containers: Hely a konténerek között

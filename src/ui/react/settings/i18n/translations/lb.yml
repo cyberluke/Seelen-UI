@@ -269,14 +269,21 @@ shortcuts:
     Segen UI Client
   labels:
     create_new_workspace: Neie Aarbechtsberäich erstellen
+    create_new_workspace_row: Erstellt eng nei Workspace Row
     destroy_current_workspace: Zerstéiert aktuell Aarbechtsberäich
     misc_force_quit: Kraaft opzehalen
     misc_force_restart: Kraaft Restart
     move_to_workspace: Plënnert op Aarbechtsberäich {{0}}
     pause_toggle: Pause / Resume Ofkiirzungen
+    send_to_next_workspace: Schéckt Fënster op Next Workspace
+    send_to_previous_workspace: Schéckt Fënster op virdrun Workspace
     send_to_workspace: Schéckt op Aarbechtsberäich {{0}}
+    send_to_workspace_down: Schéckt Fënster op d'Aarbechtsberäich ënnen
+    send_to_workspace_up: Schéckt Fënster op d'Aarbechtsberäich uewen
     switch_to_next_workspace: Wiesselt op d'nächst Aarbechtsberäich
     switch_to_previous_workspace: Wiesselt op virdrun Aarbechtsberäich
+    switch_to_workspace_down: Wiesselt op d'Aarbechtsberäich ënnen
+    switch_to_workspace_up: Wiesselt op d'Aarbechtsberäich uewen
     switch_workspace: Schalt op Aarbechtsberäich {{0}}
   readonly_tooltip: Dëst ass e Lies-nëmme Mangel
   reset: Reset op Defaults
@@ -303,8 +310,8 @@ toolbar:
   placeholder: {}
 update:
   available: Update verfügbar!
-  channel: Update Kanal
   downloading: NËMMEN ...
+  channel: Update Kanal
 wall:
   blur: Blour
   cancel: Ofbriechen
@@ -370,6 +377,13 @@ wall:
 weg:
   auto_hide: Automatesch
   auto_hide_touch_disabled: Auto verstoppen ass net op Touchscreen Geräter verfügbar
+  automation:
+    enabled: Aktivéiert Kontroll Fligeren
+    flight_recorder: Fluchrekorder
+    label: Automatioun (MCP / REST / CLI)
+    mcp_enabled: MCP Server
+    rest_enabled: REST Adapter
+    rest_port: REST Hafen (0 = Auto)
   delay_to_hide: Verspéidung ze verstoppen
   delay_to_show: Verspéidung fir ze weisen
   dock_side: Positioun un
@@ -379,6 +393,12 @@ weg:
     always: Ëmmer
     never: Ni
     on_overlap: Op Iwwerlappung
+  import_error: Ausgefall op Taskbar Elementer importéieren
+  import_from_taskbar:
+    button: Import vun der Windows Taskbar
+    label: Import Pinned Elementer
+  import_no_items: Keng gepecht Elementer an der Windows Taskbar fonnt
+  import_success: Erfollegräich importéiert {{count}} Element(en) vun der Windows Taskbar
   items:
     gap: Raum tëscht Artikelen
     label: Artikelen
@@ -404,6 +424,56 @@ weg:
     full_width: Voll Écran Breet
     min_content: Kleng wéi méiglech
   padding: Padding
+  preview:
+    animated: Animéiert
+    animation_duration: Animatioun Dauer (ms)
+    app_aware_titles: Applikatioun-bewosst Titelen
+    aspect_fixed: Befestegt
+    aspect_mode: Aspekt Verhältnis Modus
+    aspect_ratio: Fixed Ratio (Zähler)
+    aspect_source: Quell Fënster
+    auto_grid: Auto Gitter
+    cache_enabled: Preview Cache
+    card_height: Kaart Héicht (px, 0 = Auto)
+    card_width: Kaart Breet (px)
+    columns: Kolonnen
+    compact_titles: Kompakt Titelen
+    gap: Spalt tëscht Kaarten (px)
+    grace_region: Pointer Grace Regioun (px)
+    grouped_click_label: Gruppéiert Ikon klickt
+    grouped_click_last_used: Aktivéiert lescht benotzt
+    grouped_click_minimize_restore: Grupp minimiséieren / restauréieren
+    grouped_click_preview: Open Virschau
+    hover_close_delay: Hover Zoumaache Verzögerung (ms)
+    hover_open_delay: Hover Open Retard (ms)
+    keep_open: Halen oppen op traversal
+    label: Fënster Preview
+    max_columns: Max Kolonnen
+    max_height: Max Popup Héicht (px)
+    max_rows: Max Zeile virum Scrollen
+    max_width: Max Popup Breet (px)
+    min_columns: Min Kolonnen
+    nearest_first: Noost-éischt Projektioun
+    ordering: Bestellung
+    ordering_alphabetical: Alphabetesch
+    ordering_application_defined: Applikatioun definéiert
+    ordering_hybrid: Hybrid (manuell éischt)
+    ordering_manual: Manuell
+    ordering_mru: MRU
+    ordering_stable: Stabil
+    padding: Popup Polsterung (px)
+    prepared_entries: Memory Budget (KiB)
+    prewarm: Prewarm Vue
+    radius: Grenzradius (px)
+    stale_while_refresh: Stale-während-erfrëschen
+    titles: Titelen
+    titles_hidden: Verstoppt
+    titles_one_line: Eng Zeil
+    titles_two_lines: Zwee Zeilen
+    trigger: Virschau Ausléiser
+    trigger_click: Klickt
+    trigger_hover: Hover
+    trigger_hover_and_click: Hover + Klick
   show_end_task: Show Enn Aufgab an der Taskbar
   width: Breet
 welcome:
@@ -442,6 +512,10 @@ wm:
   drag_behavior_options:
     sort: Sortéieren (Fënstere nei bestellen beim zéien)
     swap: Tauschen (Swap Fënsteren um Drag End)
+  floating:
+    height: Floating Windows Héicht
+    title: Floating Windows Gréisst
+    width: Schwiewend Windows Breet
   layout: Lueden
   resize_delta: Resize Delta (%)
   space_between_containers: Raum tëscht Behälter

@@ -302,6 +302,19 @@ toolbar:
   margin: Margin Size
   padding: Padding Size
   placeholder: {}
+system_tray:
+  label: System Tray
+  pinned_position: Pinned icons position
+  pinned_position.before: Before overflow arrow
+  pinned_position.after: After overflow arrow
+  offline_pinned: Offline pinned icons
+  offline_pinned.hide: Hide
+  offline_pinned.disabled: Show disabled
+  icon_spacing: Icon spacing
+  icon_size: Icon size
+  show_tooltips: Show tooltips
+  drag_reorder: Enable drag reorder
+  overflow_arrow: Overflow arrow
 update:
   available: Update Available!
   channel: Update Channel
@@ -369,6 +382,13 @@ wall:
 weg:
   auto_hide: Auto Hide
   auto_hide_touch_disabled: Auto hide is not available on touch screen devices
+  automation:
+    enabled: Enable control planes
+    flight_recorder: Flight recorder
+    label: Automation (MCP / REST / CLI)
+    mcp_enabled: MCP server
+    rest_enabled: REST adapter
+    rest_port: REST port (0 = auto)
   delay_to_hide: Delay to hide
   delay_to_show: Delay to show
   dock_side: Position
@@ -409,6 +429,56 @@ weg:
     full_width: Full screen width
     min_content: Small as can be
   padding: Padding
+  preview:
+    animation_duration: Animation duration (ms)
+    animated: Animated
+    app_aware_titles: Application-aware titles
+    aspect_fixed: Fixed
+    aspect_mode: Aspect ratio mode
+    aspect_ratio: Fixed ratio (numerator)
+    aspect_source: Source window
+    auto_grid: Auto grid
+    cache_enabled: Preview cache
+    card_height: Card height (px, 0 = auto)
+    card_width: Card width (px)
+    columns: Columns
+    compact_titles: Compact titles
+    gap: Gap between cards (px)
+    grouped_click_last_used: Activate last used
+    grouped_click_label: Grouped icon click
+    grouped_click_minimize_restore: Minimize/restore group
+    grouped_click_preview: Open preview
+    hover_close_delay: Hover close delay (ms)
+    hover_open_delay: Hover open delay (ms)
+    keep_open: Keep open on traversal
+    label: Window Preview
+    grace_region: Pointer grace region (px)
+    max_columns: Max columns
+    max_height: Max popup height (px)
+    max_rows: Max rows before scroll
+    max_width: Max popup width (px)
+    min_columns: Min columns
+    nearest_first: Nearest-first projection
+    ordering: Ordering
+    ordering_alphabetical: Alphabetical
+    ordering_application_defined: Application defined
+    ordering_hybrid: Hybrid (manual first)
+    ordering_manual: Manual
+    ordering_mru: MRU
+    ordering_stable: Stable
+    padding: Popup padding (px)
+    prepared_entries: Memory budget (KiB)
+    prewarm: Prewarm view
+    radius: Border radius (px)
+    stale_while_refresh: Stale-while-refresh
+    titles: Titles
+    titles_hidden: Hidden
+    titles_one_line: One line
+    titles_two_lines: Two lines
+    trigger: Preview trigger
+    trigger_click: Click
+    trigger_hover: Hover
+    trigger_hover_and_click: Hover + Click
   show_end_task: Show end task in taskbar
   width: Width
 welcome:

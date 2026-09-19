@@ -57,6 +57,76 @@ pub struct FancyToolbarSettings {
     pub delay_to_show: u32,
     /// delay to hide the toolbar on Mouse Leave in milliseconds
     pub delay_to_hide: u32,
+    /// System tray cluster configuration (pinned icons + overflow arrow).
+    #[serde(default)]
+    pub tray: TrayToolbarSettings,
+}
+
+/// Where the pinned tray cluster sits *inside* the tray slot.
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Default, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum TrayPinnedPosition {
+    /// Pinned icons appear before the overflow arrow (default).
+    #[default]
+    BeforeOverflow,
+    /// Pinned icons appear after the overflow arrow.
+    AfterOverflow,
+}
+
+/// Behavior for a pinned icon whose application is not currently running.
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize, Default, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum TrayOfflineMode {
+    /// Hide the offline icon (default).
+    #[default]
+    Hide,
+    /// Show a disabled placeholder.
+    Disabled,
+}
+
+/// Typed configuration for the pinned + overflow tray cluster.
+#[serde_alias(SnakeCase)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[serde(default, rename_all = "camelCase")]
+pub struct TrayToolbarSettings {
+    /// Where the pinned cluster sits relative to the overflow arrow.
+    pub pinned_position: TrayPinnedPosition,
+    /// Behavior for pinned icons whose application is offline.
+    pub offline_pinned: TrayOfflineMode,
+    /// Explicit spacing between cluster icons (px). `None` inherits the
+    /// default from the parent toolbar.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub icon_spacing: Option<u32>,
+    /// Explicit size for pinned icons (px). `None` inherits `itemSize`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub icon_size: Option<u32>,
+    /// Show the tooltip for each pinned icon.
+    pub show_tooltips: bool,
+    /// Enable drag reorder of pinned icons.
+    pub drag_reorder_enabled: bool,
+    /// Render the overflow arrow (opens `@seelen/system-tray`).
+    pub overflow_arrow_enabled: bool,
+    /// Ordered tray logical identity keys that are currently pinned.
+    /// This is the single authoritative pin store.
+    pub pinned: Vec<String>,
+}
+
+impl Default for TrayToolbarSettings {
+    fn default() -> Self {
+        Self {
+            pinned_position: TrayPinnedPosition::BeforeOverflow,
+            offline_pinned: TrayOfflineMode::Hide,
+            icon_spacing: Some(6),
+            icon_size: Some(32),
+            show_tooltips: true,
+            drag_reorder_enabled: true,
+            overflow_arrow_enabled: true,
+            pinned: Vec::new(),
+        }
+    }
 }
 
 impl Default for FancyToolbarSettings {
@@ -71,6 +141,7 @@ impl Default for FancyToolbarSettings {
             hide_mode: HideMode::Never,
             delay_to_show: 100,
             delay_to_hide: 800,
+            tray: TrayToolbarSettings::default(),
         }
     }
 }
@@ -193,6 +264,10 @@ pub struct SeelenWegSettings {
     pub show_end_task: bool,
     /// Action to perform when middle-clicking a dock item
     pub middle_click_action: WegMiddleClickAction,
+    /// window preview popup configuration
+    pub preview: WindowPreviewSettings,
+    /// programmatic control planes (MCP / REST / CLI)
+    pub automation: AutomationSettings,
 }
 
 impl Default for SeelenWegSettings {
@@ -216,6 +291,8 @@ impl Default for SeelenWegSettings {
             show_end_task: false,
             split_windows: false,
             middle_click_action: WegMiddleClickAction::OpenNewInstance,
+            preview: WindowPreviewSettings::default(),
+            automation: AutomationSettings::default(),
         }
     }
 }
@@ -224,6 +301,231 @@ impl SeelenWegSettings {
     /// total height or width of the dock, depending on the Position
     pub fn total_size(&self) -> u32 {
         self.size + (self.padding * 2) + (self.margin * 2)
+    }
+}
+
+// ============== Window Preview Settings ==============
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum WindowPreviewTrigger {
+    /// popup opens when the pointer enters the dock item
+    Hover,
+    /// popup opens only on click
+    Click,
+    /// popup opens on hover or click
+    HoverAndClick,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum PreviewAspectRatioMode {
+    /// cards use the real source window ratio
+    SourceWindow,
+    /// cards use the configured fixed ratio
+    Fixed,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum PreviewTitleLines {
+    OneLine,
+    TwoLines,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum PreviewOrderingStrategy {
+    /// user-defined manual order (drag), never reshuffled by focus/MRU
+    Manual,
+    /// stable creation order
+    Stable,
+    /// most-recently-used order
+    Mru,
+    /// alphabetical by display title
+    Alphabetical,
+    /// order provided/declared by the application itself (creation order fallback)
+    ApplicationDefined,
+    /// manual first, unknown windows appended by mru
+    Hybrid,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), ts(repr(enum = name)))]
+pub enum PreviewGroupedClickAction {
+    /// keep/toggle the preview popup
+    OpenPreview,
+    /// activate the last used window of the group
+    ActivateLastUsed,
+    /// minimize (if focused) / restore the group
+    MinimizeRestoreGroup,
+}
+
+#[serde_alias(SnakeCase)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[serde(default, rename_all = "camelCase")]
+pub struct WindowPreviewSettings {
+    /// which input opens the preview popup
+    pub trigger: WindowPreviewTrigger,
+    /// preferred card width in px (0 = derive from popup max width and columns)
+    pub card_width: u32,
+    /// forced card height in px; 0 keeps source ratio
+    pub card_height: u32,
+    /// how the card aspect ratio is resolved
+    pub aspect_ratio_mode: PreviewAspectRatioMode,
+    /// fixed ratio numerator (used when aspectRatioMode = Fixed)
+    pub aspect_ratio_num: u32,
+    /// fixed ratio denominator (used when aspectRatioMode = Fixed)
+    pub aspect_ratio_den: u32,
+    /// auto-compute columns from available space
+    pub auto_grid: bool,
+    /// preferred number of columns when auto grid computes within bounds
+    pub preferred_columns: u32,
+    /// minimum columns clamp
+    pub min_columns: u32,
+    /// maximum columns clamp
+    pub max_columns: u32,
+    /// maximum rows before the list scrolls
+    pub max_rows: u32,
+    /// popup maximum width in px
+    pub max_width: u32,
+    /// popup maximum height in px
+    pub max_height: u32,
+    /// gap between cards in px
+    pub gap: u32,
+    /// popup padding in px
+    pub padding: u32,
+    /// card border radius in px
+    pub border_radius: u32,
+    /// animate popup open/close
+    pub animated: bool,
+    /// popup animation duration in ms
+    pub animation_duration: u32,
+    /// show window titles on cards
+    pub show_titles: bool,
+    /// how many lines a title may use
+    pub title_lines: PreviewTitleLines,
+    /// compact title mode (strip redundant app suffixes)
+    pub compact_titles: bool,
+    /// full title tooltip (requires showTitles)
+    pub title_tooltip: bool,
+    /// application-aware title normalization (vscode/edge/terminal parsers)
+    pub application_aware_titles: bool,
+    /// how cards are ordered inside a group popup
+    pub ordering: PreviewOrderingStrategy,
+    /// open delay after pointer enter, in ms
+    pub hover_open_delay: u32,
+    /// close delay after pointer leave, in ms (grace for traversal)
+    pub hover_close_delay: u32,
+    /// extra geometric grace beyond the popup rect, in px
+    pub pointer_grace_region: u32,
+    /// keep popup open while the pointer travels icon -> gap -> popup
+    pub keep_open_on_traversal: bool,
+    /// enable the layered preview cache
+    pub cache_enabled: bool,
+    /// max thumbnails kept per cache tier
+    pub thumbnail_cache_size: u32,
+    /// cache memory budget in KiB
+    pub cache_memory_budget: u32,
+    /// show stale thumbnails immediately and refresh asynchronously
+    pub stale_while_refresh: bool,
+    /// keep the grouped view/model prewarmed for running groups
+    pub prewarm_view: bool,
+    /// visual projection: nearest window to the anchor goes first visually
+    pub nearest_first_projection: bool,
+    /// grouped-icon click behavior
+    pub grouped_click_action: PreviewGroupedClickAction,
+}
+
+impl Default for WindowPreviewSettings {
+    fn default() -> Self {
+        Self {
+            trigger: WindowPreviewTrigger::Hover,
+            card_width: 256,
+            card_height: 0,
+            aspect_ratio_mode: PreviewAspectRatioMode::SourceWindow,
+            aspect_ratio_num: 16,
+            aspect_ratio_den: 9,
+            auto_grid: true,
+            preferred_columns: 3,
+            min_columns: 1,
+            max_columns: 8,
+            max_rows: 4,
+            max_width: 800,
+            max_height: 560,
+            gap: 10,
+            padding: 10,
+            border_radius: 10,
+            animated: true,
+            animation_duration: 150,
+            show_titles: true,
+            title_lines: PreviewTitleLines::OneLine,
+            compact_titles: true,
+            title_tooltip: true,
+            application_aware_titles: true,
+            ordering: PreviewOrderingStrategy::Manual,
+            hover_open_delay: 0,
+            hover_close_delay: 150,
+            pointer_grace_region: 24,
+            keep_open_on_traversal: true,
+            cache_enabled: true,
+            thumbnail_cache_size: 64,
+            cache_memory_budget: 32768,
+            stale_while_refresh: true,
+            prewarm_view: true,
+            nearest_first_projection: false,
+            grouped_click_action: PreviewGroupedClickAction::OpenPreview,
+        }
+    }
+}
+
+// ============== Automation (Control Plane) Settings ==============
+
+#[serde_alias(SnakeCase)]
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
+#[serde(default, rename_all = "camelCase")]
+pub struct AutomationSettings {
+    /// master switch for the programmatic control planes
+    #[serde(default = "auto_enabled")]
+    pub enabled: bool,
+    /// bind the REST adapter (always loopback); 0 disables it
+    #[serde(default = "auto_enabled")]
+    pub rest_enabled: bool,
+    /// REST port; 0 lets the OS auto-assign on 127.0.0.1
+    #[serde(default = "auto_port")]
+    pub rest_port: u16,
+    /// serve the MCP stdio adapter through the `slu` client process
+    #[serde(default = "auto_enabled")]
+    pub mcp_enabled: bool,
+    /// emit a bounded trace ring-buffer for `slu trace`
+    #[serde(default = "auto_enabled")]
+    pub flight_recorder: bool,
+}
+
+fn auto_enabled() -> bool {
+    true
+}
+
+fn auto_port() -> u16 {
+    37_074
+}
+
+impl Default for AutomationSettings {
+    fn default() -> Self {
+        Self {
+            enabled: auto_enabled(),
+            rest_enabled: auto_enabled(),
+            rest_port: auto_port(),
+            mcp_enabled: auto_enabled(),
+            flight_recorder: auto_enabled(),
+        }
     }
 }
 

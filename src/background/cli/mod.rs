@@ -2,6 +2,7 @@ mod debugger;
 mod self_pipe;
 pub mod shortcuts;
 mod svc_pipe;
+mod tray_cli;
 mod uri;
 
 pub use self_pipe::SelfPipe;
@@ -32,6 +33,8 @@ struct MainCli {
     silent: bool,
     #[arg(long, default_value_t)]
     verbose: bool,
+    #[arg(long, default_value_t)]
+    json: bool,
     /// Path or URI to open (e.g. from the Windows protocol handler).
     uri: Option<String>,
 }
@@ -65,7 +68,8 @@ pub async fn handle_console_client() -> Result<()> {
     Ok(())
 }
 
-pub async fn process_app_command(cmd: AppCommand) -> Result<()> {
+/// Returns `Some(json)` when the command produced a structured payload.
+pub async fn process_app_command(cmd: AppCommand) -> Result<Option<String>> {
     match cmd {
         AppCommand::Settings => {
             show_settings()?;
@@ -80,7 +84,7 @@ pub async fn process_app_command(cmd: AppCommand) -> Result<()> {
             wm_cli::process(command)?;
         }
         AppCommand::Weg(command) => {
-            weg_cli::process(command)?;
+            return weg_cli::process(command);
         }
         AppCommand::Widget(command) => {
             widget_cli::run(command)?;
@@ -100,9 +104,12 @@ pub async fn process_app_command(cmd: AppCommand) -> Result<()> {
         AppCommand::ToggleShortcutsPause => {
             shortcuts::toggle_pause()?;
         }
+        AppCommand::Tray(cli) => {
+            return tray_cli::process(cli).await;
+        }
         _ => {
             return Err("Command does not support instance execution".into());
         }
     }
-    Ok(())
+    Ok(None)
 }

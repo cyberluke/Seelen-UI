@@ -1,5 +1,11 @@
 import { invoke, RuntimeStyleSheet, SeelenCommand, Widget } from "@seelen-ui/lib";
-import { type AppBarEdge, FancyToolbarSide, HideMode } from "@seelen-ui/lib/types";
+import {
+  Alignment,
+  type AppBarEdge,
+  type FancyToolbarSettings,
+  FancyToolbarSide,
+  HideMode,
+} from "@seelen-ui/lib/types";
 import { isTouchPrimary } from "libs/ui/svelte/utils/signals.svelte.ts";
 import { locale } from "../i18n/index.ts";
 import { declareDocumentAsLayeredHitbox } from "libs/ui/react/utils/layered.ts";
@@ -37,7 +43,7 @@ class SettingsState {
     return widgetRect;
   }
 
-  get value() {
+  get value(): FancyToolbarSettings {
     return _settings.value.byWidget["@seelen/fancy-toolbar"];
   }
 
@@ -65,6 +71,15 @@ class SettingsState {
   }
   get delayToShow(): number {
     return this.value.delayToShow;
+  }
+  get traySettings() {
+    return this.value.tray;
+  }
+  get tooltipAlignY(): Alignment {
+    return this.position === FancyToolbarSide.Bottom ? Alignment.End : Alignment.Start;
+  }
+  get tooltipOriginY(): number {
+    return this.position === FancyToolbarSide.Bottom ? this.widgetRect.top : this.widgetRect.bottom;
   }
 }
 

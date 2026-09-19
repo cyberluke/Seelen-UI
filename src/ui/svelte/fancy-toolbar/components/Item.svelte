@@ -15,20 +15,21 @@
   import { settingsState } from "../state/settings.svelte.ts";
   import { styleToString } from "../utils.ts";
   import EvaluatedComponents from "../EvaluatedComponents.svelte";
-  import { createRemoteDataResolver } from "../remoteData.svelte.ts";
-  import { resolveScopes } from "libs/ui/svelte/utils/scopes.svelte.ts";
-  import {
-    compileSandboxed,
-    createCanvasSandbox,
-    evalSanboxed,
-    evalToStr,
-    getSystemTokens,
-    getThemeTokens,
-  } from "libs/ui/svelte/utils/sandbox.ts";
-  import { prefersDarkColorScheme } from "libs/ui/svelte/runes/DarkMode.svelte.ts";
-  import { CssHandled } from "libs/ui/svelte/utils/animations.ts";
+import { createRemoteDataResolver } from "../remoteData.svelte.ts";
+import { resolveScopes } from "libs/ui/svelte/utils/scopes.svelte.ts";
+import {
+  compileSandboxed,
+  createCanvasSandbox,
+  evalSanboxed,
+  evalToStr,
+  getSystemTokens,
+  getThemeTokens,
+} from "libs/ui/svelte/utils/sandbox.ts";
+import { prefersDarkColorScheme } from "libs/ui/svelte/runes/DarkMode.svelte.ts";
+import { CssHandled } from "libs/ui/svelte/utils/animations.ts";
+import SystemTrayToolbarItem from "./SystemTrayToolbarItem.svelte";
 
-  interface Props {
+interface Props {
     module: ToolbarItem;
     sortable?: ReturnType<typeof createSortable> | null;
     pluginId?: string;
@@ -37,6 +38,7 @@
   let { module: self, sortable = null, pluginId }: Props = $props();
 
   const noopAttach = () => {};
+  const isSystemTrayCluster = $derived(pluginId === "@seelen/tb-system-tray");
 
   // ── Context menu listener ────────────────────────────────────────────────
 
@@ -178,7 +180,23 @@
   });
 </script>
 
-{#if !fetching && (content || self.render)}
+{#if isSystemTrayCluster}
+  <div
+    id={self.id}
+    {@attach sortable?.attach ?? noopAttach}
+    data-plugin-id={pluginId}
+    data-dragging={sortable?.isDragging}
+    style={itemStyle}
+    class="ft-bar-item ft-bar-item-tray"
+    transition:CssHandled|global={{
+      enabled() {
+        return !!sortable && !sortable.isDragging;
+      },
+    }}
+  >
+    <SystemTrayToolbarItem />
+  </div>
+{:else if !fetching && (content || self.render)}
   {#if self.id.startsWith("hardcoded-separator")}
     <div {@attach sortable?.attach ?? noopAttach} class="ft-bar-separator"></div>
   {:else}

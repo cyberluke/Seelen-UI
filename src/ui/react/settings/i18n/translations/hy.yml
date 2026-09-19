@@ -272,14 +272,21 @@ shortcuts:
     `օգտագործելով Seelen UI հաճախորդը
   labels:
     create_new_workspace: Ստեղծեք նոր աշխատանքային տարածք
+    create_new_workspace_row: Ստեղծեք աշխատանքային տարածքի նոր տող
     destroy_current_workspace: Քանդել ընթացիկ աշխատանքային տարածքը
     misc_force_quit: Ուժը թողնել
     misc_force_restart: FORCE REARTART
     move_to_workspace: Տեղափոխվել դեպի Workspace {0}
     pause_toggle: Դադարեցնել/Վերսկսել դյուրանցումներ
+    send_to_next_workspace: Ուղարկեք պատուհանը հաջորդ աշխատանքային տարածք
+    send_to_previous_workspace: Ուղարկեք պատուհանը նախորդ աշխատանքային տարածք
     send_to_workspace: Ուղարկել Workspace- ին {0}
+    send_to_workspace_down: Պատուհանն ուղարկեք ստորև բերված աշխատանքային տարածք
+    send_to_workspace_up: Ուղարկեք պատուհանը վերևում գտնվող աշխատանքային տարածք
     switch_to_next_workspace: Անցեք հաջորդ աշխատանքային տարածքին
     switch_to_previous_workspace: Անցեք նախորդ աշխատանքային տարածքին
+    switch_to_workspace_down: Անցեք ներքևում գտնվող աշխատանքային տարածքին
+    switch_to_workspace_up: Անցեք վերևում գտնվող աշխատանքային տարածքին
     switch_workspace: Անցեք Workspace- ին {{0}}
   readonly_tooltip: Սա ընթերցված դյուրանցում է
   reset: Վերականգնել կանխադրված
@@ -306,8 +313,8 @@ toolbar:
   placeholder: {}
 update:
   available: 'Թարմացրեք մատչելի:'
-  channel: Թարմացրեք ալիքը
   downloading: Ներբեռնում ...
+  channel: Թարմացրեք ալիքը
 wall:
   blur: Բութ
   cancel: Չեղարկել
@@ -371,6 +378,13 @@ wall:
 weg:
   auto_hide: Ավտոմատ թաքցնել
   auto_hide_touch_disabled: Ավտոմատ թաքցնելը հասանելի չէ սենսորային էկրանով սարքերում
+  automation:
+    enabled: Միացնել կառավարման ինքնաթիռները
+    flight_recorder: Թռիչքի ձայնագրիչ
+    label: Ավտոմատացում (MCP / REST / CLI)
+    mcp_enabled: MCP սերվեր
+    rest_enabled: REST ադապտեր
+    rest_port: REST պորտ (0 = ավտոմատ)
   delay_to_hide: Հետաձգել թաքցնելը
   delay_to_show: Ցուցադրման ուշացում
   dock_side: Դիրք
@@ -380,6 +394,12 @@ weg:
     always: Միշտ
     never: Երբեք
     on_overlap: Համընկնման վրա
+  import_error: Չհաջողվեց ներմուծել առաջադրանքների տողի տարրերը
+  import_from_taskbar:
+    button: Ներմուծում Windows Taskbar-ից
+    label: Ներմուծեք ամրացված տարրեր
+  import_no_items: Windows-ի առաջադրանքների տողում ամրացված տարրեր չեն գտնվել
+  import_success: Windows-ի առաջադրանքների տողից հաջողությամբ ներմուծվեց {{count}} տարր
   items:
     gap: Տարածություն իրերի միջեւ
     label: Իրերը
@@ -405,6 +425,56 @@ weg:
     full_width: Ամբողջ էկրանի լայնությունը
     min_content: Փոքր, որքան կարող է լինել
   padding: Լիցք
+  preview:
+    animated: Անիմացիոն
+    animation_duration: Անիմացիայի տևողությունը (մվ)
+    app_aware_titles: Դիմումներին ծանոթ վերնագրեր
+    aspect_fixed: Ամրագրված
+    aspect_mode: Ասպեկտների հարաբերակցության ռեժիմ
+    aspect_ratio: Ֆիքսված հարաբերակցություն (համարիչ)
+    aspect_source: Աղբյուրի պատուհան
+    auto_grid: Ավտոմատ ցանց
+    cache_enabled: Նախադիտել քեշը
+    card_height: Քարտի բարձրությունը (px, 0 = ավտոմատ)
+    card_width: Քարտի լայնությունը (px)
+    columns: Սյունակներ
+    compact_titles: Կոմպակտ վերնագրեր
+    gap: Քարտերի միջև բացը (px)
+    grace_region: Ցուցանիշի շնորհի շրջան (px)
+    grouped_click_label: Խմբավորված պատկերակը սեղմեք
+    grouped_click_last_used: Ակտիվացրեք վերջին օգտագործվածը
+    grouped_click_minimize_restore: Նվազագույնի հասցնել/վերականգնել խումբը
+    grouped_click_preview: Բացեք նախադիտումը
+    hover_close_delay: Սավը փակելու ուշացում (մս)
+    hover_open_delay: Սավառնել բաց ուշացումով (ms)
+    keep_open: Բաց պահեք անցման ժամանակ
+    label: Պատուհանների նախադիտում
+    max_columns: Առավելագույն սյունակներ
+    max_height: Ելնող պատուհանի առավելագույն բարձրությունը (px)
+    max_rows: Առավելագույն տողեր ոլորելուց առաջ
+    max_width: Ելնող պատուհանի առավելագույն լայնությունը (px)
+    min_columns: Min սյունակներ
+    nearest_first: Մոտակա առաջին պրոյեկցիան
+    ordering: Պատվիրում
+    ordering_alphabetical: Այբբենական կարգով
+    ordering_application_defined: Հավելվածը սահմանված է
+    ordering_hybrid: Հիբրիդ (առաջին հերթին ձեռքով)
+    ordering_manual: Ձեռնարկ
+    ordering_mru: MRU
+    ordering_stable: Կայուն
+    padding: Բացվող լիցք (px)
+    prepared_entries: Հիշողության բյուջե (KiB)
+    prewarm: Նախապես տաք տեսարան
+    radius: Եզրագծի շառավիղ (px)
+    stale_while_refresh: Հնացած-իսկ թարմացնել
+    titles: Վերնագրեր
+    titles_hidden: Թաքնված
+    titles_one_line: Մեկ տող
+    titles_two_lines: Երկու տող
+    trigger: Նախադիտման գործարկիչ
+    trigger_click: Սեղմեք
+    trigger_hover: Հովեր
+    trigger_hover_and_click: Սավառնել + Սեղմել
   show_end_task: Show ույց տալ ավարտի առաջադրանքը առաջադրանքի մեջ
   width: Լայնություն
 welcome:
@@ -443,6 +513,10 @@ wm:
   drag_behavior_options:
     sort: Տեսակավորել (վերադասավորել պատուհանները քաշելիս)
     swap: Փոխանակում (փոխանակեք պատուհանները՝ քաշելու վերջում)
+  floating:
+    height: Լողացող պատուհանների բարձրությունը
+    title: Լողացող պատուհանների չափը
+    width: Լողացող պատուհանների լայնությունը
   layout: Դասավորություն
   resize_delta: Չափափոխել դելտան (%)
   space_between_containers: Տիեզերք բեռնարկղերի միջեւ

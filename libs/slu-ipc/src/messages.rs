@@ -14,13 +14,15 @@ use crate::{
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum IpcResponse {
     Success,
+    /// Structured payload (json string) for commands that return data.
+    Data(String),
     Err(String),
 }
 
 impl IpcResponse {
     pub fn ok(self) -> Result<()> {
         match self {
-            IpcResponse::Success => Ok(()),
+            IpcResponse::Success | IpcResponse::Data(_) => Ok(()),
             IpcResponse::Err(err) => Err(Error::IpcResponse(err)),
         }
     }

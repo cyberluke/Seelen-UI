@@ -277,14 +277,21 @@ shortcuts:
     client UI Seelen
   labels:
     create_new_workspace: Crea nuovo spazio di lavoro
+    create_new_workspace_row: Crea una nuova riga dell'area di lavoro
     destroy_current_workspace: Distruggi l'attuale spazio di lavoro
     misc_force_quit: Force smettila
     misc_force_restart: Riavvio forzato
     move_to_workspace: Passa su Workspace {{0}}
     pause_toggle: Pausa/Riprendi scorciatoie
+    send_to_next_workspace: Invia la finestra all'area di lavoro successiva
+    send_to_previous_workspace: Invia la finestra all'area di lavoro precedente
     send_to_workspace: Invia a Workspace {{0}}
+    send_to_workspace_down: Invia la finestra all'area di lavoro sottostante
+    send_to_workspace_up: Invia la finestra all'area di lavoro sopra
     switch_to_next_workspace: Passa all'area di lavoro successiva
     switch_to_previous_workspace: Passa all'area di lavoro precedente
+    switch_to_workspace_down: Passa all'area di lavoro qui sotto
+    switch_to_workspace_up: Passa all'area di lavoro sopra
     switch_workspace: Passa a Workspace {{0}}
   readonly_tooltip: Questo è un collegamento di sola lettura
   reset: Ripristina le impostazioni predefinite
@@ -313,8 +320,8 @@ toolbar:
   placeholder: {}
 update:
   available: Aggiornamento Disponibile!
-  channel: Canale di Aggiornamento
   downloading: Download in corso...
+  channel: Canale di Aggiornamento
 wall:
   blur: Sfocatura
   cancel: Cancellare
@@ -380,6 +387,13 @@ weg:
   auto_hide_touch_disabled: >-
     La funzione Nascondi automaticamente non è disponibile sui dispositivi touch
     screen
+  automation:
+    enabled: Abilita i piani di controllo
+    flight_recorder: Registratore di volo
+    label: Automazione (MCP/REST/CLI)
+    mcp_enabled: server MCP
+    rest_enabled: Adattatore REST
+    rest_port: Porta REST (0 = automatico)
   delay_to_hide: Ritardo per nascondere
   delay_to_show: Ritardo per mostrare
   dock_side: Posizione
@@ -389,6 +403,12 @@ weg:
     always: Sempre
     never: Mai
     on_overlap: Sulla sovrapposizione
+  import_error: Impossibile importare gli elementi della barra delle applicazioni
+  import_from_taskbar:
+    button: Importa dalla barra delle applicazioni di Windows
+    label: Importa elementi appuntati
+  import_no_items: Nessun elemento aggiunto trovato nella barra delle applicazioni di Windows
+  import_success: '{{count}} elemento/i importato/i dalla barra delle applicazioni di Windows'
   items:
     gap: Spazio tra gli Elementi
     label: Elementi
@@ -414,6 +434,56 @@ weg:
     full_width: Larghezza dello schermo intero
     min_content: Piccolo quanto può essere
   padding: Spaziatura
+  preview:
+    animated: Animata
+    animation_duration: Durata dell'animazione (ms)
+    app_aware_titles: Titoli compatibili con l'applicazione
+    aspect_fixed: Fisso
+    aspect_mode: Modalità proporzioni
+    aspect_ratio: Rapporto fisso (numeratore)
+    aspect_source: Finestra di origine
+    auto_grid: Griglia automatica
+    cache_enabled: Cache di anteprima
+    card_height: Altezza della carta (px, 0 = automatica)
+    card_width: Larghezza della carta (px)
+    columns: Colonne
+    compact_titles: Titoli compatti
+    gap: Spazio tra le carte (px)
+    grace_region: Regione di grazia del puntatore (px)
+    grouped_click_label: Fare clic sull'icona raggruppata
+    grouped_click_last_used: Attiva l'ultimo utilizzo
+    grouped_click_minimize_restore: Minimizza/ripristina il gruppo
+    grouped_click_preview: Apri l'anteprima
+    hover_close_delay: Ritardo chiusura al passaggio del mouse (ms)
+    hover_open_delay: Ritardo apertura al passaggio del mouse (ms)
+    keep_open: Mantieniti aperto durante la traversata
+    label: Anteprima della finestra
+    max_columns: Colonne massime
+    max_height: Altezza massima popup (px)
+    max_rows: Numero massimo di righe prima dello scorrimento
+    max_width: Larghezza massima popup (px)
+    min_columns: Colonne minime
+    nearest_first: Proiezione più vicina
+    ordering: Ordinare
+    ordering_alphabetical: Alfabetica
+    ordering_application_defined: Applicazione definita
+    ordering_hybrid: Ibrido (prima manuale)
+    ordering_manual: Manuale
+    ordering_mru: MRU
+    ordering_stable: Stabile
+    padding: Imbottitura popup (px)
+    prepared_entries: Budget di memoria (KiB)
+    prewarm: Vista preriscaldata
+    radius: Raggio del bordo (px)
+    stale_while_refresh: Stale durante l'aggiornamento
+    titles: Titoli
+    titles_hidden: Nascosta
+    titles_one_line: Una riga
+    titles_two_lines: Due righe
+    trigger: Trigger di anteprima
+    trigger_click: Clic
+    trigger_hover: Passa il mouse
+    trigger_hover_and_click: Passa il mouse + fai clic
   show_end_task: Mostra la fine dell'attività nella barra delle applicazioni
   width: Larghezza
 welcome:
@@ -453,6 +523,10 @@ wm:
   drag_behavior_options:
     sort: Ordina (riordina le finestre durante il trascinamento)
     swap: Scambia (scambia le finestre alla fine del trascinamento)
+  floating:
+    height: Altezza delle finestre mobili
+    title: Dimensioni finestre mobili
+    width: Larghezza delle finestre mobili
   layout: Layout
   resize_delta: Delta Ridimensionamento (percento)
   space_between_containers: Spazio tra i Contenitori

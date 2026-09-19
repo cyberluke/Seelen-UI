@@ -1,5 +1,6 @@
 import { settings } from "../../../../state/mod";
-import type { FancyToolbarSettings, FancyToolbarSide, HideMode } from "@seelen-ui/lib/types";
+import type { FancyToolbarSettings } from "@seelen-ui/lib/types";
+import type { FancyToolbarSide, HideMode, TrayOfflineMode, TrayPinnedPosition } from "@seelen-ui/lib/types";
 
 /**
  * Patches the FancyToolbar configuration with partial updates.
@@ -76,4 +77,48 @@ export function setToolbarDelayToShow(delayToShow: number) {
  */
 export function setToolbarDelayToHide(delayToHide: number) {
   patchToolbarConfig({ delayToHide });
+}
+
+/**
+ * System-tray sub-config helpers
+ */
+export function getTrayConfig() {
+  return getToolbarConfig().tray;
+}
+
+export function patchTrayConfig(
+  patch: Partial<NonNullable<ReturnType<typeof getTrayConfig>>>,
+) {
+  const current = getToolbarConfig();
+  patchToolbarConfig({
+    tray: { ...(current.tray ?? {}), ...patch },
+  });
+}
+
+export function setTrayPinnedPosition(pos: TrayPinnedPosition): void {
+  patchTrayConfig({ pinnedPosition: pos });
+}
+
+export function setTrayOfflineMode(mode: TrayOfflineMode): void {
+  patchTrayConfig({ offlinePinned: mode });
+}
+
+export function setTrayIconSpacing(value: number | null) {
+  patchTrayConfig({ iconSpacing: value ?? undefined });
+}
+
+export function setTrayIconSize(value: number | null) {
+  patchTrayConfig({ iconSize: value ?? undefined });
+}
+
+export function setTrayShowTooltips(enabled: boolean) {
+  patchTrayConfig({ showTooltips: enabled });
+}
+
+export function setTrayDragReorder(enabled: boolean) {
+  patchTrayConfig({ dragReorderEnabled: enabled });
+}
+
+export function setTrayOverflowArrow(enabled: boolean) {
+  patchTrayConfig({ overflowArrowEnabled: enabled });
 }

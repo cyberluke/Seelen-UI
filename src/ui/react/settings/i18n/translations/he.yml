@@ -254,14 +254,21 @@ shortcuts:
   enable_tooltip: השבת אם תיישם מערכת קיצורי דרך משלך באמצעות לקוח ממשק המשתמש של Seelen
   labels:
     create_new_workspace: צור סביבת עבודה חדשה
+    create_new_workspace_row: צור שורת סביבת עבודה חדשה
     destroy_current_workspace: להרוס את סביבת העבודה הנוכחית
     misc_force_quit: כוח התפטר
     misc_force_restart: הכוח להפעיל מחדש
     move_to_workspace: עברו לסביבת עבודה {{0}}
     pause_toggle: השהה/המשך קיצורי דרך
+    send_to_next_workspace: שלח חלון לסביבת העבודה הבאה
+    send_to_previous_workspace: שלח חלון לסביבת העבודה הקודמת
     send_to_workspace: שלח לסביבת עבודה {{0}}
+    send_to_workspace_down: שלח חלון לסביבת העבודה למטה
+    send_to_workspace_up: שלח חלון לסביבת העבודה למעלה
     switch_to_next_workspace: עבור לסביבת העבודה הבאה
     switch_to_previous_workspace: עבור לסביבת העבודה הקודמת
+    switch_to_workspace_down: עבור אל סביבת העבודה למטה
+    switch_to_workspace_up: עבור אל סביבת העבודה למעלה
     switch_workspace: עברו לסביבת עבודה {{0}}
   readonly_tooltip: זהו קיצור דרך לקריאה בלבד
   reset: אפס לברירות מחדל
@@ -288,8 +295,8 @@ toolbar:
   placeholder: {}
 update:
   available: עדכון זמין!
-  channel: ערוץ עדכונים
   downloading: מוריד ...
+  channel: ערוץ עדכונים
 wall:
   blur: לְטַשׁטֵשׁ
   cancel: לְבַטֵל
@@ -351,6 +358,13 @@ wall:
 weg:
   auto_hide: הסתר אוטומטי
   auto_hide_touch_disabled: הסתרה אוטומטית אינה זמינה במכשירי מסך מגע
+  automation:
+    enabled: אפשר מטוסי בקרה
+    flight_recorder: מקליט טיסה
+    label: אוטומציה (MCP / REST / CLI)
+    mcp_enabled: שרת MCP
+    rest_enabled: מתאם REST
+    rest_port: יציאת REST (0 = אוטומטי)
   delay_to_hide: עיכוב להסתיר
   delay_to_show: עיכוב להצגה
   dock_side: מַצָב
@@ -360,6 +374,12 @@ weg:
     always: תָמִיד
     never: לעולם לא
     on_overlap: על חפיפה
+  import_error: ייבוא ​​פריטי שורת המשימות נכשל
+  import_from_taskbar:
+    button: ייבא משורת המשימות של Windows
+    label: ייבוא ​​פריטים מוצמדים
+  import_no_items: לא נמצאו פריטים מוצמדים בשורת המשימות של Windows
+  import_success: '{{count}} פריטים יובאו בהצלחה משורת המשימות של Windows'
   items:
     gap: רווח בין פריטים
     label: פריטים
@@ -385,6 +405,56 @@ weg:
     full_width: רוחב מסך מלא
     min_content: קטן ככל שניתן
   padding: ריפוד
+  preview:
+    animated: אנימציה
+    animation_duration: משך הנפשה (מילישניות)
+    app_aware_titles: כותרות המודעות לאפליקציות
+    aspect_fixed: קָבוּעַ
+    aspect_mode: מצב יחס גובה-רוחב
+    aspect_ratio: יחס קבוע (מונה)
+    aspect_source: חלון מקור
+    auto_grid: רשת אוטומטית
+    cache_enabled: תצוגה מקדימה של מטמון
+    card_height: גובה הכרטיס (px, 0 = אוטומטי)
+    card_width: רוחב הכרטיס (px)
+    columns: עמודות
+    compact_titles: כותרות קומפקטיות
+    gap: פער בין כרטיסים (px)
+    grace_region: אזור חסד מצביע (px)
+    grouped_click_label: לחיצה על סמל מקובץ
+    grouped_click_last_used: הפעל את השימוש האחרון
+    grouped_click_minimize_restore: צמצם/שחזר קבוצה
+    grouped_click_preview: פתח את התצוגה המקדימה
+    hover_close_delay: עיכוב סגירת ריחוף (מילישניות)
+    hover_open_delay: עיכוב פתיחת ריחוף (מילישניות)
+    keep_open: שמור פתוח במעבר
+    label: תצוגה מקדימה של חלון
+    max_columns: מקסימום עמודות
+    max_height: גובה מוקפץ מקסימלי (פיקסלים)
+    max_rows: מקסימום שורות לפני הגלילה
+    max_width: רוחב מוקפץ מקסימלי (פיקסלים)
+    min_columns: מינימום עמודות
+    nearest_first: הקרנה הקרובה-ראשונה
+    ordering: הזמנה
+    ordering_alphabetical: אָלֶף בֵּיתִי
+    ordering_application_defined: יישום מוגדר
+    ordering_hybrid: היברידי (תחילה ידני)
+    ordering_manual: יָדָנִי
+    ordering_mru: MRU
+    ordering_stable: יַצִיב
+    padding: ריפוד קופץ (px)
+    prepared_entries: תקציב זיכרון (KiB)
+    prewarm: נוף מוקדם
+    radius: רדיוס גבול (px)
+    stale_while_refresh: מעופש-בזמן-רענון
+    titles: כותרות
+    titles_hidden: מוּסתָר
+    titles_one_line: שורה אחת
+    titles_two_lines: שתי שורות
+    trigger: מפעיל תצוגה מקדימה
+    trigger_click: נְקִישָׁה
+    trigger_hover: לְרַחֵף
+    trigger_hover_and_click: רחף + לחץ
   show_end_task: הצג את משימת הסיום בשורת המשימות
   width: רוחב
 welcome:
@@ -422,6 +492,10 @@ wm:
   drag_behavior_options:
     sort: מיון (סדר מחדש את החלונות תוך כדי גרירה)
     swap: החלפה (החלפה של חלונות בקצה הגרירה)
+  floating:
+    height: גובה חלונות צף
+    title: גודל חלונות צף
+    width: רוחב חלונות צף
   layout: מערך
   resize_delta: שינוי גודל דלתא (%)
   space_between_containers: רווח בין מיכלים

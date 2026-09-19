@@ -74,3 +74,57 @@
     background-color: var(--slu-std-ui-pressed-overlay);
   }
 }
+
+.ft-bar-item-tray {
+  padding: 0;
+
+  > .ft-bar-tray-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: var(--config-item-size);
+  }
+
+  .ft-bar-tray-pinned,
+  .ft-bar-tray-overflow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--config-item-size);
+    min-width: var(--config-item-size);
+    padding: 0 calc(var(--config-padding) / 2);
+    box-sizing: border-box;
+    border-radius: calc(var(--config-item-size) * 0.25);
+  }
+
+  .ft-bar-tray-pinned {
+    &:hover {
+      background-color: oklch(from var(--system-accent-color) l c h / 0.2);
+    }
+
+    &:active {
+      background-color: oklch(from var(--system-accent-color) l c h / 0.3);
+    }
+
+    &[data-offline="true"] {
+      opacity: 0.55;
+    }
+  }
+
+  .ft-bar-tray-overflow {
+    &:hover {
+      background-color: oklch(from var(--system-accent-color) l c h / 0.2);
+    }
+
+    &:active {
+      background-color: oklch(from var(--system-accent-color) l c h / 0.3);
+    }
+  }
+
+  .ft-bar-tray-pinned-icon,
+  .ft-bar-tray-overflow-icon {
+    height: 100%;
+    width: max-content;
+    object-fit: contain;
+  }
+}

@@ -1,7 +1,16 @@
 <script lang="ts">
-  import { invoke, SeelenCommand, Widget } from "@seelen-ui/lib";
-  import { Icon, MissingIcon } from "libs/ui/svelte/components/Icon/index.ts";
+  import { Widget } from "@seelen-ui/lib";
+  import { DragDropProvider, DragOverlay } from "@dnd-kit/svelte";
+  import { move } from "@dnd-kit/helpers";
+  import { onDestroy, onMount } from "svelte";
   import { previewState } from "./state.svelte.ts";
+  import CardItem from "./components/CardItem.svelte";
+  import { computePreviewLayout, previewSettings } from "../weg/state/preview.svelte.ts";
+  import { systemState } from "../weg/state/system.svelte.ts";
+  import { createDragDropManager } from "libs/ui/dnd.ts";
+
+  const manager = createDragDropManager();
+  onDestroy(() => manager.destroy());
 
   $effect(() => {
     Widget.getCurrent().ready();
@@ -13,52 +22,86 @@
     }
   });
 
-  function onClickPreview(hwnd: number) {
-    invoke(SeelenCommand.WegToggleWindowState, { hwnd, wasFocused: false });
-  }
+  const s = $derived(previewSettings());
+  const layout = $derived(
+    computePreviewLayout(previewState.currentInteractables.length, systemState.currentMonitor),
+  );
 
-  function onClosePreview(e: MouseEvent, hwnd: number) {
-    e.stopPropagation();
-    invoke(SeelenCommand.WegCloseApp, { hwnd });
-  }
+  const cacheHit = $derived(
+    !s.cacheEnabled ||
+      previewState.currentInteractables.some((w) => previewState.thumbnailOf(w.hwnd)),
+  );
 
-  function onAuxClickPreview(e: MouseEvent, hwnd: number) {
-    if (e.button === 1) {
-      invoke(SeelenCommand.WegCloseApp, { hwnd });
-    }
+  let painted = false;
+  onMount(() => {
+    requestAnimationFrame(() => {
+      if (!painted) {
+        painted = true;
+        previewState.reportPaint(cacheHit);
+      }
+    });
+  });
+
+  function handleDragOver(event: any) {
+    const ids = previewState.currentInteractables.map((w) => w.hwnd);
+    const newIds: number[] = move(ids, event);
+    const ordered = newIds
+      .map((id) => previewState.currentInteractables.find((w) => w.hwnd === id))
+      .filter((w): w is (typeof previewState.currentInteractables)[number] => !!w);
+    previewState.persistOrder(ordered);
   }
 </script>
 
-<div class="weg-item-preview-container slu-std-popover">
-  <div class="weg-item-preview-list">
-    {#each previewState.currentInteractables as win (win.hwnd)}
-      {@const preview = previewState.previews.value[win.hwnd]}
-      <div
-        role="button"
-        tabindex="0"
-        class="weg-item-preview"
-        onclick={() => onClickPreview(win.hwnd)}
-        onauxclick={(e) => onAuxClickPreview(e, win.hwnd)}
-        onkeypress={() => {}}
-      >
-        <div class="weg-item-preview-topbar">
-          <div class="weg-item-preview-title">{win.title}</div>
-          <button data-skin="transparent" onclick={(e) => onClosePreview(e, win.hwnd)}>
-            <Icon iconName="IoClose" />
-          </button>
-        </div>
-        <div class="weg-item-preview-image-container">
-          {#if preview}
-            <img
-              class="weg-item-preview-image"
-              src="data:image/webp;base64,{preview.data}"
-              alt={win.title}
-            />
-          {:else}
-            <MissingIcon class="weg-item-no-preview" />
-          {/if}
-        </div>
-      </div>
-    {/each}
-  </div>
+<div
+  class="weg-item-preview-container slu-std-popover"
+  style="
+    padding: {layout.padding}px;
+    border-radius: {layout.borderRadius}px;
+    max-width: {layout.popupWidth}px;
+    max-height: {layout.popupHeight}px;
+    {previewState.animated
+      ? `transition: opacity ${previewState.animationDuration}ms ease, transform ${previewState.animationDuration}ms ease;`
+      : "transition: none;"}
+  "
+>
+  <DragDropProvider {manager} onDragOver={handleDragOver}>
+    <div
+      class="weg-item-preview-list"
+      style="
+        display: grid;
+        grid-template-columns: repeat({layout.columns}, {layout.cardWidth}px);
+        gap: {layout.gap}px;
+        {layout.scrollable ? `overflow-y: auto; max-height: ${layout.popupHeight - layout.padding * 2}px;` : ""}
+      "
+    >
+      {#each previewState.currentInteractables as win, i (win.hwnd)}
+        {@const preview = previewState.thumbnailOf(win.hwnd)}
+        {@const title = previewState.titleInfo(win)}
+        <CardItem
+          {win}
+          index={i}
+          label={title.label}
+          tooltip={title.tooltip}
+          {preview}
+          showTitles={s.showTitles}
+          titleLines={s.titleLines}
+          radius={layout.borderRadius}
+          aspectFixed={s.aspectRatioMode === "Fixed"}
+          ratio="{s.aspectRatioNum} / {s.aspectRatioDen}"
+        />
+      {/each}
+    </div>
+
+    <DragOverlay>
+      {#snippet children(source)}
+        {@const item = previewState.currentInteractables.find((w) => w.hwnd === source.id)}
+        {#if item}
+          {@const title = previewState.titleInfo(item)}
+          <div class="weg-item-preview weg-overlay" data-title={title.label}>
+            {item.title}
+          </div>
+        {/if}
+      {/snippet}
+    </DragOverlay>
+  </DragDropProvider>
 </div>

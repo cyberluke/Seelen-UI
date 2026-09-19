@@ -266,14 +266,21 @@ shortcuts:
     បិទប្រសិនបើអ្នកនឹងអនុវត្តប្រព័ន្ធផ្លូវកាត់ផ្ទាល់ខ្លួនរបស់អ្នកដោយប្រើម៉ាស៊ីនភ្ញៀវយូណេយូយូ
   labels:
     create_new_workspace: បង្កើតកន្លែងធ្វើការថ្មី
+    create_new_workspace_row: បង្កើតជួរដេកកន្លែងធ្វើការថ្មី។
     destroy_current_workspace: បំផ្លាញកន្លែងធ្វើការបច្ចុប្បន្ន
     misc_force_quit: បង្ខំឱ្យឈប់
     misc_force_restart: បង្ខំឱ្យចាប់ផ្តើមឡើងវិញ
     move_to_workspace: ផ្លាស់ទីទៅកន្លែងធ្វើការ {{0}}
     pause_toggle: ផ្អាក/បន្តផ្លូវកាត់
+    send_to_next_workspace: ផ្ញើបង្អួចទៅកន្លែងធ្វើការបន្ទាប់
+    send_to_previous_workspace: ផ្ញើបង្អួចទៅកន្លែងធ្វើការពីមុន
     send_to_workspace: ផ្ញើទៅកន្លែងធ្វើការ {{0}}
+    send_to_workspace_down: ផ្ញើបង្អួចទៅកន្លែងធ្វើការខាងក្រោម
+    send_to_workspace_up: ផ្ញើបង្អួចទៅកន្លែងធ្វើការខាងលើ
     switch_to_next_workspace: ប្តូរទៅកន្លែងធ្វើការបន្ទាប់
     switch_to_previous_workspace: ប្តូរទៅកន្លែងធ្វើការមុន
+    switch_to_workspace_down: ប្តូរទៅកន្លែងធ្វើការខាងក្រោម
+    switch_to_workspace_up: ប្តូរទៅកន្លែងធ្វើការខាងលើ
     switch_workspace: ប្តូរទៅកន្លែងធ្វើការ {{0}}
   readonly_tooltip: នេះគឺជាផ្លូវកាត់ដែលបានតែអាន
   reset: កំណត់ឡើងវិញនូវលំនាំដើម
@@ -300,8 +307,8 @@ toolbar:
   placeholder: {}
 update:
   available: មានបច្ចុប្បន្នភាព!
-  channel: ឆានែលធ្វើបច្ចុប្បន្នភាព
   downloading: ទាញយក ...
+  channel: ឆានែលធ្វើបច្ចុប្បន្នភាព
 wall:
   blur: ព្រមម៉ុន
   cancel: បោះបង់
@@ -365,6 +372,13 @@ wall:
 weg:
   auto_hide: លាក់ដោយស្វ័យប្រវត្តិ
   auto_hide_touch_disabled: ការលាក់ដោយស្វ័យប្រវត្តិមិនមាននៅលើឧបករណ៍អេក្រង់ប៉ះទេ។
+  automation:
+    enabled: បើកយន្តហោះគ្រប់គ្រង
+    flight_recorder: ឧបករណ៍ថតយន្តហោះ
+    label: ស្វ័យប្រវត្តិកម្ម (MCP / REST / CLI)
+    mcp_enabled: ម៉ាស៊ីនមេ MCP
+    rest_enabled: អាដាប់ទ័រ REST
+    rest_port: ច្រក REST (0 = ស្វ័យប្រវត្តិ)
   delay_to_hide: ពន្យារពេលដើម្បីលាក់
   delay_to_show: ពន្យាពេលក្នុងការបង្ហាញ
   dock_side: តីតាមង
@@ -374,6 +388,12 @@ weg:
     always: ជានិច្ច
     never: មិនដែល
     on_overlap: នៅលើការត្រួតស៊ីគ្នា។
+  import_error: បានបរាជ័យក្នុងការនាំចូលធាតុរបារភារកិច្ច
+  import_from_taskbar:
+    button: នាំចូលពីរបារភារកិច្ចវីនដូ
+    label: នាំចូលធាតុដែលបានខ្ទាស់
+  import_no_items: រកមិនឃើញធាតុដែលបានខ្ទាស់នៅក្នុងរបារភារកិច្ចវីនដូទេ។
+  import_success: បាននាំចូលធាតុ {{count}} ដោយជោគជ័យពីរបារភារកិច្ច Windows
   items:
     gap: ចន្លោះរវាងធាតុ
     label: ធាតុ
@@ -399,6 +419,56 @@ weg:
     full_width: ទទឹងពេញអេក្រង់
     min_content: តូចតាមដែលអាចធ្វើបាន
   padding: ទ្រនាប់
+  preview:
+    animated: មានចលនា
+    animation_duration: រយៈពេលចលនា (ms)
+    app_aware_titles: ចំណងជើងដែលដឹងអំពីកម្មវិធី
+    aspect_fixed: ជួសជុល
+    aspect_mode: របៀបសមាមាត្រ
+    aspect_ratio: សមាមាត្រថេរ (លេខភាគ)
+    aspect_source: បង្អួចប្រភព
+    auto_grid: ក្រឡាចត្រង្គស្វ័យប្រវត្តិ
+    cache_enabled: មើលឃ្លាំងសម្ងាត់ជាមុន
+    card_height: កម្ពស់កាត (px, 0 = ស្វ័យប្រវត្តិ)
+    card_width: ទទឹងកាត (px)
+    columns: ជួរឈរ
+    compact_titles: ចំណងជើងបង្រួម
+    gap: គម្លាតរវាងកាត (px)
+    grace_region: តំបន់គុណនៃទ្រនិច (px)
+    grouped_click_label: ចុចរូបតំណាងជាក្រុម
+    grouped_click_last_used: ធ្វើឱ្យសកម្មដែលបានប្រើចុងក្រោយ
+    grouped_click_minimize_restore: បង្រួម/ស្តារក្រុមឡើងវិញ
+    grouped_click_preview: បើកការមើលជាមុន
+    hover_close_delay: ដាក់លើការពន្យាពេលបិទ (ms)
+    hover_open_delay: ដាក់លើការពន្យាពេលបើក (ms)
+    keep_open: បើកផ្លូវឆ្លងកាត់
+    label: ការមើលបង្អួចជាមុន
+    max_columns: ជួរអតិបរមា
+    max_height: កម្ពស់លេចឡើងអតិបរមា (px)
+    max_rows: ជួរអតិបរមាមុនពេលរមូរ
+    max_width: ទទឹងអតិបរមាលេចឡើង (px)
+    min_columns: ជួរឈរអប្បបរមា
+    nearest_first: ការព្យាករណ៍ដែលនៅជិតបំផុត - ទីមួយ
+    ordering: ការបញ្ជាទិញ
+    ordering_alphabetical: អក្ខរក្រម
+    ordering_application_defined: កម្មវិធីដែលបានកំណត់
+    ordering_hybrid: កូនកាត់ (ដោយដៃដំបូង)
+    ordering_manual: សៀវភៅដៃ
+    ordering_mru: MRU
+    ordering_stable: ស្ថិរភាព
+    padding: ផ្ទាំងលេចឡើង (px)
+    prepared_entries: ថវិកាអង្គចងចាំ (KiB)
+    prewarm: ទិដ្ឋភាពក្តៅ
+    radius: កាំព្រំដែន (px)
+    stale_while_refresh: ធុញថប់ពេលកំពុងធ្វើឱ្យស្រស់
+    titles: ចំណងជើង
+    titles_hidden: លាក់
+    titles_one_line: មួយជួរ
+    titles_two_lines: ពីរជួរ
+    trigger: មើល​គន្លឹះ​សាកល្បង
+    trigger_click: ចុច
+    trigger_hover: អូស
+    trigger_hover_and_click: ដាក់លើ + ចុច
   show_end_task: បង្ហាញភារកិច្ចបញ្ចប់នៅក្នុងរបារភារកិច្ច
   width: ទទឹង
 welcome:
@@ -438,6 +508,10 @@ wm:
   drag_behavior_options:
     sort: តម្រៀប (តម្រៀបបង្អួចឡើងវិញពេលកំពុងអូស)
     swap: ប្តូរ (ប្តូរបង្អួចនៅលើចុងអូស)
+  floating:
+    height: កម្ពស់វីនដូអណ្តែត
+    title: ទំហំវីនដូអណ្តែត
+    width: ទទឹងវីនដូអណ្តែត
   layout: ប្លង់
   resize_delta: ប្តូរទំហំដីសណ្តរ (%)
   space_between_containers: ចន្លោះរវាងកុងតឺន័រ

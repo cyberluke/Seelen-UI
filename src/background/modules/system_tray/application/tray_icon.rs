@@ -1,6 +1,8 @@
 use std::hash::{DefaultHasher, Hash, Hasher};
 
-use seelen_core::system_state::{SysTrayIcon, SysTrayIconId, SystrayIconAction};
+use seelen_core::system_state::{
+    SysTrayIcon, SysTrayIconId, SystrayIconAction, TrayLogicalIdentity,
+};
 use windows::Win32::{
     Foundation::{HWND, LPARAM, WPARAM},
     UI::{
@@ -17,7 +19,7 @@ use windows::Win32::{
 use crate::{
     modules::system_tray::application::{SystemTrayManager, util::Util},
     utils::{constants::SEELEN_COMMON, icon_extractor::convert_hicon_to_rgba_image},
-    windows_api::{WindowsApi, window::Window},
+    windows_api::{WindowsApi, process::Process, window::Window},
 };
 use slu_ipc::messages::{IconEventData, Win32TrayEvent};
 
@@ -48,13 +50,25 @@ impl SystemTrayManager {
     }
 
     fn find_icon(&self, icon_data: &IconEventData) -> Option<SysTrayIcon> {
-        icon_data
-            .guid
-            .and_then(|guid| self.icon_by_guid(guid))
-            .or_else(|| match (icon_data.window_handle, icon_data.uid) {
-                (Some(handle), Some(uid)) => self.icon_by_handle(handle, uid),
-                _ => None,
-            })
+        let by_guid = icon_data.guid.and_then(|guid| self.icon_by_guid(guid));
+        if by_guid.is_some() {
+            return by_guid;
+        }
+        match (icon_data.window_handle, icon_data.uid) {
+            (Some(handle), Some(uid)) => {
+                let direct = self.icon_by_handle(handle, uid);
+                if direct.is_some() {
+                    return direct;
+                }
+                // Cross-restart rebind: same exe path + same uid under a new
+                // HWND. Prefer the freshest match.
+                self.icons
+                    .values()
+                    .into_iter()
+                    .find(|existing| existing.uid == Some(uid) && same_exe(existing, icon_data))
+            }
+            _ => None,
+        }
     }
 
     /// Handles an event from the `Systray`.
@@ -139,6 +153,9 @@ impl SystemTrayManager {
 
                     to_update.is_visible = icon_data.is_visible;
 
+                    // Refresh cached logical identity + process metadata.
+                    refresh_identity(&mut to_update);
+
                     self.icons
                         .upsert(to_update.stable_id.clone(), to_update.clone());
                     Some(SystrayEvent::IconUpdate(to_update.clone()))
@@ -170,8 +187,9 @@ impl SystemTrayManager {
                         icon_path = Some(path);
                     }
 
-                    let icon = SysTrayIcon {
+                    let mut icon = SysTrayIcon {
                         stable_id,
+                        logical_id: String::new(),
                         uid: icon_data.uid,
                         window_handle: icon_data.window_handle,
                         guid: icon_data.guid,
@@ -182,7 +200,14 @@ impl SystemTrayManager {
                         callback_message: icon_data.callback_message,
                         version: icon_data.version,
                         is_visible: icon_data.is_visible,
+                        process_id: None,
+                        process_path: None,
+                        process_name: None,
+                        app_user_model_id: None,
+                        application_display_name: None,
                     };
+
+                    refresh_identity(&mut icon);
 
                     self.icons.upsert(icon.stable_id.clone(), icon.clone());
                     Some(SystrayEvent::IconAdd(icon))
@@ -242,9 +267,13 @@ impl SystemTrayManager {
             let _ = unsafe { AllowSetForegroundWindow(proc_id) };
         }
 
-        let wm_messages = match action {
-            SystrayIconAction::LeftClick => vec![WM_LBUTTONDOWN, WM_LBUTTONUP],
-            SystrayIconAction::LeftDoubleClick => vec![WM_LBUTTONDBLCLK, WM_LBUTTONUP],
+        match action {
+            SystrayIconAction::LeftClick => {
+                vec![WM_LBUTTONDOWN, WM_LBUTTONUP]
+            }
+            SystrayIconAction::LeftDoubleClick => {
+                vec![WM_LBUTTONDBLCLK, WM_LBUTTONUP]
+            }
             SystrayIconAction::RightClick => {
                 vec![WM_RBUTTONDOWN, WM_RBUTTONUP]
             }
@@ -254,11 +283,11 @@ impl SystemTrayManager {
             SystrayIconAction::HoverEnter => vec![WM_MOUSEHOVER],
             SystrayIconAction::HoverLeave => vec![WM_MOUSELEAVE],
             SystrayIconAction::HoverMove => vec![WM_MOUSEMOVE],
-        };
-
-        for wm_message in wm_messages {
-            Self::notify_icon(window_handle, callback, uid, icon.version, wm_message)?;
         }
+        .iter()
+        .for_each(|m| {
+            let _ = Self::notify_icon(window_handle, callback, uid, icon.version, *m);
+        });
 
         // Additional messages are sent for version 4 and above. Explorer sends
         // these for version 3 as well though, so we do the same.
@@ -315,6 +344,42 @@ impl SystemTrayManager {
 
         Ok(())
     }
+}
+
+fn same_exe(icon: &SysTrayIcon, data: &IconEventData) -> bool {
+    let Some(handle) = data.window_handle else {
+        return false;
+    };
+    let incoming = Process::from_window(&Window::from(handle));
+    let Ok(incoming_path) = incoming.program_path() else {
+        return false;
+    };
+    icon.process_path.as_deref() == Some(incoming_path.to_string_lossy().as_ref())
+}
+
+/// Populates the identity fields of `icon` from its owner process.
+fn refresh_identity(icon: &mut SysTrayIcon) {
+    if let Some(handle) = icon.window_handle {
+        let window = Window::from(handle);
+        let process = Process::from_window(&window);
+        icon.process_id = Some(process.id());
+        icon.process_path = process
+            .program_path()
+            .ok()
+            .map(|p| p.to_string_lossy().to_string());
+        icon.process_name = process.program_exe_name().ok();
+        icon.application_display_name = window
+            .app_display_name()
+            .ok()
+            .or_else(|| process.program_display_name().ok());
+        // Win32 apps often do not populate `packageAppUserModelId`. Fall back
+        // to the window's (best effort) name.
+        icon.app_user_model_id = process
+            .package_app_user_model_id()
+            .ok()
+            .map(|v| v.to_string());
+    }
+    icon.logical_id = TrayLogicalIdentity::resolve(icon).key;
 }
 
 /// Computes a hash of the icon image.

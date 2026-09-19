@@ -250,6 +250,23 @@ slu_commands_declaration! {
     WegPinItem = weg_pin_item(path: PathBuf),
     WegImportPinnedTaskbarItems = weg_import_pinned_taskbar_items() -> usize,
 
+    // SeelenWeg native command core (shared by UI / CLI / MCP / REST)
+    WegGetWindowEntries = weg_get_window_entries() -> Vec<WindowEntry>,
+    WegGetWindow = weg_get_window(identification: String) -> Option<WindowEntry>,
+    WegFindWindows = weg_find_windows(query: String) -> Vec<WindowEntry>,
+    WegFocusWindow = weg_focus_window(identification: String) -> WindowActionResult,
+    WegMaximizeWindow = weg_maximize_window(identification: String) -> WindowActionResult,
+    WegRestoreWindow = weg_restore_window(identification: String) -> WindowActionResult,
+    WegMinimizeWindow = weg_minimize_window(identification: String) -> WindowActionResult,
+    WegFocusAndMaximizeWindow = weg_focus_and_maximize_window(identification: String) -> WindowActionResult,
+    WegGetWindowOrder = weg_get_window_order(app: String) -> Vec<String>,
+    WegSetWindowOrder = weg_set_window_order(app: String, identities: Vec<String>),
+    WegSetWindowAlias = weg_set_window_alias(alias: String, identity: String),
+    WegGetRecentWindows = weg_get_recent_windows(limit: Option<u32>) -> Vec<WindowEntry>,
+    WegReportPreviewLatency = weg_report_preview_latency(latency: PreviewLatency),
+    WegGetAutomationMetrics = weg_get_automation_metrics() -> AutomationMetrics,
+    WegGetTrace = weg_get_trace() -> Vec<TraceFrame>,
+
     // Windows Manager
     WmGetRenderTree = wm_get_render_tree() -> TwmGlobalRuntimeTree,
     SetAppWindowsPositions = set_app_windows_positions(positions: HashMap<isize, Rect>),
@@ -270,6 +287,15 @@ slu_commands_declaration! {
     // system tray
     GetSystemTrayIcons = get_system_tray_icons() -> Vec<SysTrayIcon>,
     SendSystemTrayIconAction = send_system_tray_icon_action(id: SysTrayIconId, action: SystrayIconAction),
+
+    // semantic desktop API (system tray)
+    ListTrayIcons = list_tray_icons() -> Vec<TrayIconInfo>,
+    ListPinnedTrayIcons = list_pinned_tray_icons() -> Vec<TrayIconInfo>,
+    GetTrayPinState = get_tray_pin_state() -> TrayPinState,
+    PinTrayIcon = pin_tray_icon(logical_id: String),
+    UnpinTrayIcon = unpin_tray_icon(logical_id: String),
+    SetTrayPinOrder = set_tray_pin_order(order: Vec<String>),
+    SendTrayAction = send_tray_action(logical_id: String, action: SystrayIconAction),
 
     // Notifications
     GetNotifications = get_notifications() -> Vec<AppNotification>,

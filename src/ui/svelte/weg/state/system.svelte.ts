@@ -2,11 +2,14 @@ import { SeelenWegSide } from "@seelen-ui/lib/types";
 import { currentMonitorId, monitors, mousePos } from "./getters.svelte.ts";
 
 const _currentMonitor = $derived.by(() => {
-  const monitor = monitors.value.find((m) => m.id === currentMonitorId);
-  if (!monitor) {
-    throw new Error("Current monitor not found");
-  }
-  return monitor;
+  const direct = monitors.value.find((m) => m.id === currentMonitorId);
+  if (direct) return direct;
+  // Non-ReplicaByMonitor widgets (e.g. `@seelen/weg-preview`) have no
+  // `monitorId` on their label. Fall back to primary, then first entry so
+  // the hover preview can paint instead of throwing.
+  const fallback = monitors.value.find((m) => m.isPrimary) || monitors.value[0];
+  if (fallback) return fallback;
+  throw new Error("Current monitor not found");
 });
 
 const THRESHOLD = 2;

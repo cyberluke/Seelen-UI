@@ -267,14 +267,21 @@ shortcuts:
     kasutajaliidese klienti
   labels:
     create_new_workspace: Looge uus tööruum
+    create_new_workspace_row: Looge uus tööruumi rida
     destroy_current_workspace: Hävitada praegune tööruum
     misc_force_quit: Sund lõpetama
     misc_force_restart: Taaskäivituse sundimine
     move_to_workspace: Liikuge tööruumi {{0}} saidile
     pause_toggle: Peata/jätka otseteed
+    send_to_next_workspace: Saada aken järgmisele tööalale
+    send_to_previous_workspace: Saada aken eelmisele tööalale
     send_to_workspace: Saada tööruumi {{0}}
+    send_to_workspace_down: Saada aken allolevasse tööruumi
+    send_to_workspace_up: Saada aken ülalolevasse tööruumi
     switch_to_next_workspace: Lülitage järgmisele tööalale
     switch_to_previous_workspace: Lülitage eelmisele tööalale
+    switch_to_workspace_down: Lülituge allolevale tööruumile
+    switch_to_workspace_up: Lülituge ülalolevale tööruumile
     switch_workspace: Lülitage tööruumi {{0}}
   readonly_tooltip: See on kirjutuskaitstud otsetee
   reset: Lähtestage vaikeseadetele
@@ -301,8 +308,8 @@ toolbar:
   placeholder: {}
 update:
   available: Värskendage saadaval!
-  channel: Värskenduskanal
   downloading: Allalaadimine ...
+  channel: Värskenduskanal
 wall:
   blur: Blur
   cancel: Tühista
@@ -366,6 +373,13 @@ wall:
 weg:
   auto_hide: Automaatne peida
   auto_hide_touch_disabled: Automaatne peitmine pole puuteekraaniga seadmetes saadaval
+  automation:
+    enabled: Luba juhttasandid
+    flight_recorder: Lennusalvesti
+    label: Automatiseerimine (MCP / REST / CLI)
+    mcp_enabled: MCP server
+    rest_enabled: REST adapter
+    rest_port: REST port (0 = automaatne)
   delay_to_hide: Viivitage peitmine
   delay_to_show: Näitamisega viivitus
   dock_side: Positsioon
@@ -375,6 +389,12 @@ weg:
     always: Alati
     never: Mitte kunagi
     on_overlap: Kattumises
+  import_error: Tegumiriba üksuste importimine ebaõnnestus
+  import_from_taskbar:
+    button: Importige Windowsi tegumiribalt
+    label: Kinnitatud üksuste importimine
+  import_no_items: Windowsi tegumiribal ei leitud kinnitatud üksusi
+  import_success: Windowsi tegumiribalt imporditi edukalt {{count}} üksust
   items:
     gap: Esemete vaheline ruum
     label: Esemed
@@ -400,6 +420,56 @@ weg:
     full_width: Täisekraani laius
     min_content: Nii väike kui olla saab
   padding: Polsterdamine
+  preview:
+    animated: Animeeritud
+    animation_duration: Animatsiooni kestus (ms)
+    app_aware_titles: Rakendust tundvad pealkirjad
+    aspect_fixed: Parandatud
+    aspect_mode: Kuvasuhte režiim
+    aspect_ratio: Fikseeritud suhe (lugeja)
+    aspect_source: Allika aken
+    auto_grid: Automaatne ruudustik
+    cache_enabled: Vahemälu eelvaade
+    card_height: Kaardi kõrgus (px, 0 = automaatne)
+    card_width: Kaardi laius (px)
+    columns: Veerud
+    compact_titles: Kompaktsed pealkirjad
+    gap: Kaartide vahe (px)
+    grace_region: Osuti ajapikenduspiirkond (piksel)
+    grouped_click_label: Rühmitatud ikooniklõps
+    grouped_click_last_used: Aktiveeri viimati kasutatud
+    grouped_click_minimize_restore: Grupi minimeerimine/taastamine
+    grouped_click_preview: Ava eelvaade
+    hover_close_delay: Kursoriga sulgemise viivitus (ms)
+    hover_open_delay: Kursoriga avamise viivitus (ms)
+    keep_open: Hoia läbisõidul avatuna
+    label: Akna eelvaade
+    max_columns: Maksimaalne veergude arv
+    max_height: Hüpikakna maksimaalne kõrgus (px)
+    max_rows: Max ridu enne kerimist
+    max_width: Hüpikakna maksimaalne laius (px)
+    min_columns: Minimaalsed veerud
+    nearest_first: Lähim-esimene projektsioon
+    ordering: Tellimine
+    ordering_alphabetical: Tähestikuline
+    ordering_application_defined: Rakendus määratletud
+    ordering_hybrid: Hübriid (kõigepealt käsitsi)
+    ordering_manual: Käsiraamat
+    ordering_mru: MRU
+    ordering_stable: Stabiilne
+    padding: Hüpikakna täidis (px)
+    prepared_entries: Mälu eelarve (KiB)
+    prewarm: Eelsoe vaade
+    radius: Äärise raadius (px)
+    stale_while_refresh: Aeg-kui-värskenda
+    titles: Pealkirjad
+    titles_hidden: Peidetud
+    titles_one_line: Üks rida
+    titles_two_lines: Kaks rida
+    trigger: Eelvaate päästik
+    trigger_click: Klõpsake
+    trigger_hover: Hõljutage kursorit
+    trigger_hover_and_click: Hõljutage kursorit + klõpsake
   show_end_task: Ülesande lõpuülesande kuvamine tegumiribal
   width: Laius
 welcome:
@@ -438,6 +508,10 @@ wm:
   drag_behavior_options:
     sort: Sorteeri (akende järjestamine lohistamise ajal ümber)
     swap: Vaheta (vahetage aknad lohistamise lõpus)
+  floating:
+    height: Ujuv akna kõrgus
+    title: Ujuv Windowsi suurus
+    width: Ujuv akende laius
   layout: Paigutus
   resize_delta: Suuruse muutmine delta (%)
   space_between_containers: Konteinerite vaheline ruum

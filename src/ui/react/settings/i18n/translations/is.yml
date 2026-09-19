@@ -266,14 +266,21 @@ shortcuts:
     viðskiptavininum
   labels:
     create_new_workspace: Búðu til nýja vinnusvæði
+    create_new_workspace_row: Búðu til nýja vinnusvæðislínu
     destroy_current_workspace: Eyðileggja núverandi vinnusvæði
     misc_force_quit: Force hætti
     misc_force_restart: Force endurræsing
     move_to_workspace: Fara í vinnusvæði {{0}}
     pause_toggle: Gera hlé / halda áfram flýtileiðum
+    send_to_next_workspace: Senda glugga á næsta vinnusvæði
+    send_to_previous_workspace: Senda glugga á fyrra vinnusvæði
     send_to_workspace: Sendu á Workspace {{0}}
+    send_to_workspace_down: Sendu glugga á vinnusvæði fyrir neðan
+    send_to_workspace_up: Sendu glugga á vinnusvæði fyrir ofan
     switch_to_next_workspace: Skiptu yfir í næsta vinnusvæði
     switch_to_previous_workspace: Skiptu yfir í fyrri vinnusvæði
+    switch_to_workspace_down: Skiptu yfir í vinnusvæði fyrir neðan
+    switch_to_workspace_up: Skiptu yfir í vinnusvæði hér að ofan
     switch_workspace: Skiptu yfir í vinnusvæði {{0}}
   readonly_tooltip: Þetta er aðeins skrifvarinn
   reset: Endurstilla í vanskil
@@ -300,8 +307,8 @@ toolbar:
   placeholder: {}
 update:
   available: Uppfærsla í boði!
-  channel: Uppfæra rás
   downloading: Niðurhal ...
+  channel: Uppfæra rás
 wall:
   blur: Þoka
   cancel: Hætta við
@@ -363,6 +370,13 @@ wall:
 weg:
   auto_hide: Sjálfvirk fela
   auto_hide_touch_disabled: Sjálfvirk fela er ekki í boði á snertiskjátækjum
+  automation:
+    enabled: Virkja stjórnflugvélar
+    flight_recorder: Flugritari
+    label: Sjálfvirkni (MCP / REST / CLI)
+    mcp_enabled: MCP miðlara
+    rest_enabled: REST millistykki
+    rest_port: REST tengi (0 = sjálfvirkt)
   delay_to_hide: Seinkun á að fela
   delay_to_show: Seinkun á sýningu
   dock_side: Staða
@@ -372,6 +386,12 @@ weg:
     always: Alltaf
     never: Aldrei
     on_overlap: Á skörun
+  import_error: Mistókst að flytja inn verkstikuatriði
+  import_from_taskbar:
+    button: Flytja inn frá Windows Verkefnastikunni
+    label: Flytja inn festa hluti
+  import_no_items: Engir festir hlutir fundust í Windows verkefnastikunni
+  import_success: Tókst að flytja inn {{count}} atriði frá Windows verkefnastikunni
   items:
     gap: Rými milli atriða
     label: Hlutir
@@ -397,6 +417,56 @@ weg:
     full_width: Full skjábreidd
     min_content: Lítið eins og hægt er
   padding: Padding
+  preview:
+    animated: Hreyfimyndir
+    animation_duration: Lengd hreyfimynda (ms)
+    app_aware_titles: Forritsvitaðir titlar
+    aspect_fixed: Lagað
+    aspect_mode: Hlutfallsstilling
+    aspect_ratio: Fast hlutfall (teljari)
+    aspect_source: Heimildagluggi
+    auto_grid: Sjálfvirkt rist
+    cache_enabled: Forskoða skyndiminni
+    card_height: Hæð korts (px, 0 = sjálfvirkt)
+    card_width: Kortabreidd (px)
+    columns: Dálkar
+    compact_titles: Samræmdir titlar
+    gap: Bil á milli korta (px)
+    grace_region: Bendir náðarsvæði (px)
+    grouped_click_label: Smelltu á hóptákn
+    grouped_click_last_used: Virkjaðu síðast notað
+    grouped_click_minimize_restore: Lágmarka/endurheimta hóp
+    grouped_click_preview: Opna forskoðun
+    hover_close_delay: Lokunartöf (ms)
+    hover_open_delay: Opnunartöf á sveimi (ms)
+    keep_open: Haldið opnu þegar farið er yfir
+    label: Forskoðun glugga
+    max_columns: Hámarksdálkar
+    max_height: Hámarkshæð sprettiglugga (px)
+    max_rows: Hámarksraðir fyrir flettu
+    max_width: Hámarksbreidd sprettiglugga (px)
+    min_columns: Min dálkar
+    nearest_first: Næst-fyrsta vörpun
+    ordering: Pöntun
+    ordering_alphabetical: Stafrófsröð
+    ordering_application_defined: Forrit skilgreint
+    ordering_hybrid: Hybrid (handvirkt fyrst)
+    ordering_manual: Handbók
+    ordering_mru: MRU
+    ordering_stable: Stöðugt
+    padding: Sprettigluggafylling (px)
+    prepared_entries: Minni fjárhagsáætlun (KiB)
+    prewarm: Forhitt útsýni
+    radius: Kantarradíus (px)
+    stale_while_refresh: Gamaldags-meðan-hressa
+    titles: Titlar
+    titles_hidden: Falinn
+    titles_one_line: Ein lína
+    titles_two_lines: Tvær línur
+    trigger: Forskoðun kveikja
+    trigger_click: Smelltu
+    trigger_hover: Sveima
+    trigger_hover_and_click: Sveima + smella
   show_end_task: Sýna lokverkefni í verkstikunni
   width: Breidd
 welcome:
@@ -435,6 +505,10 @@ wm:
   drag_behavior_options:
     sort: Raða (endurraða gluggum á meðan þú dregur)
     swap: Skipta (skipta um glugga á dragenda)
+  floating:
+    height: Fljótandi gluggahæð
+    title: Fljótandi Windows Stærð
+    width: Fljótandi Windows Breidd
   layout: Skipulag
   resize_delta: Breyta stærð delta (%)
   space_between_containers: Rými milli gáma

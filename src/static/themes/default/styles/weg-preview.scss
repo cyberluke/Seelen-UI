@@ -1,76 +1,75 @@
-$itemSize: 256px;
-$itemListSpacing: 10px;
+// Structural rules only; every tunable dimension comes from the settings-driven
+// inline styles emitted by the preview app (see src/ui/svelte/weg-preview).
 
 .weg-item-preview-container {
   width: max-content;
-  padding: $itemListSpacing;
   background-color: oklch(from var(--slu-std-bg-color) l c h / 0.8);
+}
 
-  .weg-item-preview-list {
-    display: flex;
-    overflow: auto;
-    flex-wrap: wrap;
+.weg-item-preview {
+  width: 100%;
+  padding: var(--spacing-xs);
 
-    gap: $itemListSpacing;
-    max-width: $itemSize * 4 + $itemListSpacing * 3;
+  background-color: var(--slu-std-bg-light-color);
+  box-shadow: var(--shadow-s);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+
+  &:hover {
+    filter: brightness(0.95);
+    backdrop-filter: brightness(0.95);
   }
 
-  .weg-item-preview {
-    width: $itemSize;
-    padding: var(--spacing-xs);
-
-    border-radius: 10px;
-    background-color: var(--slu-std-bg-light-color);
-    box-shadow: var(--shadow-s);
-
+  .weg-item-preview-topbar {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-xs);
+    padding-left: var(--spacing-2xs);
 
-    &:hover {
-      filter: brightness(0.95);
-      backdrop-filter: brightness(0.95);
-    }
-
-    .weg-item-preview-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--spacing-xs);
-      padding-left: var(--spacing-2xs);
-
-      .weg-item-preview-title {
-        flex: 1;
-        overflow: hidden;
-        text-wrap: nowrap;
-        text-overflow: ellipsis;
-
-        font-weight: 600;
-      }
-    }
-
-    .weg-item-preview-image-container {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      border-radius: 10px;
+    .weg-item-preview-title {
+      flex: 1;
       overflow: hidden;
-      border: 1px solid var(--color-gray-300);
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
-      .weg-item-preview-image {
-        max-height: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: top;
-      }
-
-      .weg-item-no-preview {
-        width: 30px;
-      }
+      font-weight: 600;
     }
   }
+
+  &[data-title-lines="TwoLines"] .weg-item-preview-title {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .weg-item-preview-image-container {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+    border: 1px solid var(--color-gray-300);
+
+    .weg-item-preview-image {
+      max-height: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .weg-item-no-preview {
+      width: 30px;
+    }
+  }
+}
+
+.weg-overlay {
+  opacity: 0.8;
 }

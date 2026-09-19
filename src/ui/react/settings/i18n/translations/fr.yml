@@ -274,14 +274,21 @@ shortcuts:
     du client de l'interface utilisateur Seelen
   labels:
     create_new_workspace: Créer un nouvel espace de travail
+    create_new_workspace_row: Créer une nouvelle ligne d'espace de travail
     destroy_current_workspace: Détruire l'espace de travail actuel
     misc_force_quit: Force quitter
     misc_force_restart: Forcer le redémarrage
     move_to_workspace: Déplacer dans l'espace de travail {{0}}
     pause_toggle: Raccourcis Pause/Reprise
+    send_to_next_workspace: Envoyer la fenêtre à l'espace de travail suivant
+    send_to_previous_workspace: Envoyer la fenêtre vers l'espace de travail précédent
     send_to_workspace: Envoyer à Workspace {{0}}
+    send_to_workspace_down: Envoyer la fenêtre vers l'espace de travail ci-dessous
+    send_to_workspace_up: Envoyer la fenêtre vers l'espace de travail ci-dessus
     switch_to_next_workspace: Passez à l'espace de travail suivant
     switch_to_previous_workspace: Passez à l'espace de travail précédent
+    switch_to_workspace_down: Passer à l'espace de travail ci-dessous
+    switch_to_workspace_up: Passer à l'espace de travail ci-dessus
     switch_workspace: Passez à Workspace {{0}}
   readonly_tooltip: Ceci est un raccourci en lecture seule
   reset: Réinitialiser les valeurs par défaut
@@ -310,8 +317,8 @@ toolbar:
   placeholder: {}
 update:
   available: Mise à jour disponible !
-  channel: Canal de mise à jour
   downloading: Téléchargement...
+  channel: Canal de mise à jour
 wall:
   blur: Flou
   cancel: Annuler
@@ -379,6 +386,13 @@ weg:
   auto_hide_touch_disabled: >-
     Le masquage automatique n'est pas disponible sur les appareils à écran
     tactile
+  automation:
+    enabled: Activer les plans de contrôle
+    flight_recorder: Enregistreur de vol
+    label: Automatisation (MCP/REST/CLI)
+    mcp_enabled: Serveur MCP
+    rest_enabled: Adaptateur REPOS
+    rest_port: Port REST (0 = automatique)
   delay_to_hide: Délai avant masquage
   delay_to_show: Délai avant affichage
   dock_side: Position
@@ -388,6 +402,14 @@ weg:
     always: Toujours
     never: Jamais
     on_overlap: Si chevauchement
+  import_error: Échec de l'importation des éléments de la barre des tâches
+  import_from_taskbar:
+    button: Importer depuis la barre des tâches Windows
+    label: Importer des éléments épinglés
+  import_no_items: Aucun élément épinglé trouvé dans la barre des tâches Windows
+  import_success: >-
+    {{count}} élément(s) importé(s) avec succès depuis la barre des tâches
+    Windows
   items:
     gap: Espace entre les éléments
     label: Applications
@@ -413,6 +435,56 @@ weg:
     full_width: Pleine largeur
     min_content: Aussi petit que possible
   padding: Hauteur
+  preview:
+    animated: Animée
+    animation_duration: Durée de l'animation (ms)
+    app_aware_titles: Titres adaptés aux applications
+    aspect_fixed: Fixée
+    aspect_mode: Mode rapport hauteur/largeur
+    aspect_ratio: Ratio fixe (numérateur)
+    aspect_source: Fenêtre source
+    auto_grid: Grille automatique
+    cache_enabled: Aperçu du cache
+    card_height: Hauteur de la carte (px, 0 = auto)
+    card_width: Largeur de la carte (px)
+    columns: Colonnes
+    compact_titles: Titres compacts
+    gap: Espace entre les cartes (px)
+    grace_region: Région de grâce du pointeur (px)
+    grouped_click_label: Clic sur une icône groupée
+    grouped_click_last_used: Activer la dernière utilisation
+    grouped_click_minimize_restore: Réduire/Restaurer le groupe
+    grouped_click_preview: Ouvrir l'aperçu
+    hover_close_delay: Délai de fermeture en survol (ms)
+    hover_open_delay: Délai d'ouverture en survol (ms)
+    keep_open: Rester ouvert lors de la traversée
+    label: Aperçu de la fenêtre
+    max_columns: Nombre maximum de colonnes
+    max_height: Hauteur maximale des fenêtres contextuelles (px)
+    max_rows: Nombre maximum de lignes avant le défilement
+    max_width: Largeur maximale des fenêtres contextuelles (px)
+    min_columns: Nombre minimum de colonnes
+    nearest_first: Projection la plus proche en premier
+    ordering: Commande
+    ordering_alphabetical: Alphabétique
+    ordering_application_defined: Application définie
+    ordering_hybrid: Hybride (manuel d'abord)
+    ordering_manual: Manuel
+    ordering_mru: MRU
+    ordering_stable: Écurie
+    padding: Remplissage contextuel (px)
+    prepared_entries: Budget mémoire (Kio)
+    prewarm: Vue de préchauffage
+    radius: Rayon de bordure (px)
+    stale_while_refresh: obsolète pendant l'actualisation
+    titles: Titres
+    titles_hidden: Cachée
+    titles_one_line: Une ligne
+    titles_two_lines: Deux lignes
+    trigger: Déclencheur de prévisualisation
+    trigger_click: Cliquez
+    trigger_hover: Flotter
+    trigger_hover_and_click: Survol + clic
   show_end_task: Afficher la tâche finale dans la barre des tâches
   width: Largeur
 welcome:
@@ -451,6 +523,10 @@ wm:
   drag_behavior_options:
     sort: Trier (réorganiser les fenêtres en les faisant glisser)
     swap: Swap (échanger les fenêtres à la fin du glissement)
+  floating:
+    height: Hauteur des fenêtres flottantes
+    title: Taille des fenêtres flottantes
+    width: Largeur des fenêtres flottantes
   layout: Disposition
   resize_delta: Delta de redimensionnement (%)
   space_between_containers: Espacement entre les conteneurs

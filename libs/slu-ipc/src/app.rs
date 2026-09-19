@@ -11,7 +11,7 @@ use crate::{
         IPC, create_security_descriptor, read_from_ipc_stream, send_to_ipc_stream,
         send_to_ipc_stream_blocking, write_to_ipc_stream,
     },
-    error::Result,
+    error::{Error, Result},
     messages::{AppMessage, IpcResponse},
 };
 
@@ -96,6 +96,16 @@ impl AppIpc {
         send_to_ipc_stream(&stream, &message.to_bytes()?)
             .await?
             .ok()
+    }
+
+    /// Sends a message and returns the data payload of the response, when present.
+    pub async fn send_for_payload(message: AppMessage) -> Result<Option<String>> {
+        let stream = AsyncDuplexPipeStream::connect_by_path(Self::path()).await?;
+        match send_to_ipc_stream(&stream, &message.to_bytes()?).await? {
+            IpcResponse::Success => Ok(None),
+            IpcResponse::Data(data) => Ok(Some(data)),
+            IpcResponse::Err(err) => Err(Error::IpcResponse(err)),
+        }
     }
 
     /// Sends a message to the current session synchronously

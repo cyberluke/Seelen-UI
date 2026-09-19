@@ -1,12 +1,13 @@
-import { FancyToolbarSide, HideMode } from "@seelen-ui/lib/types";
+import { FancyToolbarSide, HideMode, TrayOfflineMode, TrayPinnedPosition } from "@seelen-ui/lib/types";
 import { Icon } from "libs/ui/react/components/Icon/index.tsx";
 import { $is_touch_primary } from "libs/ui/react/utils/signals";
-import { Button, InputNumber, Select, Tooltip } from "antd";
+import { Button, InputNumber, Select, Switch, Tooltip } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { OptionsFromEnum } from "../../../shared/utils/app.ts";
 import {
   getToolbarConfig,
+  getTrayConfig,
   setToolbarDelayToHide,
   setToolbarDelayToShow,
   setToolbarHideMode,
@@ -14,6 +15,13 @@ import {
   setToolbarMargin,
   setToolbarPadding,
   setToolbarPosition,
+  setTrayDragReorder,
+  setTrayIconSize,
+  setTrayIconSpacing,
+  setTrayOfflineMode,
+  setTrayOverflowArrow,
+  setTrayPinnedPosition,
+  setTrayShowTooltips,
 } from "./application.ts";
 
 import { SettingsGroup, SettingsOption, SettingsSubGroup } from "../../../../components/SettingsBox/index.tsx";
@@ -126,6 +134,96 @@ export function FancyToolbarSettings() {
           </SettingsOption>
         </SettingsSubGroup>
       </SettingsGroup>
+
+      <TraySettingsSection />
     </>
+  );
+}
+
+function TraySettingsSection() {
+  const { t } = useTranslation();
+  const tray = getTrayConfig();
+
+  return (
+    <SettingsGroup>
+      <SettingsSubGroup label={t("system_tray.label")}>
+        <SettingsOption
+          label={t("system_tray.pinned_position")}
+          action={
+            <Select
+              style={{ width: "160px" }}
+              value={tray.pinnedPosition}
+              options={[
+                {
+                  value: TrayPinnedPosition.BeforeOverflow,
+                  label: t("system_tray.pinned_position.before"),
+                },
+                {
+                  value: TrayPinnedPosition.AfterOverflow,
+                  label: t("system_tray.pinned_position.after"),
+                },
+              ]}
+              onChange={(value) => setTrayPinnedPosition(value as TrayPinnedPosition)}
+            />
+          }
+        />
+        <SettingsOption
+          label={t("system_tray.offline_pinned")}
+          action={
+            <Select
+              style={{ width: "160px" }}
+              value={tray.offlinePinned}
+              options={[
+                {
+                  value: TrayOfflineMode.Hide,
+                  label: t("system_tray.offline_pinned.hide"),
+                },
+                {
+                  value: TrayOfflineMode.Disabled,
+                  label: t("system_tray.offline_pinned.disabled"),
+                },
+              ]}
+              onChange={(value) => setTrayOfflineMode(value as TrayOfflineMode)}
+            />
+          }
+        />
+        <SettingsOption
+          label={t("system_tray.icon_spacing")}
+          action={
+            <InputNumber
+              value={tray.iconSpacing ?? undefined}
+              min={0}
+              max={40}
+              placeholder="-"
+              onChange={(value) => setTrayIconSpacing(value)}
+            />
+          }
+        />
+        <SettingsOption
+          label={t("system_tray.icon_size")}
+          action={
+            <InputNumber
+              value={tray.iconSize ?? undefined}
+              min={0}
+              max={100}
+              placeholder="-"
+              onChange={(value) => setTrayIconSize(value)}
+            />
+          }
+        />
+        <SettingsOption
+          label={t("system_tray.show_tooltips")}
+          action={<Switch checked={tray.showTooltips} onChange={setTrayShowTooltips} />}
+        />
+        <SettingsOption
+          label={t("system_tray.drag_reorder")}
+          action={<Switch checked={tray.dragReorderEnabled} onChange={setTrayDragReorder} />}
+        />
+        <SettingsOption
+          label={t("system_tray.overflow_arrow")}
+          action={<Switch checked={tray.overflowArrowEnabled} onChange={setTrayOverflowArrow} />}
+        />
+      </SettingsSubGroup>
+    </SettingsGroup>
   );
 }

@@ -11,6 +11,11 @@
     padding: var(--spacing-xs);
 
     .system-tray-item-icon-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1rem;
+
       .system-tray-item-icon {
         width: 1rem;
         height: 1rem;
@@ -23,10 +28,33 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      min-width: 0;
 
       text-align: left;
       font-weight: 600;
       font-size: 0.8rem;
     }
+  }
+
+  .system-tray-pin {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    opacity: 0.55;
+    transition: opacity 120ms ease;
+
+    .system-tray-pin-icon {
+      width: 0.85rem;
+      height: 0.85rem;
+    }
+  }
+
+  .system-tray-pin[data-state="pinned"] {
+    opacity: 1;
+  }
+
+  .system-tray-item:hover .system-tray-pin {
+    opacity: 1;
   }
 }

@@ -253,14 +253,21 @@ shortcuts:
   enable_tooltip: የእራስዎን አቋራጮችን ስርዓት የሚተገበሩበትን የእራስዎን አቋራጮዎች ስርዓት የሚተገበሩ ከሆነ ያሰናክሉ
   labels:
     create_new_workspace: አዲስ የስራ ቦታ ይፍጠሩ
+    create_new_workspace_row: አዲስ የስራ ቦታ ረድፍ ፍጠር
     destroy_current_workspace: የአሁኑን የስራ ቦታ አጥፋ
     misc_force_quit: ኃይል አቁሟል
     misc_force_restart: አስገባ
     move_to_workspace: ወደ የሥራ ቦታ ይሂዱ {{0}}}
     pause_toggle: አቋራጮችን ለአፍታ አቁም/ከቆመበት ቀጥል
+    send_to_next_workspace: መስኮት ወደ ቀጣዩ የስራ ቦታ ላክ
+    send_to_previous_workspace: መስኮት ወደ ቀዳሚው የስራ ቦታ ላክ
     send_to_workspace: ወደ የሥራ ቦታ {{0}}}}
+    send_to_workspace_down: መስኮት ከታች ወደ የስራ ቦታ ይላኩ።
+    send_to_workspace_up: መስኮት ከላይ ወደ የስራ ቦታ ላክ
     switch_to_next_workspace: ወደ ቀጣዩ የስራ ቦታ ይቀይሩ
     switch_to_previous_workspace: ወደ ቀዳሚው የስራ ቦታ ይቀይሩ
+    switch_to_workspace_down: ከታች ወደ የስራ ቦታ ቀይር
+    switch_to_workspace_up: ከላይ ወደ የስራ ቦታ ቀይር
     switch_workspace: ወደ የሥራ ቦታ ቀይር {{0}}}
   readonly_tooltip: ይህ የተነበበ ብቻ አቋራጭ ነው
   reset: ወደ ነባሪዎች ዳግም ያስጀምሩ
@@ -287,8 +294,8 @@ toolbar:
   placeholder: {}
 update:
   available: ዝመና ይገኛል!
-  channel: ጣቢያውን አዘምን
   downloading: ማውረድ ...
+  channel: ጣቢያውን አዘምን
 wall:
   blur: ብዥታ
   cancel: ሰርዝ
@@ -350,6 +357,13 @@ wall:
 weg:
   auto_hide: ራስ-ሰር መደበቅ
   auto_hide_touch_disabled: ራስ-ደብቅ በንክኪ ስክሪን መሳሪያዎች ላይ አይገኝም
+  automation:
+    enabled: የመቆጣጠሪያ አውሮፕላኖችን አንቃ
+    flight_recorder: የበረራ መቅጃ
+    label: አውቶሜሽን (MCP / REST / CLI)
+    mcp_enabled: የኤምሲፒ አገልጋይ
+    rest_enabled: REST አስማሚ
+    rest_port: REST ወደብ (0 = ራስ)
   delay_to_hide: ለመደበቅ መዘግየት
   delay_to_show: ለማሳየት መዘግየት
   dock_side: አቀማመጥ
@@ -359,6 +373,12 @@ weg:
     always: ሁሌም
     never: በጭራሽ
     on_overlap: መደራረብ ላይ
+  import_error: የተግባር አሞሌ ንጥሎችን ማስመጣት አልተሳካም።
+  import_from_taskbar:
+    button: ከዊንዶውስ የተግባር አሞሌ አስመጣ
+    label: የታሰሩ ዕቃዎችን አስመጣ
+  import_no_items: በዊንዶውስ የተግባር አሞሌ ውስጥ ምንም የተሰካ እቃዎች አልተገኙም።
+  import_success: በተሳካ ሁኔታ ከዊንዶውስ የተግባር አሞሌ {{count}} ንጥል ነገር አስመጣ
   items:
     gap: በእቃዎች መካከል ቦታ
     label: ዕቃዎች
@@ -384,6 +404,56 @@ weg:
     full_width: የሙሉ ማያ ገጽ ስፋት
     min_content: በተቻለ መጠን ትንሽ
   padding: ፓድ
+  preview:
+    animated: የታነመ
+    animation_duration: የአኒሜሽን ቆይታ (ሚሴ)
+    app_aware_titles: መተግበሪያን የሚያውቁ ርዕሶች
+    aspect_fixed: ቋሚ
+    aspect_mode: ምጥጥነ ገጽታ ሁነታ
+    aspect_ratio: ቋሚ ሬሾ (ቁጥር)
+    aspect_source: ምንጭ መስኮት
+    auto_grid: ራስ-ሰር ፍርግርግ
+    cache_enabled: መሸጎጫ ቅድመ ዕይታ
+    card_height: የካርድ ቁመት (px፣ 0 = auto)
+    card_width: የካርድ ስፋት (ፒክሰል)
+    columns: አምዶች
+    compact_titles: የታመቁ ርዕሶች
+    gap: በካርዶች መካከል ያለው ክፍተት (px)
+    grace_region: የጠቋሚ ጸጋ ክልል (px)
+    grouped_click_label: የቡድን አዶ ጠቅ ያድርጉ
+    grouped_click_last_used: ለመጨረሻ ጊዜ ጥቅም ላይ የዋለውን ያግብሩ
+    grouped_click_minimize_restore: ቡድንን አሳንስ/ ወደነበረበት መመለስ
+    grouped_click_preview: ቅድመ እይታን ክፈት
+    hover_close_delay: ያንዣብቡ ቅርብ መዘግየት (ሚሴ)
+    hover_open_delay: አንዣብብ ክፍት መዘግየት (ሚሴ)
+    keep_open: በጉዞ ላይ ክፍት ይሁኑ
+    label: የመስኮት ቅድመ እይታ
+    max_columns: ከፍተኛው አምዶች
+    max_height: ከፍተኛ ብቅ ባይ ቁመት (ፒክሰል)
+    max_rows: ከማሸብለል በፊት ከፍተኛው ረድፎች
+    max_width: ከፍተኛው ብቅ ባይ ስፋት (ፒክሰል)
+    min_columns: አነስተኛ ዓምዶች
+    nearest_first: የቅርብ-የመጀመሪያ ትንበያ
+    ordering: በማዘዝ ላይ
+    ordering_alphabetical: ፊደል
+    ordering_application_defined: መተግበሪያ ተገልጿል
+    ordering_hybrid: ድብልቅ (በመጀመሪያ በእጅ)
+    ordering_manual: መመሪያ
+    ordering_mru: MRU
+    ordering_stable: የተረጋጋ
+    padding: ብቅ ባይ (px)
+    prepared_entries: የማህደረ ትውስታ በጀት (ኪቢ)
+    prewarm: ቅድመ-ሙቅ እይታ
+    radius: የድንበር ራዲየስ (px)
+    stale_while_refresh: የቆየ-እየታደሰ
+    titles: ርዕሶች
+    titles_hidden: ተደብቋል
+    titles_one_line: አንድ መስመር
+    titles_two_lines: ሁለት መስመሮች
+    trigger: ቀስቅሴን አስቀድመው ይመልከቱ
+    trigger_click: ጠቅ ያድርጉ
+    trigger_hover: አንዣብብ
+    trigger_hover_and_click: አንዣብብ + ጠቅ ያድርጉ
   show_end_task: በተግባር አሞሌ ውስጥ የመጨረሻውን ተግባር ያሳዩ
   width: ስፋት
 welcome:
@@ -421,6 +491,10 @@ wm:
   drag_behavior_options:
     sort: ደርድር (በመጎተት ላይ መስኮቶችን እንደገና ይዘዙ)
     swap: ስዋፕ (በመጎተት መጨረሻ ላይ መስኮቶችን ይቀያይሩ)
+  floating:
+    height: ተንሳፋፊ የዊንዶውስ ከፍታ
+    title: ተንሳፋፊ የዊንዶውስ መጠን
+    width: ተንሳፋፊ የዊንዶውስ ስፋት
   layout: አቀማመጥ
   resize_delta: ዴልታ (%)
   space_between_containers: በእቃ መጫዎቻዎች መካከል ያለው ቦታ

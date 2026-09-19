@@ -273,14 +273,21 @@ shortcuts:
     -asiakkaan avulla
   labels:
     create_new_workspace: Luo uusi työtila
+    create_new_workspace_row: Luo uusi työtilarivi
     destroy_current_workspace: Tuhoa nykyinen työtila
     misc_force_quit: Pakottaa
     misc_force_restart: Pakota uudelleenkäynnistys
     move_to_workspace: Siirry työtilaan {{0}}
     pause_toggle: Keskeytä/Jatka pikanäppäimet
+    send_to_next_workspace: Lähetä ikkuna seuraavaan työtilaan
+    send_to_previous_workspace: Lähetä ikkuna edelliseen työtilaan
     send_to_workspace: Lähetä työtilaan {{0}}
+    send_to_workspace_down: Lähetä ikkuna alla olevaan työtilaan
+    send_to_workspace_up: Lähetä ikkuna yllä olevaan työtilaan
     switch_to_next_workspace: Vaihda seuraavaan työtilaan
     switch_to_previous_workspace: Vaihda edelliseen työtilaan
+    switch_to_workspace_down: Vaihda alla olevaan työtilaan
+    switch_to_workspace_up: Vaihda työtilaan yläpuolella
     switch_workspace: Vaihda työtilaan {{0}}
   readonly_tooltip: Tämä on vain luku-pikakuvake
   reset: Palauta laiminlyöntiin
@@ -307,8 +314,8 @@ toolbar:
   placeholder: {}
 update:
   available: Päivitä saatavilla!
-  channel: Päivityskanava
   downloading: Lataaminen ...
+  channel: Päivityskanava
 wall:
   blur: Sumeus
   cancel: Peruuttaa
@@ -370,6 +377,13 @@ wall:
 weg:
   auto_hide: Automaattinen piilo
   auto_hide_touch_disabled: Automaattinen piilotus ei ole käytettävissä kosketusnäytöllisissä laitteissa
+  automation:
+    enabled: Ota ohjaustasot käyttöön
+    flight_recorder: Lennon tallennin
+    label: Automaatio (MCP / REST / CLI)
+    mcp_enabled: MCP-palvelin
+    rest_enabled: REST adapteri
+    rest_port: REST-portti (0 = automaattinen)
   delay_to_hide: Viive piilottaa
   delay_to_show: Viive näyttöön
   dock_side: Sijainti
@@ -379,6 +393,12 @@ weg:
     always: Aina
     never: Ei koskaan
     on_overlap: Päällekkäin
+  import_error: Tehtäväpalkin kohteiden tuonti epäonnistui
+  import_from_taskbar:
+    button: Tuo Windowsin tehtäväpalkista
+    label: Tuo kiinnitetyt kohteet
+  import_no_items: Windowsin tehtäväpalkista ei löytynyt kiinnitettyjä kohteita
+  import_success: '{{count}} kohde(tta) tuotiin onnistuneesti Windowsin tehtäväpalkista'
   items:
     gap: Tilaa esineiden välillä
     label: Kohteet
@@ -404,6 +424,56 @@ weg:
     full_width: Koko näytön leveys
     min_content: Niin pieni kuin voi olla
   padding: Pehmuste
+  preview:
+    animated: Animoitu
+    animation_duration: Animaation kesto (ms)
+    app_aware_titles: Sovellustietoiset otsikot
+    aspect_fixed: Korjattu
+    aspect_mode: Kuvasuhdetila
+    aspect_ratio: Kiinteä suhde (osoittaja)
+    aspect_source: Lähdeikkuna
+    auto_grid: Automaattinen ruudukko
+    cache_enabled: Esikatsele välimuisti
+    card_height: Kortin korkeus (px, 0 = automaattinen)
+    card_width: Kortin leveys (px)
+    columns: Sarakkeet
+    compact_titles: Kompaktit otsikot
+    gap: Korttien välinen rako (px)
+    grace_region: Osoittimen lisäysalue (px)
+    grouped_click_label: Ryhmitetty kuvakkeen napsautus
+    grouped_click_last_used: Aktivoi viimeksi käytetty
+    grouped_click_minimize_restore: Pienennä/palauta ryhmä
+    grouped_click_preview: Avaa esikatselu
+    hover_close_delay: Kohdistimen sulkemisviive (ms)
+    hover_open_delay: Hover Open -viive (ms)
+    keep_open: Pysy avoimena matkan aikana
+    label: Ikkunan esikatselu
+    max_columns: Enintään sarakkeita
+    max_height: Suurin ponnahdusikkunan korkeus (px)
+    max_rows: Rivien enimmäismäärä ennen vierittämistä
+    max_width: Suurin ponnahdusikkunan leveys (px)
+    min_columns: Min sarakkeet
+    nearest_first: Lähin ensimmäinen projektio
+    ordering: Tilaus
+    ordering_alphabetical: Aakkosellinen
+    ordering_application_defined: Sovellus määritelty
+    ordering_hybrid: Hybridi (manuaalinen ensin)
+    ordering_manual: Manuaalinen
+    ordering_mru: MRU
+    ordering_stable: Vakaa
+    padding: Ponnahdusikkunat (px)
+    prepared_entries: Muistibudjetti (KiB)
+    prewarm: Esilämmin näkymä
+    radius: Reunuksen säde (px)
+    stale_while_refresh: Vanhentunut, kun päivitä
+    titles: Otsikot
+    titles_hidden: Piilotettu
+    titles_one_line: Yksi rivi
+    titles_two_lines: Kaksi riviä
+    trigger: Esikatselutriggeri
+    trigger_click: Napsauta
+    trigger_hover: Vie hiiri
+    trigger_hover_and_click: Vie hiiri + napsauta
   show_end_task: Näyttää lopetetun tehtävän tehtäväpalkissa
   width: Leveys
 welcome:
@@ -442,6 +512,10 @@ wm:
   drag_behavior_options:
     sort: Lajittele (järjestä ikkunat uudelleen vetäessäsi)
     swap: Vaihda (vaihda ikkunoita vetämällä)
+  floating:
+    height: Kelluva ikkunakorkeus
+    title: Kelluva Windowsin koko
+    width: Kelluva ikkunan leveys
   layout: Layout
   resize_delta: Muuttaa Delta (%)
   space_between_containers: Konttien välinen tila

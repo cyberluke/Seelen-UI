@@ -9,7 +9,10 @@ use windows::Win32::UI::WindowsAndMessaging::SW_MINIMIZE;
 
 use crate::{
     error::Result,
-    modules::apps::application::USER_APPS_MANAGER,
+    modules::{
+        apps::application::USER_APPS_MANAGER,
+        weg_core::{application as core, infrastructure},
+    },
     state::application::WEG_ITEMS_MANAGER,
     windows_api::{WindowsApi, window::Window},
 };
@@ -21,7 +24,7 @@ use crate::{
 ///      If no item has that umid, a new item will be created for it.
 ///   2. Window has no umid → matched by exact path (item.relaunch.command or item.path).
 ///
-/// note: on update of this function check src\ui\react\weg\modules\shared\state\windows.ts both should work the same
+/// note: on update of this function check src\ui\svelte\weg\state\windows.svelte.ts
 fn get_windows_for_item<'a>(
     item: &WegItemData,
     interactables: &'a [UserAppWindow],
@@ -52,7 +55,11 @@ fn get_windows_for_item<'a>(
         .collect()
 }
 
-pub fn process(cmd: WegCli) -> Result<()> {
+fn json<T: serde::Serialize>(value: &T) -> Option<String> {
+    serde_json::to_string(value).ok()
+}
+
+pub fn process(cmd: WegCli) -> Result<Option<String>> {
     #[allow(irrefutable_let_patterns)]
     if let WegCommand::ForegroundOrRunApp { index } = cmd.subcommand {
         let weg_items = WEG_ITEMS_MANAGER.get();
@@ -66,11 +73,11 @@ pub fn process(cmd: WegCli) -> Result<()> {
             .collect();
 
         if all_items.len() <= index {
-            return Ok(());
+            return Ok(None);
         }
 
         let WegItem::AppOrFile(inner_data) = all_items[index] else {
-            return Ok(());
+            return Ok(None);
         };
 
         let interactables = USER_APPS_MANAGER.interactable_windows.to_vec();
@@ -104,6 +111,83 @@ pub fn process(cmd: WegCli) -> Result<()> {
                 }
             }
         }
+        return Ok(None);
     }
-    Ok(())
+
+    let payload = match cmd.subcommand {
+        WegCommand::Windows => json(&core::window_entries()),
+        WegCommand::Apps => {
+            use std::collections::HashMap;
+            let mut counts: HashMap<String, usize> = HashMap::new();
+            for e in core::window_entries() {
+                *counts.entry(e.application).or_default() += 1;
+            }
+            let apps: Vec<seelen_core::system_state::ApplicationEntry> = counts
+                .into_iter()
+                .map(
+                    |(key, window_count)| seelen_core::system_state::ApplicationEntry {
+                        key,
+                        window_count,
+                    },
+                )
+                .collect();
+            json(&apps)
+        }
+        WegCommand::Get { identification } => json(&core::get_window(&identification)),
+        WegCommand::Find { query } => json(&core::find_windows(&query)),
+        WegCommand::Focus { identification } => {
+            json(&infrastructure::weg_focus_window(identification)?)
+        }
+        WegCommand::FocusMaximize { identification } => json(
+            &infrastructure::weg_focus_and_maximize_window(identification)?,
+        ),
+        WegCommand::Maximize { identification } => {
+            json(&infrastructure::weg_maximize_window(identification)?)
+        }
+        WegCommand::Restore { identification } => {
+            json(&infrastructure::weg_restore_window(identification)?)
+        }
+        WegCommand::Minimize { identification } => {
+            json(&infrastructure::weg_minimize_window(identification)?)
+        }
+        WegCommand::Close { identification } => json(&core::close_window(&identification, "cli")?),
+        WegCommand::MoveToMonitor {
+            identification,
+            monitor,
+        } => json(&core::move_window_to_monitor(
+            &identification,
+            monitor,
+            "cli",
+        )?),
+        WegCommand::OrderList { app } => json(&core::get_window_order(&app)),
+        WegCommand::OrderMove { app, identity, to } => {
+            let mut order = core::get_window_order(&app);
+            if order.is_empty() {
+                order = core::window_entries()
+                    .into_iter()
+                    .filter(|e| e.application == app)
+                    .map(|e| {
+                        e.logical_identity
+                            .rsplit_once(':')
+                            .map(|(_, l)| l.to_string())
+                            .unwrap_or(e.logical_identity)
+                    })
+                    .collect();
+            }
+            let idx = order
+                .iter()
+                .position(|id| id.eq_ignore_ascii_case(&identity))
+                .ok_or("identity not in order")?;
+            let item = order.remove(idx);
+            let target = to.min(order.len());
+            order.insert(target, item);
+            core::set_window_order(&app, &order);
+            json(&order)
+        }
+        WegCommand::Recent { limit } => json(&core::get_recent_windows(limit.unwrap_or(10))),
+        WegCommand::Metrics => json(&core::automation_metrics()),
+        WegCommand::Trace => json(&core::get_trace()),
+        WegCommand::ForegroundOrRunApp { .. } => None,
+    };
+    Ok(payload)
 }

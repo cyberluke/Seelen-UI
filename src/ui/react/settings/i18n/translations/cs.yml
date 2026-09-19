@@ -271,14 +271,21 @@ shortcuts:
     Seelen UI.
   labels:
     create_new_workspace: Vytvoření nového pracovního prostoru
+    create_new_workspace_row: Vytvořit nový řádek pracovního prostoru
     destroy_current_workspace: Zničit aktuální pracovní prostor
     misc_force_quit: Síla přestat
     misc_force_restart: Vynutit restart
     move_to_workspace: Přesun do pracovního prostoru {{0}}
     pause_toggle: Zkratky pro pozastavení/obnovení
+    send_to_next_workspace: Odeslat okno do dalšího pracovního prostoru
+    send_to_previous_workspace: Odeslat okno do předchozího pracovního prostoru
     send_to_workspace: Odeslat do pracovního prostoru {{0}}
+    send_to_workspace_down: Odeslat okno do pracovního prostoru níže
+    send_to_workspace_up: Odeslat okno do pracovního prostoru výše
     switch_to_next_workspace: Přepnutí na další pracovní plochu
     switch_to_previous_workspace: Přepnutí na předchozí pracovní plochu
+    switch_to_workspace_down: Přepněte na pracovní prostor níže
+    switch_to_workspace_up: Přepněte na pracovní prostor výše
     switch_workspace: Přepnutí na pracovní plochu {{0}}
   readonly_tooltip: Toto je zkratka pouze pro čtení
   reset: Obnovení výchozího nastavení
@@ -305,8 +312,8 @@ toolbar:
   placeholder: {}
 update:
   available: Aktualizace k dispozici!
-  channel: Aktualizovat kanál
   downloading: Stahování ...
+  channel: Aktualizovat kanál
 wall:
   blur: Rozmazání
   cancel: Zrušit
@@ -370,6 +377,13 @@ wall:
 weg:
   auto_hide: Automatické skrytí
   auto_hide_touch_disabled: Automatické skrytí není k dispozici na zařízeních s dotykovou obrazovkou
+  automation:
+    enabled: Povolit řídicí roviny
+    flight_recorder: Letový záznamník
+    label: Automatizace (MCP / REST / CLI)
+    mcp_enabled: MCP server
+    rest_enabled: Adaptér REST
+    rest_port: REST port (0 = auto)
   delay_to_hide: Zpoždění schování
   delay_to_show: Zpoždění zobrazení
   dock_side: Pozice
@@ -379,6 +393,12 @@ weg:
     always: Vždy
     never: Nikdy
     on_overlap: Při překrytí
+  import_error: Import položek hlavního panelu se nezdařil
+  import_from_taskbar:
+    button: Import z hlavního panelu Windows
+    label: Importujte připnuté položky
+  import_no_items: Na hlavním panelu Windows nebyly nalezeny žádné připnuté položky
+  import_success: Úspěšně importováno {{count}} položek z hlavního panelu Windows
   items:
     gap: Prostor mezi položkami
     label: Položky
@@ -404,6 +424,56 @@ weg:
     full_width: Celá šířka obrazovky
     min_content: Malý jak jen může být
   padding: Padding
+  preview:
+    animated: Animovaný
+    animation_duration: Délka animace (ms)
+    app_aware_titles: Aplikačně orientované tituly
+    aspect_fixed: Opraveno
+    aspect_mode: Režim poměru stran
+    aspect_ratio: Pevný poměr (čitatel)
+    aspect_source: Zdrojové okno
+    auto_grid: Automatická mřížka
+    cache_enabled: Náhled mezipaměti
+    card_height: Výška karty (px, 0 = auto)
+    card_width: Šířka karty (px)
+    columns: Sloupce
+    compact_titles: Kompaktní tituly
+    gap: Mezera mezi kartami (px)
+    grace_region: Oblast odkladu ukazatele (px)
+    grouped_click_label: Kliknutí na seskupenou ikonu
+    grouped_click_last_used: Aktivovat naposledy použité
+    grouped_click_minimize_restore: Minimalizovat/obnovit skupinu
+    grouped_click_preview: Otevřít náhled
+    hover_close_delay: Zpoždění zavření kurzorem (ms)
+    hover_open_delay: Zpoždění otevření kurzorem (ms)
+    keep_open: Při průchodu mějte otevřené
+    label: Náhled okna
+    max_columns: Max. sloupců
+    max_height: Maximální výška vyskakovacího okna (px)
+    max_rows: Max řádků před posouváním
+    max_width: Maximální šířka vyskakovacího okna (px)
+    min_columns: Min sloupců
+    nearest_first: Nejbližší-první projekce
+    ordering: Objednávání
+    ordering_alphabetical: Abecední
+    ordering_application_defined: Definována aplikace
+    ordering_hybrid: Hybridní (nejprve manuál)
+    ordering_manual: Manuál
+    ordering_mru: MRU
+    ordering_stable: Stabilní
+    padding: Odsazení vyskakovacích oken (px)
+    prepared_entries: Rozpočet paměti (KiB)
+    prewarm: Předehřátý pohled
+    radius: Poloměr ohraničení (px)
+    stale_while_refresh: Zatuchlý-při-obnovení
+    titles: Tituly
+    titles_hidden: Skrytý
+    titles_one_line: Jeden řádek
+    titles_two_lines: Dvě linky
+    trigger: Náhled spouště
+    trigger_click: Klikněte
+    trigger_hover: Vznášet se
+    trigger_hover_and_click: Umístěte kurzor + klikněte
   show_end_task: Zobrazení koncové úlohy na hlavním panelu
   width: Šířka
 welcome:
@@ -442,6 +512,10 @@ wm:
   drag_behavior_options:
     sort: Řadit (změnit pořadí oken při přetahování)
     swap: Zaměnit (vyměnit okna na konci přetažení)
+  floating:
+    height: Výška plovoucí okna
+    title: Velikost plovoucího okna
+    width: Plovoucí šířka okna
   layout: Rozložení
   resize_delta: Změna velikosti (%)
   space_between_containers: Prostor mezi kontejnery

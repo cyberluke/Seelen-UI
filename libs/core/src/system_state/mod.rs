@@ -16,6 +16,7 @@ mod tray;
 mod ui_colors;
 mod user;
 mod user_apps;
+mod weg_core;
 mod win_explorer;
 
 pub use bluetooth::*;
@@ -36,4 +37,5 @@ pub use tray::*;
 pub use ui_colors::*;
 pub use user::*;
 pub use user_apps::*;
+pub use weg_core::*;
 pub use win_explorer::*;

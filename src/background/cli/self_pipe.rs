@@ -13,9 +13,9 @@ use crate::{
 
 pub struct SelfPipe;
 impl SelfPipe {
-    async fn handle_raw_cli_message(argv: Vec<String>) -> Result<()> {
+    async fn handle_raw_cli_message(argv: Vec<String>) -> Result<Option<String>> {
         if argv.is_empty() {
-            return Ok(());
+            return Ok(None);
         }
 
         // Normalize argv: always use a fixed program name as argv[0] for clap.
@@ -32,28 +32,30 @@ impl SelfPipe {
                     .collect()
             };
 
-        if let Ok(cli) = AppCli::try_parse_from(normalized)
-            && let Err(err) = process_app_command(cli.command).await
-        {
-            log::error!("Failed to process command: {err}");
-            return Err(err);
+        if let Ok(cli) = AppCli::try_parse_from(normalized) {
+            return process_app_command(cli.command).await;
         }
-        Ok(())
+        Ok(None)
     }
 
     async fn handle_message(message: AppMessage) -> IpcResponse {
         match message {
-            AppMessage::Cli(argv) => {
-                if let Err(err) = Self::handle_raw_cli_message(argv).await {
-                    return IpcResponse::Err(err.to_string());
-                }
-            }
-            AppMessage::Command(cmd) => {
-                if let Err(err) = process_app_command(cmd).await {
+            AppMessage::Cli(argv) => match Self::handle_raw_cli_message(argv).await {
+                Ok(Some(data)) => return IpcResponse::Data(data),
+                Ok(None) => {}
+                Err(err) => {
                     log::error!("Failed to process command: {err}");
                     return IpcResponse::Err(err.to_string());
                 }
-            }
+            },
+            AppMessage::Command(cmd) => match process_app_command(cmd).await {
+                Ok(Some(data)) => return IpcResponse::Data(data),
+                Ok(None) => {}
+                Err(err) => {
+                    log::error!("Failed to process command: {err}");
+                    return IpcResponse::Err(err.to_string());
+                }
+            },
             AppMessage::OpenUri(uri) => {
                 tokio::spawn(async move {
                     process_uri(&uri).await.log_error();

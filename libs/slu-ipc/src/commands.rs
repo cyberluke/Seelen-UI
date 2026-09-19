@@ -26,6 +26,9 @@ pub struct AppCli {
     /// Prints some extra information on the console.
     #[arg(long, default_value_t)]
     pub verbose: bool,
+    /// Renders command output as raw json (otherwise pretty human layout).
+    #[arg(long, default_value_t)]
+    pub json: bool,
     #[command(subcommand)]
     pub command: AppCommand,
 }
@@ -46,6 +49,8 @@ pub enum AppCommand {
     Wallpaper(WallpaperCli),
     /// Toggle the global shortcuts pause state
     ToggleShortcutsPause,
+    /// System tray semantic API
+    Tray(TrayCli),
 }
 
 impl SluCliCommand for AppCommand {
@@ -281,6 +286,81 @@ pub enum WegCommand {
         /// Which index should be started on weg.
         index: usize,
     },
+    /// List all managed windows with stable ids
+    Windows,
+    /// List grouped applications with window counts
+    Apps,
+    /// Get one window by runtime id, logical identity, alias or title
+    Get {
+        /// identification token
+        identification: String,
+    },
+    /// Fuzzy-match windows by identity / title / alias
+    Find {
+        /// search query
+        query: String,
+    },
+    /// Focus a window
+    Focus {
+        /// identification token
+        identification: String,
+    },
+    /// Focus and maximize a window atomically
+    #[command(alias = "fm")]
+    FocusMaximize {
+        /// identification token
+        identification: String,
+    },
+    /// Maximize a window
+    Maximize {
+        /// identification token
+        identification: String,
+    },
+    /// Restore a window from maximized
+    Restore {
+        /// identification token
+        identification: String,
+    },
+    /// Minimize a window
+    Minimize {
+        /// identification token
+        identification: String,
+    },
+    /// Close a window
+    Close {
+        /// identification token
+        identification: String,
+    },
+    /// Move a window to the n-th monitor (0 based)
+    MoveToMonitor {
+        /// identification token
+        identification: String,
+        /// monitor index
+        monitor: u32,
+    },
+    /// List the manual order of an application group
+    OrderList {
+        /// application key
+        app: String,
+    },
+    /// Move an identity to a position inside the manual order
+    OrderMove {
+        /// application key
+        app: String,
+        /// logical identity / alias / title
+        identity: String,
+        /// target position
+        to: usize,
+    },
+    /// Recently focused windows
+    Recent {
+        /// max entries
+        limit: Option<u32>,
+    },
+    /// Latency metrics of the control plane (p50/p95/p99/max)
+    Metrics,
+    /// Dump the flight recorder trace
+    Trace,
 }
 
 // ===== WindowManager =====
@@ -414,4 +494,41 @@ pub enum WallpaperCommand {
     Next,
     /// Cycle to the previous wallpaper
     Prev,
+}
+
+// ===== System Tray =====
+
+#[derive(Debug, Serialize, Deserialize, clap::Args)]
+#[command(alias = "t")]
+pub struct TrayCli {
+    #[command(subcommand)]
+    pub command: TrayCommand,
+}
+
+#[derive(Debug, Serialize, Deserialize, clap::Subcommand)]
+pub enum TrayCommand {
+    /// List all known tray icons (with pinned/order info).
+    ListIcons,
+    /// List only currently-pinned tray icons in pinned order.
+    ListPinned,
+    /// Print the persisted pin state (ordered logical identities).
+    GetPinState,
+    /// Pin a tray icon by logical identity key.
+    Pin {
+        /// Logical identity key (guid:.../exe:...|uid:...)
+        logical_id: String,
+    },
+    /// Unpin a tray icon by logical identity key.
+    Unpin { logical_id: String },
+    /// Replace the whole pinned order with the provided keys.
+    SetOrder {
+        /// Ordered logical identity keys (space separated).
+        order: Vec<String>,
+    },
+    /// Send a native action to a tray icon.
+    Send {
+        logical_id: String,
+        /// One of: LeftClick, RightClick, MiddleClick, LeftDoubleClick, HoverEnter, HoverLeave, HoverMove
+        action: String,
+    },
 }

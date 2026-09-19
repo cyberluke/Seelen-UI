@@ -268,14 +268,21 @@ shortcuts:
     SEELEN UI
   labels:
     create_new_workspace: Kreirajte novi radni prostor
+    create_new_workspace_row: Kreirajte novi red radnog prostora
     destroy_current_workspace: Uništite trenutni radni prostor
     misc_force_quit: Prisiliti
     misc_force_restart: Restart sile
     move_to_workspace: Pređite na radni prostor {{0}}
     pause_toggle: Prečice za pauzu/nastavljanje
+    send_to_next_workspace: Pošalji prozor na sljedeći radni prostor
+    send_to_previous_workspace: Pošalji prozor u prethodni radni prostor
     send_to_workspace: Pošaljite u radni prostor {{0}}
+    send_to_workspace_down: Pošalji prozor u radni prostor ispod
+    send_to_workspace_up: Pošalji prozor u radni prostor iznad
     switch_to_next_workspace: Prebacite se na sljedeći radni prostor
     switch_to_previous_workspace: Prebacite se na prethodni radni prostor
+    switch_to_workspace_down: Prebacite se na radni prostor ispod
+    switch_to_workspace_up: Prebacite se na radni prostor iznad
     switch_workspace: Prebacite se na radni prostor {{0}}
   readonly_tooltip: Ovo je prečica za čitanje
   reset: Resetiranje na zadane vrijednosti
@@ -304,8 +311,8 @@ toolbar:
   placeholder: {}
 update:
   available: Ažuriraj dostupno!
-  channel: Ažuriraj kanal
   downloading: Preuzimanje ...
+  channel: Ažuriraj kanal
 wall:
   blur: Zamutiti
   cancel: Otkaži
@@ -371,6 +378,13 @@ weg:
   auto_hide_touch_disabled: >-
     Automatsko skrivanje nije dostupno na uređajima sa ekranom osjetljivim na
     dodir
+  automation:
+    enabled: Omogući kontrolne ravni
+    flight_recorder: Rekorder leta
+    label: Automatizacija (MCP / REST / CLI)
+    mcp_enabled: MCP server
+    rest_enabled: REST adapter
+    rest_port: REST port (0 = automatski)
   delay_to_hide: Odložite da se sakrijete
   delay_to_show: Kašnjenje za prikaz
   dock_side: Položaj
@@ -380,6 +394,12 @@ weg:
     always: Uvijek
     never: Nikad
     on_overlap: Na preklapanje
+  import_error: Uvoz stavki trake zadataka nije uspio
+  import_from_taskbar:
+    button: Uvoz sa Windows trake zadataka
+    label: Uvezite zakačene stavke
+  import_no_items: Nema zakačenih stavki na Windows traci zadataka
+  import_success: Uspješno uvezeno {{count}} stavki sa Windows trake zadataka
   items:
     gap: Prostor između predmeta
     label: Predmeti
@@ -405,6 +425,56 @@ weg:
     full_width: Cijela širina ekrana
     min_content: Manji koliko može
   padding: Obloga
+  preview:
+    animated: Animirani
+    animation_duration: Trajanje animacije (ms)
+    app_aware_titles: Naslovi svjesni aplikacija
+    aspect_fixed: Popravljeno
+    aspect_mode: Način omjera širine i visine
+    aspect_ratio: Fiksni omjer (brojilac)
+    aspect_source: Izvorni prozor
+    auto_grid: Auto grid
+    cache_enabled: Predmemorija za pregled
+    card_height: Visina kartice (px, 0 = auto)
+    card_width: Širina kartice (px)
+    columns: Kolone
+    compact_titles: Zbijeni naslovi
+    gap: Razmak između kartica (px)
+    grace_region: Pointer grace region (px)
+    grouped_click_label: Klik na grupiranu ikonu
+    grouped_click_last_used: Aktivirajte posljednje korišteno
+    grouped_click_minimize_restore: Minimiziraj/vrati grupu
+    grouped_click_preview: Otvorite pregled
+    hover_close_delay: Kašnjenje zatvaranja pokazivača (ms)
+    hover_open_delay: Kašnjenje otvaranja pokazivača (ms)
+    keep_open: Ostanite otvoreni na putu
+    label: Pregled prozora
+    max_columns: Max kolone
+    max_height: Maksimalna visina skočnog prozora (px)
+    max_rows: Maksimalni broj redova prije pomicanja
+    max_width: Maksimalna širina skočnog prozora (px)
+    min_columns: Min kolona
+    nearest_first: Najbliža prva projekcija
+    ordering: Naručivanje
+    ordering_alphabetical: Abecedno
+    ordering_application_defined: Definisana aplikacija
+    ordering_hybrid: Hibrid (prvo ručno)
+    ordering_manual: Manual
+    ordering_mru: MRU
+    ordering_stable: Stabilno
+    padding: Popup padding (px)
+    prepared_entries: Budžet memorije (KiB)
+    prewarm: Pretopli pogled
+    radius: Granični radijus (px)
+    stale_while_refresh: Stale-dok-osvježi
+    titles: Naslovi
+    titles_hidden: Skriveno
+    titles_one_line: Jedna linija
+    titles_two_lines: Dvije linije
+    trigger: Okidač za pregled
+    trigger_click: Kliknite
+    trigger_hover: Hover
+    trigger_hover_and_click: Zadržite pokazivač miša + kliknite
   show_end_task: Prikaži krajnji zadatak u traci zadataka
   width: Širina
 welcome:
@@ -444,6 +514,10 @@ wm:
   drag_behavior_options:
     sort: Sortiraj (promijeni redoslijed prozora tokom prevlačenja)
     swap: Zamijeni (zamijeni prozore na kraju povlačenja)
+  floating:
+    height: Plutajuća visina prozora
+    title: Plutajuća veličina Windowsa
+    width: Plutajuća širina prozora
   layout: Izgled
   resize_delta: Promijenite veličinu Delta (%)
   space_between_containers: Prostor između kontejnera

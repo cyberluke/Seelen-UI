@@ -1,14 +1,18 @@
 import { invoke, SeelenCommand } from "@seelen-ui/lib";
 import { Alignment, SeelenWegSide, type UserAppWindow, type WidgetId } from "@seelen-ui/lib/types";
 import { settingsState } from "./state/settings.svelte.ts";
+import { systemState } from "./state/system.svelte.ts";
+import { previewSettings } from "./state/preview.svelte.ts";
 
-export function triggerPreviewWidget(itemEl: HTMLElement, windows: UserAppWindow[]) {
+export function triggerPreviewWidget(itemEl: HTMLElement, windows: UserAppWindow[], t0Date?: number) {
   const dockSide = settingsState.position;
+  const preview = previewSettings();
 
   const elRect = itemEl.getBoundingClientRect();
   const viewRect = settingsState.widgetRect.hitboxRect;
+  const scaleFactor = systemState.currentMonitor.scaleFactor || globalThis.devicePixelRatio || 1;
 
-  const toPhysical = (n: number) => Math.round(n * globalThis.devicePixelRatio);
+  const toPhysical = (n: number) => Math.round(n * scaleFactor);
 
   let x: number;
   let y: number;
@@ -34,7 +38,7 @@ export function triggerPreviewWidget(itemEl: HTMLElement, windows: UserAppWindow
       alignX = Alignment.Start;
       alignY = Alignment.Center;
       break;
-    case SeelenWegSide.Right:
+    default:
       x = viewRect.left;
       y = viewRect.top + toPhysical(elRect.top + elRect.height / 2);
       alignX = Alignment.End;
@@ -51,6 +55,9 @@ export function triggerPreviewWidget(itemEl: HTMLElement, windows: UserAppWindow
       customArgs: {
         hwnds: windows.map((w) => w.hwnd),
         position: dockSide,
+        t0Date,
+        animated: preview.animated,
+        animationDuration: preview.animationDuration,
       },
     },
   });

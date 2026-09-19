@@ -11,7 +11,7 @@ use tauri_plugin_dialog::{DialogExt, MessageDialogKind};
 use super::IntegrityError;
 
 /// Public key for minisign verification (same as updater)
-const MINISIGN_PUBLIC_KEY: &str = "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ4QjU1RUI0NEM0NzBERUIKUldUckRVZE10RjYxU0lpaERvdklYL05DVlg0Sk9EVngvaEgzZjMvU1NNemJTZXZ1K0dNVXU3ZkQK";
+const MINISIGN_PUBLIC_KEY: &str = "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDNERTQwQzVEMkUwNjQ2NDQKUldSRVJnWXVYUXprUGJlZFlNTEJDWWExQ2Fuc2VRVFpLcm9lQjRKdHdIeDB6aXdGTElhTkVyWHIK";
 
 pub async fn ensure_bundle_files_integrity(
     app: &tauri::AppHandle,

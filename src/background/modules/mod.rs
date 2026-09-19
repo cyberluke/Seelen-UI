@@ -14,6 +14,7 @@ pub mod system_settings;
 pub mod system_tray;
 pub mod trash_bin;
 pub mod user;
+pub mod weg_core;
 
 #[macro_export]
 macro_rules! event_manager {
