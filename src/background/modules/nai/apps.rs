@@ -172,9 +172,7 @@ fn resolve(entry: &Entry) -> Option<String> {
     })
 }
 
-fn running_pids(path: Option<&str>) -> Vec<u32> {
-    use sysinfo::{ProcessesToUpdate, System};
-
+fn running_pids(path: Option<&str>, sys: &sysinfo::System) -> Vec<u32> {
     let Some(needle) = path.map(|p| {
         std::path::Path::new(p)
             .file_name()
@@ -187,8 +185,6 @@ fn running_pids(path: Option<&str>) -> Vec<u32> {
         return Vec::new();
     }
 
-    let mut sys = System::new();
-    sys.refresh_processes(ProcessesToUpdate::All, true);
     sys.processes()
         .values()
         .filter_map(|process| {
@@ -199,6 +195,11 @@ fn running_pids(path: Option<&str>) -> Vec<u32> {
 }
 
 pub fn apps() -> Vec<AppDescriptor> {
+    use sysinfo::{ProcessesToUpdate, System};
+
+    let mut sys = System::new();
+    sys.refresh_processes(ProcessesToUpdate::All, true);
+
     std::iter::once(Entry {
         id: "shell",
         name: "NAI OS",
@@ -216,7 +217,7 @@ pub fn apps() -> Vec<AppDescriptor> {
             description: entry.description,
             kind: entry.kind,
             capabilities: entry.capabilities,
-            running_pids: running_pids(path.as_deref()),
+            running_pids: running_pids(path.as_deref(), &sys),
             path,
         }
     })
