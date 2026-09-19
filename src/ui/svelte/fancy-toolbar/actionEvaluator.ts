@@ -10,6 +10,9 @@ const ALLOWED_COMMANDS = [
   SeelenCommand.SetVolumeLevel,
   SeelenCommand.OpenFile,
   SeelenCommand.GetRuntimeExePath,
+  SeelenCommand.MediaPrev,
+  SeelenCommand.MediaNext,
+  SeelenCommand.MediaTogglePlayPause,
 ];
 
 const ActionsScope = {

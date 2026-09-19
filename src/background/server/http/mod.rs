@@ -383,8 +383,32 @@ async fn mcp(req: &mut Request, res: &mut Response) {
     res.render(Text::Json(answer));
 }
 
-/// Starts the background HTTP server. Intended to be spawned once at app startup.
-pub async fn start_server() {
+/// Starts the background HTTP server on its own thread, with a dedicated single-threaded
+/// runtime, so it never competes with the main runtime workers. Intended to be called once
+/// at app startup.
+pub fn start_http_server() {
+    let spawned = std::thread::Builder::new()
+        .name("http-server".into())
+        .spawn(|| {
+            let runtime = match tokio::runtime::Builder::new_current_thread()
+                .enable_all()
+                .build()
+            {
+                Ok(runtime) => runtime,
+                Err(err) => {
+                    log::error!("Failed to create HTTP server runtime: {err:?}");
+                    return;
+                }
+            };
+            runtime.block_on(run_http_server());
+        });
+
+    if let Err(err) = spawned {
+        log::error!("Failed to spawn HTTP server thread: {err:?}");
+    }
+}
+
+async fn run_http_server() {
     let api = Router::new()
         .push(Router::with_path("ping").get(ping))
         .push(

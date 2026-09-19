@@ -7,7 +7,7 @@ use crate::{app::get_app_handle, error::Result};
 
 use super::IntegrityError;
 
-pub async fn validate_webview_runtime() -> std::result::Result<(), IntegrityError> {
+pub fn validate_webview_runtime() -> std::result::Result<(), IntegrityError> {
     match webview_version() {
         Ok(version) => {
             let major: u32 = version
@@ -92,7 +92,7 @@ fn probe_webview_once() -> tokio::sync::oneshot::Receiver<()> {
     rx
 }
 
-pub async fn check_for_webview_optimal_state() -> std::result::Result<(), IntegrityError> {
+pub async fn check_for_webview_optimal_state() -> bool {
     log::info!("Testing webview optimal state...");
 
     for attempt in 1..=PROBE_ATTEMPTS {
@@ -101,7 +101,7 @@ pub async fn check_for_webview_optimal_state() -> std::result::Result<(), Integr
         tokio::select! {
             _ = rx => {
                 log::info!("Webview optimal state confirmed.");
-                return Ok(());
+                return true;
             }
             _ = tokio::time::sleep(PROBE_ATTEMPT_TIMEOUT) => {
                 // The first window creation carries the WebView2 loader + environment
@@ -117,5 +117,5 @@ pub async fn check_for_webview_optimal_state() -> std::result::Result<(), Integr
     }
 
     log::error!("Webview optimal state check timed out after {PROBE_ATTEMPTS} attempts.");
-    Err(IntegrityError::WebviewOptimalStateFailed)
+    false
 }

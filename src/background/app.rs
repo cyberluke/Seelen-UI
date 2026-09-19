@@ -12,14 +12,11 @@ use crate::{
     error::{Result, ResultLogExt},
     hook::register_win_hook,
     migrations::Migrations,
-    modules::user::infrastructure::reemit_user,
+    modules::{start::application::StartMenuManager, user::infrastructure::reemit_user},
     resources::RESOURCES,
     session::infrastructure::reemit_session,
     state::application::{AppSettings, FULL_STATE, initialize_user_resources_watcher},
-    utils::{
-        CRONOMETER,
-        discord::{start_discord_rpc, update_discord_rpc},
-    },
+    utils::discord::{start_discord_rpc, update_discord_rpc},
     widgets::{
         manager::WIDGET_MANAGER, popups::shortcut_conflicts::show_shortcut_conflict_popup,
         weg::SeelenWeg,
@@ -53,8 +50,17 @@ pub struct SeelenUI {}
 
 /* ============== Methods ============== */
 impl SeelenUI {
-    pub async fn start() -> Result<()> {
-        Migrations::run()?;
+    /// this fn prepares the app loading assets and settings in memory parallelly
+    pub async fn pre_start() -> Result<()> {
+        Migrations::run_all()?;
+
+        // Spawned early so the probe overlaps with resource/state loading.
+        let webview_check = tokio::task::spawn(async {
+            crate::measure!(
+                "Webview optimal state",
+                crate::utils::integrity::check_for_webview_optimal_state().await
+            )
+        });
 
         // RESOURCES and FULL_STATE have no mutual dependency at init time;
         // load them in parallel then run the RESOURCES-dependent FULL_STATE steps.
@@ -62,21 +68,23 @@ impl SeelenUI {
         // paid by this point; accessing it here is a fast LazyLock hit.
         tokio::join!(
             async {
-                RESOURCES.initialize().await;
+                crate::measure!("RESOURCES", RESOURCES.initialize().await);
                 crate::boot::record_global("resources.complete");
-                CRONOMETER.record("RESOURCES");
             },
             async {
                 tokio::task::spawn_blocking(|| {
-                    let _ = FULL_STATE.load();
+                    crate::measure!("APP SETTINGS", FULL_STATE.load());
                     crate::boot::record_global("state.complete");
-                    CRONOMETER.record("FULL_STATE");
                 })
                 .await
                 .log_error();
             }
         );
-        CRONOMETER.record("Settings & Resources Load");
+        crate::measure!("START_MENU", StartMenuManager::initialize().log_error());
+
+        if !webview_check.await.unwrap_or(false) {
+            return Err("Webview optimal state check failed".into());
+        }
 
         FULL_STATE.rcu(|state| {
             let mut state = state.cloned();
@@ -84,6 +92,10 @@ impl SeelenUI {
             state
         });
 
+        Ok(())
+    }
+
+    pub async fn start() -> Result<()> {
         let state = FULL_STATE.load();
         rust_i18n::set_locale(state.locale());
 
@@ -93,29 +105,21 @@ impl SeelenUI {
 
         WIDGET_MANAGER.reconcile()?;
         crate::boot::record_global("widget.reconcile.complete");
-        CRONOMETER.record("reconcile");
+        crate::measure!("reconcile", ());
 
         create_background_window()?;
-        CRONOMETER.record("background_window");
-
         register_win_hook()?;
-        CRONOMETER.record("win_hook");
-
         start_discord_rpc()?;
-        CRONOMETER.record("discord_rpc");
 
         initialize_user_resources_watcher()?;
-        CRONOMETER.record("resource_watcher");
 
         let widgets = RESOURCES.widgets();
         let widget_refs: Vec<_> = widgets.iter().map(|w| w.as_ref()).collect();
         let (resolved, _) = resolve_shortcuts(&state.settings, &widget_refs);
-        CRONOMETER.record("resolve_shortcuts");
 
         if !crate::cli::shortcuts::SHORTCUTS_PAUSED.load(std::sync::atomic::Ordering::Acquire) {
             ServicePipe::request(SvcAction::SetShortcuts(resolved))?;
         }
-        CRONOMETER.record("shortcuts");
 
         Ok(())
     }
