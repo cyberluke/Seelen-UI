@@ -361,3 +361,27 @@ pub fn instance_info() -> Value {
         "httpPortOwner": http_port,
     })
 }
+
+/// Count of live main GUI instances (`seelen-ui.exe` processes), answering
+/// `--instances` for the queried session. Each primary holds one per-session
+/// mutex; secondaries are short-lived CLI relays that exit right after the IPC
+/// exchange, so a simple process-name count is exact here.
+pub fn instance_count() -> Value {
+    use sysinfo::{ProcessesToUpdate, System};
+
+    let mut sys = System::new();
+    sys.refresh_processes(ProcessesToUpdate::All, true);
+
+    let pids: Vec<u32> = sys
+        .processes()
+        .iter()
+        .filter(|(_, p)| p.name().to_str() == Some("seelen-ui.exe"))
+        .map(|(pid, _)| (*pid).as_u32())
+        .collect();
+
+    serde_json::json!({
+        "count": pids.len(),
+        "pids": pids,
+        "currentPid": std::process::id(),
+    })
+}

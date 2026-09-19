@@ -1,9 +1,9 @@
 import { invoke, SeelenCommand, Widget } from "@seelen-ui/lib";
-import { Alignment, SeelenWegSide, type UserAppWindow, type WidgetId } from "@seelen-ui/lib/types";
+import type { Alignment, UserAppWindow, WidgetId } from "@seelen-ui/lib/types";
 import { settingsState } from "./state/settings.svelte.ts";
 import { systemState } from "./state/system.svelte.ts";
 import { appKeyOf, previewSettings } from "./state/preview.svelte.ts";
-import { computeScreenCenter, isLargePreviewCard } from "./state/geometry.ts";
+import { computePreviewAnchor, isLargePreviewCard } from "./state/geometry.ts";
 
 // ── Cross-webview preview lifecycle controller ──────────────────────────────
 // ONE semantic model for the grouped preview: a small state machine with a
@@ -139,54 +139,18 @@ export interface PreviewAnchor {
 }
 
 function computeAnchor(itemEl: HTMLElement): PreviewAnchor {
-  const dockSide = settingsState.position;
-  const elRect = itemEl.getBoundingClientRect();
-  const viewRect = settingsState.widgetRect.hitboxRect;
   const scaleFactor = systemState.currentMonitor.scaleFactor || globalThis.devicePixelRatio || 1;
-  const toPhysical = (n: number) => Math.round(n * scaleFactor);
+  const elRect = itemEl.getBoundingClientRect();
 
-  // size-aware placement: large cards (e.g. 256) are centered on the screen,
-  // small cards (e.g. 128) stay anchored above/beside the clicked dock item
-  if (isLargePreviewCard(previewSettings().cardWidth, scaleFactor)) {
-    const center = computeScreenCenter(systemState.currentMonitor.rect);
-    return {
-      x: center.x,
-      y: center.y,
-      alignX: Alignment.Center,
-      alignY: Alignment.Center,
-    };
-  }
-
-  switch (dockSide) {
-    case SeelenWegSide.Bottom:
-      return {
-        x: viewRect.left + toPhysical(elRect.left + elRect.width / 2),
-        y: viewRect.top,
-        alignX: Alignment.Center,
-        alignY: Alignment.End,
-      };
-    case SeelenWegSide.Top:
-      return {
-        x: viewRect.left + toPhysical(elRect.left + elRect.width / 2),
-        y: viewRect.bottom,
-        alignX: Alignment.Center,
-        alignY: Alignment.Start,
-      };
-    case SeelenWegSide.Left:
-      return {
-        x: viewRect.right,
-        y: viewRect.top + toPhysical(elRect.top + elRect.height / 2),
-        alignX: Alignment.Start,
-        alignY: Alignment.Center,
-      };
-    default:
-      return {
-        x: viewRect.left,
-        y: viewRect.top + toPhysical(elRect.top + elRect.height / 2),
-        alignX: Alignment.End,
-        alignY: Alignment.Center,
-      };
-  }
+  return computePreviewAnchor({
+    large: isLargePreviewCard(previewSettings().cardWidth, scaleFactor),
+    monitor: systemState.currentMonitor.rect,
+    hitbox: settingsState.widgetRect.hitboxRect,
+    itemCenterX: elRect.left + elRect.width / 2,
+    itemCenterY: elRect.top + elRect.height / 2,
+    dockSide: settingsState.position,
+    scaleFactor,
+  });
 }
 
 /**

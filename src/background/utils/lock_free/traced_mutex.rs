@@ -15,7 +15,10 @@ pub struct TracedMutex<T> {
     timeout: std::time::Duration,
 }
 
-const DEFAULT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(5);
+// 10s: a cold WebView2 boot (loader + environment + first window) legitimately sits around
+// 2-3s, and the reconcile worker may touch several windows while holding a map lock. The old
+// 5s budget produced false-timeout panic storms on healthy machines during startup.
+const DEFAULT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(10);
 
 impl<T> TracedMutex<T> {
     /// Creates a new TracedMutex with the given value
@@ -79,22 +82,32 @@ impl<T> TracedMutex<T> {
         }
     }
 
+    /// Panics with the original call site (`#[track_caller]` propagates through
+    /// `lock`) plus the last holder, e.g.:
+    /// `Mutex lock timed out after 50ms (blocked at src/.../file.rs:123) — last held at src/.../other.rs:88`
     #[cold]
     #[track_caller]
     fn panic_timeout(&self) -> ! {
+        let blocked_at = Location::caller();
+        let blocked_at = format!("{}:{}", blocked_at.file(), blocked_at.line());
         let last = unsafe { self.last_lock_location.load(Ordering::Acquire).as_ref() };
 
         match last {
             Some(last) => panic!(
                 "{:?}",
                 AppError::from(format!(
-                    "Mutex lock timed out after {:?}.\n  Last lock acquired at: {last}",
+                    "Mutex lock timed out after {:?} (blocked at {blocked_at}) — last held at {}:{}",
                     self.timeout(),
+                    last.file(),
+                    last.line(),
                 ))
             ),
             None => panic!(
                 "{:?}",
-                AppError::from(format!("Mutex lock timed out after {:?}.", self.timeout()))
+                AppError::from(format!(
+                    "Mutex lock timed out after {:?} (blocked at {blocked_at}).",
+                    self.timeout(),
+                ))
             ),
         }
     }
@@ -199,7 +212,8 @@ mod tests {
             .and_then(|payload| payload.downcast_ref::<String>().cloned())
             .unwrap_or_default();
         assert!(message.contains("timed out"));
-        assert!(message.contains("Last lock acquired at"));
+        assert!(message.contains("(blocked at "));
+        assert!(message.contains("last held at "));
 
         let (file, line) = panicked_at
             .lock()
@@ -233,6 +247,6 @@ mod tests {
             .and_then(|payload| payload.downcast_ref::<String>().cloned())
             .unwrap_or_default();
         assert!(message.contains("timed out"));
-        assert!(!message.contains("Last lock acquired at"));
+        assert!(!message.contains("last held at"));
     }
 }

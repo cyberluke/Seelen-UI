@@ -29,8 +29,14 @@ pub struct AppCli {
     /// Renders command output as raw json (otherwise pretty human layout).
     #[arg(long, default_value_t)]
     pub json: bool,
+    /// Boot pipeline flight recorder of the queried instance.
+    #[arg(long)]
+    pub boot: bool,
+    /// Instance count of the queried session.
+    #[arg(long)]
+    pub instances: bool,
     #[command(subcommand)]
-    pub command: AppCommand,
+    pub command: Option<AppCommand>,
 }
 
 #[derive(Debug, Serialize, Deserialize, clap::Subcommand)]
@@ -416,6 +422,9 @@ pub enum WegCommand {
         /// max entries
         limit: Option<u32>,
     },
+    /// Unified runtime state in camelCase: version, nextId, latency stats,
+    /// focused / monitored / monitors and perMonitor[] grouped by index
+    State,
     /// Latency metrics of the control plane (p50/p95/p99/max)
     Metrics,
     /// Dump the flight recorder trace

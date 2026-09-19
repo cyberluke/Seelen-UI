@@ -32,10 +32,33 @@ impl SelfPipe {
                     .collect()
             };
 
-        if let Ok(cli) = AppCli::try_parse_from(normalized) {
-            return process_app_command(cli.command).await;
+        match AppCli::try_parse_from(&normalized) {
+            Ok(cli) => {
+                if let Some(command) = cli.command {
+                    return process_app_command(command).await;
+                }
+
+                let mut values = vec![];
+                if cli.boot {
+                    values.push(crate::boot::snapshot(None));
+                }
+                if cli.instances {
+                    values.push(crate::boot::instance_count());
+                }
+                match values.len() {
+                    0 => Ok(None),
+                    1 => Ok(Some(values[0].to_string())),
+                    _ => Ok(Some(
+                        serde_json::json!({
+                            "boot": values[0],
+                            "instances": values[1],
+                        })
+                        .to_string(),
+                    )),
+                }
+            }
+            Err(_) => Ok(None),
         }
-        Ok(None)
     }
 
     async fn handle_message(message: AppMessage) -> IpcResponse {

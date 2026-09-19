@@ -26,17 +26,26 @@ async fn main() {
 }
 
 async fn run(cli: AppCli) -> Result<()> {
-    let mode = cli.command.execution_mode();
+    // `--version` is handled by clap itself; these flags are answered by the
+    // targeted main instance over IPC.
+    if cli.command.is_none() {
+        if !cli.boot && !cli.instances {
+            return Err("No command given. Try '--help'.".into());
+        }
+        return send_to_main_instance(cli).await;
+    }
+
+    let mode = cli.command.as_ref().map(|c| c.execution_mode());
     match mode {
-        CommandExecutionMode::Direct => process_direct(cli).await,
-        CommandExecutionMode::MainInstance => send_to_main_instance(cli).await,
+        Some(CommandExecutionMode::Direct) => process_direct(cli).await,
+        _ => send_to_main_instance(cli).await,
     }
 }
 
 async fn process_direct(cli: AppCli) -> Result<()> {
     match cli.command {
-        AppCommand::Art(cmd) => art::process(cmd),
-        AppCommand::Resource(cmd) => resources::process(cmd).await?,
+        Some(AppCommand::Art(cmd)) => art::process(cmd),
+        Some(AppCommand::Resource(cmd)) => resources::process(cmd).await?,
         _ => return Err("Command does not support direct execution".into()),
     }
     Ok(())

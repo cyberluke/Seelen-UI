@@ -99,21 +99,30 @@ impl WidgetManager {
                 }
             }
 
-            // More visual widgets load first
-            for priority in [
+            // More visual widgets load first.
+            let priority = [
                 WidgetId::known_wall(),
                 WidgetId::known_toolbar(),
                 WidgetId::known_weg(),
-            ] {
-                WIDGET_MANAGER.deployments.get(&priority, |deployment| {
+            ];
+            for id in priority.iter() {
+                WIDGET_MANAGER.deployments.get(id, |deployment| {
                     reconcile(deployment);
                 });
             }
 
-            // All other widgets
-            WIDGET_MANAGER.deployments.for_each(|(_, deployment)| {
-                reconcile(deployment);
-            });
+            // All other widgets. Keys are snapped first so the `deployments` lock is
+            // held only for one deployment at a time: webview creation blocks
+            // (event-loop round-trips) must not keep the map locked for every other
+            // caller past the traced-mutex timeout.
+            for id in WIDGET_MANAGER.deployments.key_snapshot() {
+                if priority.contains(&id) {
+                    continue;
+                }
+                WIDGET_MANAGER.deployments.get(&id, |deployment| {
+                    reconcile(deployment);
+                });
+            }
         });
 
         Ok(())

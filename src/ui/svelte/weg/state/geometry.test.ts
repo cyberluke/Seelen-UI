@@ -1,11 +1,13 @@
 import { assertEquals } from "@std/assert";
 import { FancyToolbarSide, SeelenWegSide } from "@seelen-ui/lib/types";
 import {
+  computePreviewAnchor,
   computeScreenCenter,
   computeWegRects,
   computeWegWorkArea,
   isHorizontalDockSide,
   isLargePreviewCard,
+  PREVIEW_EDGE_GAP,
 } from "./geometry.ts";
 
 const MONITOR_4K = { left: 0, top: 0, right: 3840, bottom: 2160 };
@@ -145,4 +147,98 @@ Deno.test("screen center: odd sizes round consistently", () => {
   const c = computeScreenCenter({ left: 0, top: 0, right: 2001, bottom: 1001 });
   assertEquals(c.x, 1001); // round(1000.5)
   assertEquals(c.y, 501);
+});
+
+// ── preview anchor algorithm ───────────────────────────────────────────────
+
+// live geometry: 4k@200%, tb Top (h64) -> weg Top strip hitbox [0,64,3840,152]
+const HITBOX_TOP = { left: 0, top: 64, right: 3840, bottom: 152 };
+const HITBOX_BOTTOM = { left: 0, top: 2032, right: 3840, bottom: 2160 };
+const MON = { left: 0, top: 0, right: 3840, bottom: 2160 };
+
+Deno.test("anchor small: Bottom dock -> top above strip by height+margin", () => {
+  const a = computePreviewAnchor({
+    large: false,
+    monitor: MON,
+    hitbox: HITBOX_BOTTOM,
+    itemCenterX: 100,
+    itemCenterY: 40,
+    dockSide: SeelenWegSide.Bottom,
+    scaleFactor: 2,
+  });
+  assertEquals(a.x, 200); // hitbox.left + round(100*2)
+  assertEquals(a.y, 2032 - PREVIEW_EDGE_GAP * 2); // 2020
+  // align semantics: End y => final top = y - height : exactly `height + margin`
+  const height = 210; // card + preview title strip (example)
+  assertEquals(a.y - height, 2020 - 210);
+  assertEquals(a.alignX, "Center");
+  assertEquals(a.alignY, "End");
+});
+
+Deno.test("anchor small: Top dock -> below strip + margin", () => {
+  const a = computePreviewAnchor({
+    large: false,
+    monitor: MON,
+    hitbox: HITBOX_TOP,
+    itemCenterX: 28,
+    itemCenterY: 8,
+    dockSide: SeelenWegSide.Top,
+    scaleFactor: 2,
+  });
+  assertEquals(a.x, 56);
+  assertEquals(a.y, 152 + PREVIEW_EDGE_GAP * 2); // 164
+  assertEquals(a.alignY, "Start"); // final top = y directly
+});
+
+Deno.test("anchor small: Left/Right docks -> beside strip + margin, y on center", () => {
+  const left = computePreviewAnchor({
+    large: false,
+    monitor: MON,
+    hitbox: { left: 0, top: 0, right: 152, bottom: 2160 },
+    itemCenterX: 19,
+    itemCenterY: 300,
+    dockSide: SeelenWegSide.Left,
+    scaleFactor: 2,
+  });
+  assertEquals(left.x, 152 + 12);
+  assertEquals(left.y, 600);
+  assertEquals(left.alignX, "Start");
+
+  const right = computePreviewAnchor({
+    large: false,
+    monitor: MON,
+    hitbox: { left: 3688, top: 0, right: 3840, bottom: 2160 },
+    itemCenterX: 19,
+    itemCenterY: 300,
+    dockSide: SeelenWegSide.Right,
+    scaleFactor: 2,
+  });
+  assertEquals(right.x, 3688 - 12);
+  assertEquals(right.y, 600);
+  assertEquals(right.alignX, "End"); // final left = x - width
+});
+
+Deno.test("anchor large: centered regardless of dock side", () => {
+  for (
+    const dockSide of [
+      SeelenWegSide.Top,
+      SeelenWegSide.Bottom,
+      SeelenWegSide.Left,
+      SeelenWegSide.Right,
+    ]
+  ) {
+    const a = computePreviewAnchor({
+      large: true,
+      monitor: MON,
+      hitbox: HITBOX_TOP,
+      itemCenterX: 28,
+      itemCenterY: 8,
+      dockSide,
+      scaleFactor: 2,
+    });
+    assertEquals(a.x, 1920, `x ${dockSide}`);
+    assertEquals(a.y, 1080, `y ${dockSide}`);
+    assertEquals(a.alignX, "Center");
+    assertEquals(a.alignY, "Center");
+  }
 });

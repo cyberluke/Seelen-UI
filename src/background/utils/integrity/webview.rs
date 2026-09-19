@@ -67,12 +67,14 @@ fn open_webview2_download(app: &tauri::AppHandle) -> Result<()> {
 
 /// Try creating a webview window, tauri for some reason could panic stopping the setup hook and for some reason
 /// the panic hook is not catching this so this implementation is a workaround for that.
-pub async fn check_for_webview_optimal_state() -> std::result::Result<(), IntegrityError> {
-    log::info!("Testing webview optimal state...");
+const PROBE_ATTEMPTS: usize = 2;
+const PROBE_ATTEMPT_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(3);
 
+/// A single create/destroy round-trip through the event loop.
+fn probe_webview_once() -> tokio::sync::oneshot::Receiver<()> {
     let (tx, rx) = tokio::sync::oneshot::channel();
 
-    std::thread::spawn(|| {
+    std::thread::spawn(move || {
         let label = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode("@seelen/integrity");
         let window = tauri::WebviewWindowBuilder::new(
             get_app_handle(),
@@ -87,15 +89,33 @@ pub async fn check_for_webview_optimal_state() -> std::result::Result<(), Integr
         Result::Ok(())
     });
 
-    tokio::select! {
-        _ = rx => {
-            log::info!("Webview optimal state confirmed.");
-        }
-        _ = tokio::time::sleep(std::time::Duration::from_secs(3)) => {
-            log::error!("Webview optimal state check timed out.");
-            return Err(IntegrityError::WebviewOptimalStateFailed);
+    rx
+}
+
+pub async fn check_for_webview_optimal_state() -> std::result::Result<(), IntegrityError> {
+    log::info!("Testing webview optimal state...");
+
+    for attempt in 1..=PROBE_ATTEMPTS {
+        let rx = probe_webview_once();
+
+        tokio::select! {
+            _ = rx => {
+                log::info!("Webview optimal state confirmed.");
+                return Ok(());
+            }
+            _ = tokio::time::sleep(PROBE_ATTEMPT_TIMEOUT) => {
+                // The first window creation carries the WebView2 loader + environment
+                // init and can legitimately take ~2.5s on its own; a second instance
+                // sharing the user-data folder adds more. One retry covers real cold
+                // starts while still failing on a genuinely dead environment.
+                log::warn!("Webview optimal state check timed out (attempt {attempt}/{PROBE_ATTEMPTS}).");
+                // Give the (possibly still running) probe thread a moment to finish its
+                // create+destroy so the retried window can reuse the same label.
+                tokio::time::sleep(std::time::Duration::from_millis(1500)).await;
+            }
         }
     }
 
-    Ok(())
+    log::error!("Webview optimal state check timed out after {PROBE_ATTEMPTS} attempts.");
+    Err(IntegrityError::WebviewOptimalStateFailed)
 }
