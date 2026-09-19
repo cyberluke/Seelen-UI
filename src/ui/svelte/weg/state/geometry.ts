@@ -58,39 +58,46 @@ export function computeWegWorkArea(input: WegWorkAreaInput): Rect {
 }
 
 /**
- * Pure mirror of weg `widgetRect`: the dock has two rects.
- * - `hitboxRect`: the real reserved area (exact stripe), registered as appbar.
- * - `webviewRect`: what the webview is sized to. On non-touch it is a half
- *   monitor window (for the fullscreen preview mode) aligned to the dock side.
+ * Native surface rectangles for the dock. `webviewRect` is the real window
+ * rect of the `@seelen/weg` webview and is derived from content + work area:
+ * - touch: exactly the stripe (same as the hitbox),
+ * - non-touch: the full work area (the document is layered hit-test so the
+ *   transparent area is click-through). No half-monitor guesses.
+ * `@seelen/weg-preview` is a separate Popup preset surface and never shares
+ * these rects.
  */
 export function computeWegRects(input: WegRectsInput): WegRect {
   const wa = computeWegWorkArea(input);
   const hitboxRect: Rect = { ...wa };
   const webviewRect: Rect = { ...wa };
 
-  const size = Math.round(
+  const stripeSize = Math.round(
     (input.dock.size + input.dock.padding * 2 + input.dock.margin * 2) *
       input.scaleFactor,
   );
-  const isTouch = input.isTouch;
 
+  const stripe: Rect = { ...wa };
   switch (input.dock.position) {
     case SeelenWegSide.Left:
-      hitboxRect.right = hitboxRect.left + size;
-      webviewRect.right = isTouch ? hitboxRect.right : wa.right - Math.round((wa.right - wa.left) / 2);
+      stripe.right = stripe.left + stripeSize;
       break;
     case SeelenWegSide.Right:
-      hitboxRect.left = hitboxRect.right - size;
-      webviewRect.left = isTouch ? hitboxRect.left : wa.left + Math.round((wa.right - wa.left) / 2);
+      stripe.left = stripe.right - stripeSize;
       break;
     case SeelenWegSide.Top:
-      hitboxRect.bottom = hitboxRect.top + size;
-      webviewRect.bottom = isTouch ? hitboxRect.bottom : wa.top + Math.round((wa.bottom - wa.top) / 2);
+      stripe.bottom = stripe.top + stripeSize;
       break;
-    case SeelenWegSide.Bottom:
-      hitboxRect.top = hitboxRect.bottom - size;
-      webviewRect.top = isTouch ? hitboxRect.top : wa.bottom - Math.round((wa.bottom - wa.top) / 2);
+    default:
+      stripe.top = stripe.bottom - stripeSize;
       break;
+  }
+  Object.assign(hitboxRect, stripe);
+
+  // Only a touch surface is allowed to shrink to the stripe: the document
+  // receives pointer events directly there. On desktop the window keeps the
+  // full work area so the layered hit-test math stays exact.
+  if (input.isTouch) {
+    Object.assign(webviewRect, stripe);
   }
 
   return { hitboxRect, webviewRect };

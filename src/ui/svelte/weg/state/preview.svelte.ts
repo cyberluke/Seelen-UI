@@ -283,23 +283,21 @@ export function reportFirstPaint(cacheHit: boolean): void {
   }
   const t0 = stages.t0Date;
   const paint = performance.now();
-  const initDate = epochMs(stages.init);
+  // One time domain: every stage is converted to epoch ms with
+  // `performance.timeOrigin + performance.now()` before deltas are taken,
+  // so duplicated epoch offsets cannot appear.
   const latency = {
     metadataReadyUs: Math.max(
       0,
-      Math.round((initDate + (stages.metadata || stages.init) - initDate) * 1000 + (initDate - t0) * 1000),
+      Math.round((epochMs(stages.metadata || stages.init) - t0) * 1000),
     ),
     layoutReadyUs: Math.max(
       0,
-      Math.round(
-        ((stages.layout || stages.init) - stages.init) * 1000 + (initDate - t0) * 1000,
-      ),
+      Math.round((epochMs(stages.layout || stages.init) - t0) * 1000),
     ),
     thumbnailReadyUs: Math.max(
       0,
-      Math.round(
-        ((stages.thumbnail || stages.init) - stages.init) * 1000 + (initDate - t0) * 1000,
-      ),
+      Math.round((epochMs(stages.thumbnail || stages.init) - t0) * 1000),
     ),
     firstPaintUs: Math.max(0, Math.round((epochMs(paint) - t0) * 1000)),
     cacheHit,

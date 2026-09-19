@@ -41,17 +41,13 @@ Deno.test("weg workArea: subtracts only bottom on tb-bottom", () => {
 });
 
 Deno.test(
-  "weg rects: right side, non-touch -> webview left = wa.mid, hitbox left = right-size",
+  "weg rects: right side, non-touch -> webview = full work area, hitbox = exact stripe",
   () => {
     const { hitboxRect, webviewRect } = computeWegRects(input);
-    // size = (35+6)*2 = 82 ; wa.right 3840 -> hitbox.left 3758 ; webview.left 0+1920
+    // size = (35+6)*2 = 82 ; wa.right 3840 -> hitbox.left 3758
     assertEquals(hitboxRect, { left: 3758, top: 0, right: 3840, bottom: 2096 });
-    assertEquals(webviewRect, {
-      left: 1920,
-      top: 0,
-      right: 3840,
-      bottom: 2096,
-    });
+    // non-touch desktop surface is exactly the work area (no half-monitor)
+    assertEquals(webviewRect, { left: 0, top: 0, right: 3840, bottom: 2096 });
   },
 );
 
@@ -63,14 +59,14 @@ Deno.test("weg rects: right side, touch -> webview == hitbox", () => {
   assertEquals(webviewRect, hitboxRect);
 });
 
-Deno.test("weg rects: odd mid rounding uses Math.round", () => {
+Deno.test("weg rects: non-touch webview spans work area exactly", () => {
   const base = {
     ...input,
     monitor: { left: 0, top: 0, right: 2001, bottom: 1001 },
   };
   const { webviewRect } = computeWegRects(base);
-  // wa width 2001 -> half 1000.5 -> 1001 (round)
-  assertEquals(webviewRect.left, 1001);
+  const wa = computeWegWorkArea(base);
+  assertEquals(webviewRect, wa);
 });
 
 Deno.test("weg workArea: disabled toolbar changes nothing", () => {
