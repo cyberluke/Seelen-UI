@@ -59,17 +59,24 @@ fn emit_provenance_env(sums_path: &PathBuf) {
 }
 
 fn dist_bundle_hash() -> Option<String> {
-    // `src/static/dist` is produced by `npm run build:ui`; fold its file hashes.
-    let mut sums = CheckSums::new();
-    let dist = PathBuf::from("static").join("dist");
-    if !dist.exists() {
-        return None;
+    // `dist` is produced by `npm run build:ui`; fold its file hashes.
+    // Resolve relative to the package dir (`src`), not the shell CWD.
+    let manifest = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").ok()?);
+    for dist in [
+        manifest.join("static").join("dist"),
+        manifest.join("..").join("dist"),
+    ] {
+        if !dist.exists() {
+            continue;
+        }
+        let mut sums = CheckSums::new();
+        read_folder_recursive(dist, &mut |path| {
+            let _ = sums.add(&path);
+        });
+        let text = sums.to_plain_text();
+        return Some(slu_utils::checksums::calculate_sha256(text.as_bytes()));
     }
-    read_folder_recursive(dist, &mut |path| {
-        let _ = sums.add(&path);
-    });
-    let text = sums.to_plain_text();
-    Some(slu_utils::checksums::calculate_sha256(text.as_bytes()))
+    None
 }
 
 fn git_output(args: &[&str]) -> Option<String> {
