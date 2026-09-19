@@ -199,6 +199,7 @@ slu_commands_declaration! {
     TriggerContextMenu = trigger_context_menu(menu: ContextMenu, forward_to: Option<String>),
     TriggerDialog = trigger_dialog(dialog: Dialog),
     SetCurrentWidgetStatus = set_current_widget_status(status: WidgetStatus),
+    RecordBootStage = record_boot_stage(stage: String),
     GetSelfWindowId = get_self_window_handle() -> isize,
     SetSelfPosition = set_self_position(rect: Rect),
     SetSelfZOrder = set_self_z_order(z_order: ZOrder),
@@ -267,6 +268,13 @@ slu_commands_declaration! {
     WegGetAutomationMetrics = weg_get_automation_metrics() -> AutomationMetrics,
     WegGetTrace = weg_get_trace() -> Vec<TraceFrame>,
     WegHidePreview = weg_hide_preview(),
+
+    // NAI semantic kernel (shared by UI / CLI / MCP / REST)
+    NaiGraph = nai_graph() -> serde_json::Value,
+    NaiCapabilities = nai_capabilities() -> Vec<serde_json::Value>,
+    NaiActivate = nai_activate(identification: String) -> serde_json::Value,
+    NaiNode = nai_node(identification: String) -> Option<WindowEntry>,
+    NaiUndoLast = nai_undo_last() -> Option<serde_json::Value>,
 
     // Windows Manager
     WmGetRenderTree = wm_get_render_tree() -> TwmGlobalRuntimeTree,

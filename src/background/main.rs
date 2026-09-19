@@ -4,6 +4,7 @@
 
 mod app;
 mod backups;
+mod boot;
 mod cli;
 mod error;
 mod exposed;
@@ -38,7 +39,7 @@ use session::application::SessionManager;
 use slu_ipc::messages::SvcAction;
 use tauri_plugins::register_plugins;
 use utils::{
-    integrity::{is_already_running, print_initial_information, restart_as_appx, warn_if_elevated},
+    integrity::{print_initial_information, restart_as_appx, warn_if_elevated},
     is_running_as_appx, was_installed_using_msix,
 };
 
@@ -66,6 +67,8 @@ pub fn get_tokio_handle() -> &'static tokio::runtime::Handle {
 
 #[tokio::main]
 async fn main() -> std::process::ExitCode {
+    boot::record_global("process.started");
+
     if let Err(err) = SeelenLogger::init() {
         let fallback = std::env::temp_dir().join("seelen-ui-logger-error.log");
         let _ = std::fs::write(&fallback, format!("Failed to initialize logger: {err:?}"));
@@ -77,9 +80,19 @@ async fn main() -> std::process::ExitCode {
         return std::process::ExitCode::from(1);
     };
 
-    if is_already_running() {
-        SelfPipe::request_open_settings().await.log_error();
-        return std::process::ExitCode::from(0);
+    let outcome = utils::integrity::acquire_instance_mutex();
+    match outcome {
+        utils::integrity::InstanceOutcome::Primary => {
+            boot::record_global("single_instance.acquired")
+        }
+        // Another GUI instance owns the mutex: hand activation to it, initialize
+        // no widgets, exit immediately.
+        utils::integrity::InstanceOutcome::Secondary => {
+            SelfPipe::request_open_settings().await.log_error();
+            return std::process::ExitCode::from(0);
+        }
+        // Fail closed: unknown singleton state.
+        utils::integrity::InstanceOutcome::Failed => return std::process::ExitCode::from(2),
     }
 
     if was_installed_using_msix() && !is_running_as_appx() {
@@ -163,6 +176,7 @@ async fn setup(app_handle: &tauri::AppHandle<tauri::Wry>) -> Result<()> {
         return Err(format!("Integrity check failed: {err:?}").into());
     }
     CRONOMETER.record("Integrity check");
+    boot::record_global("integrity.complete");
 
     SeelenUI::start().await?;
     CRONOMETER.record("Start");

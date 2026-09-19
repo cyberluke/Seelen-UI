@@ -103,6 +103,7 @@ impl WidgetWebview {
         Ok(Self(window))
     }
 
+    #[allow(dead_code)]
     pub fn reload(&self) {
         self.0.reload().log_error();
     }

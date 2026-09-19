@@ -98,28 +98,85 @@ pub fn warn_if_elevated(app: &tauri::AppHandle) {
 }
 
 // https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createmutexw
+//
+// Outcome of the per-session mutex acquisition.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InstanceOutcome {
+    /// This process owns the mutex: it is the primary GUI instance.
+    Primary,
+    /// Another GUI instance already owns the mutex for this session.
+    Secondary,
+    /// The mutex could not be created / queried. Fail closed: the caller must
+    /// not initialize widgets with an unknown instance state.
+    Failed,
+}
+
+static INSTANCE_STATE: std::sync::OnceLock<(InstanceOutcome, u32, String)> =
+    std::sync::OnceLock::new();
+
+/// Diagnostics for `slu runtime instance`: (outcome, session id, mutex name).
+pub fn instance_status() -> (bool, u32, String) {
+    match INSTANCE_STATE.get() {
+        Some((outcome, session, name)) => (
+            matches!(outcome, InstanceOutcome::Primary),
+            *session,
+            name.clone(),
+        ),
+        None => (false, 0, "not-acquired".to_string()),
+    }
+}
+
+#[allow(dead_code)]
 pub fn is_already_running() -> bool {
-    unsafe {
+    matches!(acquire_instance_mutex(), InstanceOutcome::Secondary)
+}
+
+pub fn acquire_instance_mutex() -> InstanceOutcome {
+    let outcome = unsafe {
         let session_id = WindowsApi::current_session_id();
         let mutex_name = format!("Local\\Seelen-UI-Instance-{}", session_id);
         let mutex_name_wide = WindowsString::from_str(&mutex_name);
 
         // Try to create a named mutex specific to the current session
-        let Ok(handle) = CreateMutexW(None, true, mutex_name_wide.as_pcwstr()) else {
-            // Failed to create mutex, assume not running to be safe
-            log::warn!("Failed to create instance mutex, proceeding anyway");
-            return false;
+        let handle = match CreateMutexW(None, true, mutex_name_wide.as_pcwstr()) {
+            Ok(handle) => handle,
+            Err(err) => {
+                // Fail closed in production: with an unknown mutex state we can
+                // not prove singleton-ness, so treat as non-primary.
+                log::error!(
+                    "Failed to create instance mutex ({mutex_name}) for session {session_id}, pid {}, failing closed: {err:?}",
+                    std::process::id()
+                );
+                return {
+                    let _ = INSTANCE_STATE.set((InstanceOutcome::Failed, session_id, mutex_name));
+                    InstanceOutcome::Failed
+                };
+            }
         };
 
         // if mutex existed before, another instance is already running for this session
         let last_error = GetLastError();
         if last_error == ERROR_ALREADY_EXISTS {
-            return true;
+            InstanceOutcome::Secondary
+        } else {
+            // This is the first instance for this session.
+            // Keep the handle alive by leaking it (will be released when process exits)
+            Box::leak(Box::new(handle));
+            InstanceOutcome::Primary
         }
+    };
 
-        // This is the first instance for this session
-        // Keep the handle alive by leaking it (will be released when process exits)
-        Box::leak(Box::new(handle));
-        false
-    }
+    let session_id = INSTANCE_STATE
+        .get()
+        .map(|(_, s, _)| *s)
+        .unwrap_or_else(WindowsApi::current_session_id);
+    let _ = INSTANCE_STATE.set((outcome, session_id, {
+        format!("Local\\Seelen-UI-Instance-{}", session_id)
+    }));
+
+    log::info!(
+        "Instance mutex: session={session_id}, pid={}, outcome={outcome:?}, mutex=Local\\Seelen-UI-Instance-{session_id}",
+        std::process::id()
+    );
+    outcome
 }

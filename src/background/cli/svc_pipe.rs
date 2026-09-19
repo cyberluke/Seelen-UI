@@ -38,6 +38,18 @@ impl ServicePipe {
         ServiceIpc::can_stablish_connection()
     }
 
+    /// PID of the running `slu-service.exe` in the current session, if any.
+    pub fn service_pid() -> Option<u32> {
+        let mut sys = sysinfo::System::new();
+        sys.refresh_processes(sysinfo::ProcessesToUpdate::All, true);
+        sys.processes().values().find_map(|p| {
+            let name = p.name().to_string_lossy();
+            (name.eq_ignore_ascii_case("slu-service")
+                || name.eq_ignore_ascii_case("slu-service.exe"))
+            .then(|| p.pid().as_u32())
+        })
+    }
+
     pub fn service_path() -> Result<PathBuf> {
         let service_path = if was_installed_using_msix() {
             WindowsApi::known_folder(FOLDERID_LocalAppData)?

@@ -217,6 +217,7 @@ pub fn register_invoke_handler(app_builder: Builder<Wry>) -> Builder<Wry> {
     use crate::modules::media::waveform::infrastructure::*;
     use crate::modules::monitors::brightness::infrastructure::*;
     use crate::modules::monitors::infrastructure::*;
+    use crate::modules::nai::infrastructure::*;
     use crate::modules::network::infrastructure::*;
     use crate::modules::notifications::infrastructure::*;
     use crate::modules::power::infrastructure::*;

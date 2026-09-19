@@ -63,11 +63,13 @@ impl SeelenUI {
         tokio::join!(
             async {
                 RESOURCES.initialize().await;
+                crate::boot::record_global("resources.complete");
                 CRONOMETER.record("RESOURCES");
             },
             async {
                 tokio::task::spawn_blocking(|| {
                     let _ = FULL_STATE.load();
+                    crate::boot::record_global("state.complete");
                     CRONOMETER.record("FULL_STATE");
                 })
                 .await
@@ -90,6 +92,7 @@ impl SeelenUI {
         }
 
         WIDGET_MANAGER.reconcile()?;
+        crate::boot::record_global("widget.reconcile.complete");
         CRONOMETER.record("reconcile");
 
         create_background_window()?;

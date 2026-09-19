@@ -10,9 +10,14 @@ pub use svc_pipe::ServicePipe;
 
 use std::sync::atomic::Ordering;
 
-use slu_ipc::{AppIpc, commands::AppCommand, messages::AppMessage};
+use slu_ipc::{
+    AppIpc,
+    commands::{AppCommand, RuntimeCommand},
+    messages::AppMessage,
+};
 
 use crate::{
+    boot,
     error::Result,
     resources::cli as resources_cli,
     virtual_desktops::cli as vd_cli,
@@ -87,7 +92,9 @@ pub async fn process_app_command(cmd: AppCommand) -> Result<Option<String>> {
             return weg_cli::process(command);
         }
         AppCommand::Widget(command) => {
-            widget_cli::run(command)?;
+            if let Some(payload) = widget_cli::run(command)? {
+                return Ok(Some(payload));
+            }
         }
         AppCommand::Resource(command) => {
             resources_cli::process(command).await?;
@@ -106,6 +113,16 @@ pub async fn process_app_command(cmd: AppCommand) -> Result<Option<String>> {
         }
         AppCommand::Tray(cli) => {
             return tray_cli::process(cli).await;
+        }
+        AppCommand::Runtime(cli) => {
+            let value = match cli.subcommand {
+                RuntimeCommand::Instance => boot::instance_info(),
+                RuntimeCommand::Provenance => boot::provenance(),
+            };
+            return Ok(Some(value.to_string()));
+        }
+        AppCommand::Nai(cli) => {
+            return crate::modules::nai::infrastructure::process_cli(cli);
         }
         _ => {
             return Err("Command does not support instance execution".into());

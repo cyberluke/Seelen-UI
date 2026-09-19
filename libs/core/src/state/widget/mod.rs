@@ -261,4 +261,6 @@ pub enum WidgetStatus {
     CrashedOnCreation,
     /// Webview window is being restarted
     Restarting,
+    /// The mount watchdog gave up: the frontend never reached `Ready`
+    MountFailed,
 }

@@ -51,6 +51,10 @@ pub enum AppCommand {
     ToggleShortcutsPause,
     /// System tray semantic API
     Tray(TrayCli),
+    /// Runtime provenance / instance diagnostics
+    Runtime(RuntimeCli),
+    /// NAI semantic desktop kernel surface
+    Nai(NaiCli),
 }
 
 impl SluCliCommand for AppCommand {
@@ -61,6 +65,23 @@ impl SluCliCommand for AppCommand {
             _ => CommandExecutionMode::MainInstance,
         }
     }
+}
+
+// ===== Runtime =====
+
+/// Runtime diagnostics
+#[derive(Debug, Serialize, Deserialize, clap::Args)]
+pub struct RuntimeCli {
+    #[command(subcommand)]
+    pub subcommand: RuntimeCommand,
+}
+
+#[derive(Debug, Serialize, Deserialize, clap::Subcommand)]
+pub enum RuntimeCommand {
+    /// GUI PID, service PID, session id, mutex ownership, HTTP port owner
+    Instance,
+    /// Build provenance: git sha, profile, tauri mode, bundle hashes
+    Provenance,
 }
 
 // ===== Debugger =====
@@ -239,6 +260,44 @@ pub struct WidgetCli {
 pub enum WidgetCommand {
     /// Triggers a widget
     Trigger { widget_id: String },
+    /// List all widget instances with status, HWND and monitor/instance ids
+    List,
+    /// Print the boot pipeline flight recorder (all pods or one widget)
+    Boot {
+        /// widget id (e.g. @seelen/weg); omit for the global overview
+        widget_id: Option<String>,
+    },
+    /// Open DevTools for a widget (by widget id)
+    Devtools {
+        /// widget id (e.g. @seelen/weg)
+        widget_id: String,
+    },
+}
+
+// ===== NAI semantic kernel =====
+
+/// NAI OS semantic desktop commands
+#[derive(Debug, Serialize, Deserialize, clap::Args)]
+pub struct NaiCli {
+    #[command(subcommand)]
+    pub subcommand: NaiCommand,
+}
+
+#[derive(Debug, Serialize, Deserialize, clap::Subcommand)]
+pub enum NaiCommand {
+    /// Snapshot of the semantic desktop graph (windows, workspaces, monitors)
+    Graph,
+    /// Capability registry (id, risk, provider, latency class)
+    Capabilities,
+    /// Activate an object by logical identity or alias
+    Activate {
+        /// identification token
+        identification: String,
+    },
+    /// Undo the last reversible NAI action
+    Undo,
+    /// Flight-recorder trace
+    Trace,
 }
 
 // ===== Popups =====

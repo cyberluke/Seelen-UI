@@ -4,6 +4,7 @@ pub mod focus_assist;
 pub mod fonts;
 pub mod media;
 pub mod monitors;
+pub mod nai;
 pub mod network;
 pub mod notifications;
 pub mod power;

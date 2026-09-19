@@ -270,6 +270,11 @@ export class Widget extends WidgetBasics {
       return;
     }
 
+    // the first library call marks the point where the widget module finished
+    // evaluating in this webview
+    invoke(SeelenCommand.RecordBootStage, { stage: "widget.module.loaded" }).catch(() => {});
+    invoke(SeelenCommand.RecordBootStage, { stage: "widget.init.start" }).catch(() => {});
+
     this.runtimeState.initialized = true;
     await this.prepare();
 
@@ -321,6 +326,7 @@ export class Widget extends WidgetBasics {
     }
 
     console.debug(`boot: ${this.id} Widget.self.init finished`);
+    invoke(SeelenCommand.RecordBootStage, { stage: "widget.init.done" }).catch(() => {});
   }
 
   /**
@@ -342,6 +348,7 @@ export class Widget extends WidgetBasics {
     }
 
     this.runtimeState.ready = true;
+    invoke(SeelenCommand.RecordBootStage, { stage: "widget.ready.start" }).catch(() => {});
     if (this.autoSize.enabled) {
       await this.executeAutoSize();
     }
@@ -352,6 +359,7 @@ export class Widget extends WidgetBasics {
 
     // this will mark the widget as ready, and send pending trigger event if exists
     await invoke(SeelenCommand.SetCurrentWidgetStatus, { status: WidgetStatus.Ready });
+    invoke(SeelenCommand.RecordBootStage, { stage: "widget.ready.done" }).catch(() => {});
     console.debug(`boot: ${this.id} Widget.self.ready invoked`);
   }
 

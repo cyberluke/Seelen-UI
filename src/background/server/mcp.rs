@@ -162,6 +162,27 @@ pub fn tool_definitions() -> Vec<Value> {
             "Forward a native tray action (LeftClick|RightClick|MiddleClick|LeftDoubleClick|HoverEnter|HoverLeave|HoverMove).",
             r#"{"type":"object","properties":{"logicalId":{"type":"string"},"action":{"type":"string"}},"required":["logicalId","action"]}"#,
         ),
+        // ── NAI semantic kernel ─────────────────────────────────────────
+        tool(
+            "nai_graph",
+            "Snapshot of the semantic desktop graph: windows, applications, workspaces, monitors, widgets with logical identity + capabilities.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_capabilities",
+            "Capability registry descriptors (id, risk, confirmation, undo, latency class, provider priority).",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_activate",
+            "Activate an object by logical identity, alias or workspace name (switches workspace if matched, otherwise focuses window).",
+            r#"{"type":"object","properties":{"identification":{"type":"string"}},"required":["identification"]}"#,
+        ),
+        tool(
+            "nai_undo_last",
+            "Reverse the last reversible NAI action.",
+            r#"{"type":"object"}"#,
+        ),
     ]
 }
 
@@ -393,6 +414,14 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
                 .map_err(|e| e.to_string())?;
             json!({ "success": true })
         }
+        // ── NAI semantic kernel ──────────────────────────────────────────
+        "nai_graph" => crate::modules::nai::graph(),
+        "nai_capabilities" => serde_json::to_value(crate::modules::nai::capabilities()).unwrap(),
+        "nai_activate" => serde_json::to_value(
+            crate::modules::nai::activate(&get("identification")).map_err(|e| e.to_string())?,
+        )
+        .unwrap(),
+        "nai_undo_last" => serde_json::to_value(crate::modules::nai::undo_last()).unwrap(),
         other => return Err(format!("unknown tool: {other}")),
     };
     Ok(value)

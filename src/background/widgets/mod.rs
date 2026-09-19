@@ -50,12 +50,25 @@ pub fn set_current_widget_status(
     status: WidgetStatus,
 ) -> Result<()> {
     let label = WidgetWebviewLabel::try_from_raw(webview.label())?;
+    if matches!(status, WidgetStatus::Ready) {
+        // last mount-pipeline checkpoint: proves the frontend reached
+        // `Widget.ready()` for the current renderer generation
+        crate::boot::record_pod(&label.raw, "widget.ready.done");
+    }
     WIDGET_MANAGER.set_status(&label, status);
 
     if let Some(pending) = PENDING_TRIGGERS.remove(&label) {
         log::info!("Emitting pending trigger for {label}");
         get_app_handle().emit_to(label.raw, SeelenEvent::WidgetTriggered, &pending)?;
     }
+    Ok(())
+}
+
+/// Records a frontend bootstrap stage into the boot flight recorder.
+#[tauri::command(async)]
+pub fn record_boot_stage(webview: tauri::WebviewWindow, stage: String) -> Result<()> {
+    let label = WidgetWebviewLabel::try_from_raw(webview.label())?;
+    crate::boot::record_pod_frontend(&label.raw, &stage);
     Ok(())
 }
 

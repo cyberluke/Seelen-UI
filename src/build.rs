@@ -24,7 +24,60 @@ fn main() {
         .unwrap();
     }
 
+    emit_provenance_env(&sums_path);
+
     tauri_build::build();
+}
+
+/// Build-time provenance baked into the binary (`slu runtime provenance`).
+fn emit_provenance_env(sums_path: &PathBuf) {
+    let git_sha = git_output(&["rev-parse", "HEAD"]).unwrap_or_else(|| "unknown".into());
+    let dirty = git_output(&["status", "--porcelain"])
+        .map(|s| if s.trim().is_empty() { "0" } else { "1" })
+        .unwrap_or("1");
+    let build_timestamp = git_output(&["log", "-1", "--format=%cI"]).unwrap_or_default();
+    let target = std::env::var("TARGET").unwrap_or_else(|_| "unknown".into());
+
+    let resource_hash = std::fs::read(sums_path)
+        .ok()
+        .map(|raw| slu_utils::checksums::calculate_sha256(&raw));
+    // dist bundle hash: hash of the concatenated generated index files, when present
+    let frontend_hash = dist_bundle_hash();
+
+    println!("cargo:rustc-env=SUL_GIT_SHA={git_sha}");
+    println!("cargo:rustc-env=SUL_GIT_DIRTY={dirty}");
+    println!("cargo:rustc-env=SUL_BUILD_TIME={build_timestamp}");
+    println!("cargo:rustc-env=SUL_TARGET={target}");
+    println!(
+        "cargo:rustc-env=SUL_STATIC_HASH={}",
+        resource_hash.unwrap_or_else(|| "unknown".into())
+    );
+    println!(
+        "cargo:rustc-env=SUL_FRONTEND_HASH={}",
+        frontend_hash.unwrap_or_else(|| "unknown".into())
+    );
+}
+
+fn dist_bundle_hash() -> Option<String> {
+    // `src/static/dist` is produced by `npm run build:ui`; fold its file hashes.
+    let mut sums = CheckSums::new();
+    let dist = PathBuf::from("static").join("dist");
+    if !dist.exists() {
+        return None;
+    }
+    read_folder_recursive(dist, &mut |path| {
+        let _ = sums.add(&path);
+    });
+    let text = sums.to_plain_text();
+    Some(slu_utils::checksums::calculate_sha256(text.as_bytes()))
+}
+
+fn git_output(args: &[&str]) -> Option<String> {
+    std::process::Command::new("git")
+        .args(args)
+        .output()
+        .ok()
+        .and_then(|out| String::from_utf8(out.stdout).ok())
 }
 
 fn target_dir() -> PathBuf {
