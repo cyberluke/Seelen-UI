@@ -129,6 +129,7 @@ export enum SeelenCommand {
   WegReportPreviewLatency = "weg_report_preview_latency",
   WegGetAutomationMetrics = "weg_get_automation_metrics",
   WegGetTrace = "weg_get_trace",
+  WegHidePreview = "weg_hide_preview",
   WmGetRenderTree = "wm_get_render_tree",
   SetAppWindowsPositions = "set_app_windows_positions",
   RequestFocus = "request_focus",

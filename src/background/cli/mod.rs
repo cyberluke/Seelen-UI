@@ -2,7 +2,7 @@ mod debugger;
 mod self_pipe;
 pub mod shortcuts;
 mod svc_pipe;
-mod tray_cli;
+pub mod tray_cli;
 mod uri;
 
 pub use self_pipe::SelfPipe;

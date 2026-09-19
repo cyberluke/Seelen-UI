@@ -5,7 +5,7 @@ use super::application::WegPersistedState;
 /// Stable logical identity of a managed window.
 #[derive(Debug, Clone)]
 pub struct LogicalWindowIdentity {
-    /// normalized application key (umid or exe basename, lowercase)
+    /// normalized application key (provider table key, umid or exe basename, lowercase)
     pub application: String,
     /// logical local id inside the application group
     pub local_id: String,
@@ -41,55 +41,125 @@ const SKIP_SEGMENTS: &[&str] = &[
     "pwsh",
 ];
 
-/// A tiny application identity provider table. Each entry matches the
-/// normalized exe/umid prefix and explains which parsing strategy to use.
-#[derive(Debug)]
-struct IdentityRule {
-    /// exe basenames (lowercase) handled by this rule
-    exe_prefixes: &'static [&'static str],
-    /// umids (compared case-insensitively) handled by this rule
-    umids: &'static [&'static str],
-    /// normalized application key produced when the exe path identifies insiders/other
-    insiders_key: Option<&'static str>,
+/// Which identity strategy a window belongs to. One provider per application
+/// family instead of one generic parser pretending to fit every app.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IdentityProvider {
+    VsCode,
+    Terminal,
+    /// the Edge family (stable/beta/dev/canary share the slot strategy)
+    Edge,
+    Generic,
 }
 
-const IDENTITY_RULES: &[IdentityRule] = &[
-    IdentityRule {
-        exe_prefixes: &["code", "code - insiders"],
-        umids: &[
-            "microsoft.visualstudiocode",
-            "microsoft.visualstudiocode.insiders",
-        ],
-        insiders_key: Some("vscode-insiders"),
-    },
-    IdentityRule {
-        exe_prefixes: &["msedge"],
-        umids: &["microsoft.edge", "microsoft.edge.beta"],
-        insiders_key: Some("msedge-beta"),
-    },
-    IdentityRule {
-        exe_prefixes: &["wt"],
-        umids: &["microsoft.windowsterminal", "microsoft.windowsterminal"],
-        insiders_key: Some("wt-canary"),
-    },
-];
-
-/// Normalized application key: umid first, then the exe basename.
-fn application_key(win: &UserAppWindow) -> String {
-    if let Some(umid) = &win.umid {
-        return umid.to_lowercase();
-    }
+/// The lowercase executable stem of a window (without `.exe`), if known.
+fn exe_stem(win: &UserAppWindow) -> Option<String> {
     win.process
         .path
         .as_ref()
         .and_then(|p| p.file_stem())
         .map(|s| s.to_string_lossy().to_lowercase())
-        .unwrap_or_else(|| win.app_name.to_lowercase())
 }
 
-/// Stable, application-aware logical id. Never HWND-based so the identity
-/// survives recreation (the first matching segment of the title is stable).
-fn logical_local_id(win: &UserAppWindow, app_key: &str) -> String {
+/// Normalized umid for matching ("Microsoft Edge" -> "microsoft.edge").
+fn normalized_umid(win: &UserAppWindow) -> Option<String> {
+    win.umid
+        .as_ref()
+        .map(|u| u.to_lowercase().replace(' ', "."))
+}
+
+/// Classify a window into exactly one identity provider.
+pub fn provider_for(win: &UserAppWindow) -> IdentityProvider {
+    let stem = exe_stem(win).unwrap_or_default();
+    let umid = normalized_umid(win).unwrap_or_default();
+
+    if stem.starts_with("msedge") || stem == "edge" || umid.starts_with("microsoft.edge") {
+        return IdentityProvider::Edge;
+    }
+    if matches!(stem.as_str(), "code" | "code - insiders")
+        || umid.starts_with("microsoft.visualstudiocode")
+    {
+        return IdentityProvider::VsCode;
+    }
+    if stem == "wt" || umid.starts_with("microsoft.windowsterminal") {
+        return IdentityProvider::Terminal;
+    }
+    IdentityProvider::Generic
+}
+
+/// Resolve the deterministic application key (and, for Edge, the channel).
+fn application_key(win: &UserAppWindow) -> String {
+    let stem = exe_stem(win).unwrap_or_default();
+    let umid = normalized_umid(win).unwrap_or_default();
+    let raw_path = win
+        .process
+        .path
+        .as_ref()
+        .map(|p| p.to_string_lossy().to_lowercase())
+        .unwrap_or_default();
+
+    match provider_for(win) {
+        IdentityProvider::VsCode => {
+            let insiders = stem == "code - insiders"
+                || umid.contains(".insiders")
+                || raw_path.contains("insiders");
+            if insiders {
+                "vscode-insiders".to_string()
+            } else {
+                "code".to_string()
+            }
+        }
+        IdentityProvider::Terminal => {
+            if umid.ends_with(".canary") || raw_path.contains("canary") {
+                "wt-canary".to_string()
+            } else {
+                "wt".to_string()
+            }
+        }
+        IdentityProvider::Edge => edge_channel_key(&stem, &umid, &raw_path),
+        IdentityProvider::Generic => {
+            if !umid.is_empty() {
+                umid
+            } else if !stem.is_empty() {
+                stem
+            } else {
+                win.app_name.to_lowercase()
+            }
+        }
+    }
+}
+
+/// Map the real Edge product metadata (exe name / umid / install path) to the
+/// channel-specific application key. No `insiders` condition is used for the
+/// browser channels.
+fn edge_channel_key(stem: &str, umid: &str, raw_path: &str) -> String {
+    if stem == "msedge_beta"
+        || stem.ends_with("_beta")
+        || umid.ends_with(".beta")
+        || raw_path.contains("edge beta")
+    {
+        "edge-beta".to_string()
+    } else if stem == "msedge_dev"
+        || stem.ends_with("_dev")
+        || umid.ends_with(".dev")
+        || raw_path.contains("edge dev")
+    {
+        "edge-dev".to_string()
+    } else if stem == "msedge_canary"
+        || stem.ends_with("_canary")
+        || umid.ends_with(".canary")
+        || raw_path.contains("edge canary")
+    {
+        "edge-canary".to_string()
+    } else {
+        "edge-stable".to_string()
+    }
+}
+
+/// Generic title parser shared by the VsCode / Terminal / Generic providers.
+/// For these applications the first meaningful title segment is a stable
+/// project / document name.
+fn logical_local_id(win: &UserAppWindow) -> String {
     let title = win.title.trim();
     if !title.is_empty() {
         let segments: Vec<&str> = title
@@ -113,9 +183,6 @@ fn logical_local_id(win: &UserAppWindow, app_key: &str) -> String {
             break;
         }
 
-        // vscode-aware: prefer the workspace name segment (first meaningful),
-        // otherwise fall back to the whole title.
-        let _ = project.is_none() || app_key == "__any__";
         if let Some(p) = project {
             return p;
         }
@@ -124,46 +191,46 @@ fn logical_local_id(win: &UserAppWindow, app_key: &str) -> String {
     format!("win-{:x}", win.hwnd)
 }
 
+// ============================ resolution ============================
+
+/// Resolve the deterministic application key for one window (public wrapper).
+pub fn application_key_for(win: &UserAppWindow) -> String {
+    application_key(win)
+}
+
 /// Resolve the stable identity for one managed window.
+///
+/// Browsers (Edge) use the persisted slot table as `local_id`, because the
+/// active tab title is display/content state, not identity. Every other
+/// provider uses the application-aware title parser.
 pub fn identity_for(win: &UserAppWindow, persisted: &WegPersistedState) -> LogicalWindowIdentity {
-    let raw_app = application_key(win);
-
-    // find matching table rule
-    let rule = IDENTITY_RULES.iter().find(|r| {
-        let stem = raw_app.trim_end_matches(".exe");
-        r.exe_prefixes.contains(&stem)
-            || r.umids.iter().any(|u| {
-                raw_app == *u || raw_app.starts_with(u) && raw_app[u.len()..].starts_with('.')
-            })
-    });
-
-    let application = match rule {
-        Some(rule) => {
-            let mut key = raw_app.clone();
-            // prefer the table key (normalized) over the raw umid casing
-            if let Some(first) = rule.exe_prefixes.first() {
-                key = first.to_string();
-            } else if let Some(first) = rule.umids.first() {
-                key = first.to_string();
-            }
-            if let Some(insiders) = rule.insiders_key
-                && let Some(path) = &win.process.path
-                && path.to_string_lossy().to_lowercase().contains("insiders")
-            {
-                key = insiders.to_string();
-            }
-            key
-        }
-        None => raw_app,
+    let application = application_key(win);
+    let provider = provider_for(win);
+    let local_id = match provider {
+        IdentityProvider::Edge => edge_slot(win, &application, persisted),
+        _ => logical_local_id(win),
     };
-
-    let local_id = logical_local_id(win, &application);
     let full = format!("{application}:{local_id}");
     let alias = persisted.aliases.get(&full).cloned();
-    let display_title = alias
-        .clone()
-        .or_else(|| (!local_id.is_empty()).then(|| local_id.clone()))
-        .unwrap_or_else(|| win.title.clone());
+    let display_title = alias.clone().unwrap_or_else(|| match provider {
+        // Slot ids are positional labels, not content: the display keeps the
+        // active content title (the app-normalized title segment).
+        IdentityProvider::Edge => {
+            let content = logical_local_id(win);
+            if content.is_empty() {
+                win.title.clone()
+            } else {
+                content
+            }
+        }
+        _ => {
+            if local_id.is_empty() {
+                win.title.clone()
+            } else {
+                local_id.clone()
+            }
+        }
+    });
 
     LogicalWindowIdentity {
         application,
@@ -172,6 +239,62 @@ pub fn identity_for(win: &UserAppWindow, persisted: &WegPersistedState) -> Logic
         alias,
     }
 }
+
+/// Geometry/monitor fingerprint used for deterministic slot reclamation after
+/// an application restart.
+pub fn slot_fingerprint(win: &UserAppWindow) -> String {
+    match &win.rect {
+        Some(rect) => format!(
+            "{}:{}x{}",
+            win.monitor,
+            rect.right - rect.left,
+            rect.bottom - rect.top
+        ),
+        None => format!("{}:no-rect", win.monitor),
+    }
+}
+
+/// Reclaim or assign the persistent window slot for one browser window.
+///
+/// Matching first by the saved geometry/monitor fingerprint keeps the same
+/// logical slot across restarts; new windows take the smallest unused slot
+/// number, in creation order.
+pub fn edge_slot(win: &UserAppWindow, app_key: &str, persisted: &WegPersistedState) -> String {
+    let fingerprint = slot_fingerprint(win);
+    let table = persisted.slots.get(app_key);
+    if let Some(record) = table.and_then(|records| {
+        records
+            .iter()
+            .find(|r| r.fingerprint == fingerprint)
+            .or_else(|| {
+                records
+                    .iter()
+                    .find(|r| r.fingerprint.starts_with(win.monitor.as_str()))
+            })
+    }) {
+        return record.name.clone();
+    }
+
+    let mut used: Vec<u32> = table
+        .map(|records| {
+            records
+                .iter()
+                .filter_map(|r| r.name.strip_prefix("window-")?.parse::<u32>().ok())
+                .collect()
+        })
+        .unwrap_or_default();
+    used.sort_unstable();
+    let mut next = 1u32;
+    for n in &used {
+        if *n == next {
+            next += 1;
+        }
+    }
+    format!("window-{next}")
+}
+
+// Slot persistence lives in `application::save_slots` (called from
+// `window_entries`); this module only reads the persisted table.
 
 #[cfg(test)]
 mod tests {
@@ -243,5 +366,31 @@ mod tests {
         let ident = identity_for(&win, &persisted);
         assert_eq!(ident.application, "notepad");
         assert_eq!(ident.local_id, "notes.txt");
+    }
+
+    #[test]
+    fn edge_slot_identity_is_independent_from_tab_title() {
+        let persisted = WegPersistedState::default();
+        let win = sample(
+            Some("Microsoft Edge"),
+            Some("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"),
+            "LinkedIn - Microsoft Edge",
+        );
+        let ident = identity_for(&win, &persisted);
+        assert_eq!(ident.application, "edge-stable");
+        assert_eq!(ident.local_id, "window-1");
+        assert_eq!(ident.display_title, "LinkedIn");
+    }
+
+    #[test]
+    fn edge_beta_channel_key() {
+        let persisted = WegPersistedState::default();
+        let win = sample(
+            Some("Microsoft Edge Beta"),
+            Some("C:\\Program Files (x86)\\Microsoft\\Edge Beta\\Application\\msedge_beta.exe"),
+            "GitHub - Microsoft Edge Beta",
+        );
+        let ident = identity_for(&win, &persisted);
+        assert_eq!(ident.application, "edge-beta");
     }
 }

@@ -65,14 +65,21 @@ pub struct ProcessInformation {
     pub path: Option<PathBuf>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[cfg_attr(all(feature = "gen-binds", not(feature = "salvo")), derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
+#[serde(default, rename_all = "camelCase")]
 pub struct UserAppWindowPreview {
     pub hash: String,
     pub data: String,
     pub width: u32,
     pub height: u32,
+    /// unix timestamp (ms) when this frame was captured
+    pub captured_at_ms: u64,
+    /// window title observed at capture time, used to detect stale frames
+    pub title_at_capture: String,
+    /// content generation this bitmap belongs to; a preview whose generation
+    /// is older than the live generation of the window is stale
+    pub generation: u64,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

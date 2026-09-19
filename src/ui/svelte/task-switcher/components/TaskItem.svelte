@@ -1,12 +1,13 @@
 <script lang="ts">
-  import type { UserAppWindow } from "@seelen-ui/lib/types";
+  import type { WindowEntry } from "@seelen-ui/lib/types";
   import { invoke, SeelenCommand } from "@seelen-ui/lib";
   import { globalState } from "../state/index.svelte.ts";
+  import { windows } from "../state/getters.svelte.ts";
   import { FileIcon, Icon } from "libs/ui/svelte/components/Icon";
   import MissingIcon from "libs/ui/svelte/components/Icon/MissingIcon.svelte";
 
   interface Props {
-    task: UserAppWindow;
+    task: WindowEntry;
     index: number;
   }
 
@@ -15,6 +16,10 @@
   let boxRef: HTMLDivElement | undefined = $state();
   const isSelected = $derived(task.hwnd === globalState.selectedWindow);
   const preview = $derived(globalState.previews[task.hwnd]);
+  const label = $derived(task.alias || task.displayTitle || task.title);
+
+  // The shared window icon comes from the raw metadata table
+  const raw = $derived(windows.value.find((w) => w.hwnd === task.hwnd));
 
   // Focus button when selected
   $effect(() => {
@@ -46,9 +51,9 @@
 
   function handleClick() {
     globalState.showing = false;
-    invoke(SeelenCommand.WegToggleWindowState, {
-      hwnd: task.hwnd,
-      wasFocused: false,
+    // Task Switcher selection = direct native focus action (no dock toggling)
+    invoke(SeelenCommand.WegFocusWindow, {
+      identification: task.runtimeWindowId,
     });
   }
 
@@ -66,6 +71,7 @@
   }
 
   function navigateToItem(direction: "next" | "previous", currentIndex: number): void {
+    // walk the frozen session order exactly as displayed
     const windows = globalState.windows;
     const totalItems = windows.length;
 
@@ -90,8 +96,8 @@
   onfocus={handleFocus}
 >
   <div class="task-header">
-    <FileIcon class="task-icon" path={task.relaunch?.icon || task.process.path} umid={task.umid} />
-    <div class="task-title">{task.title}</div>
+    <FileIcon class="task-icon" path={raw?.relaunch?.icon || raw?.process.path} umid={raw?.umid ?? undefined} />
+    <div class="task-title">{label}</div>
     <button
       data-skin="transparent"
       onclick={(e) => {
@@ -103,9 +109,10 @@
     </button>
   </div>
   <div class="task-preview-container">
-    {#if preview}
+    {#if preview && preview.titleAtCapture === task.title}
       <img class="task-preview" src={`data:image/webp;base64,${preview.data}`} alt="" />
     {:else}
+      <!-- placeholder instead of a stale frame from another content generation -->
       <MissingIcon class="task-no-preview" />
     {/if}
   </div>

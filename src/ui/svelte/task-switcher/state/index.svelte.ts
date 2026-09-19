@@ -1,12 +1,14 @@
 import { invoke, SeelenCommand } from "@seelen-ui/lib";
+import type { WindowEntry } from "@seelen-ui/lib/types";
 import { debounce } from "lodash";
 import z from "zod";
-import { focusedWinId, monitors, previews, settings, widget, windows } from "./getters.svelte.ts";
+import { entries, focusedWinId, monitors, previews, settings, widget, windows } from "./getters.svelte.ts";
 
-export { focusedWinId, monitors, previews, settings, widget, windows };
+export { entries, focusedWinId, monitors, previews, settings, widget, windows };
 
 const WidgetConfigSchema = z.object({
   onlyOnActiveMonitor: z.boolean(),
+  ordering: z.enum(["SemanticPersistent", "MRU", "Alphabetical"]).default("SemanticPersistent"),
 });
 
 const widgetConfig = $derived.by(
@@ -22,7 +24,86 @@ let autoConfirm = $state(false);
 
 let desiredPosition = $state<{ x: number; y: number } | null>(null);
 
+// Frozen session snapshot: the runtime ids in persistent spatial order, fixed
+// when the switcher opens. Focus changes only patch/move selection, they never
+// reshuffle this list while the session is open.
+let sessionOrder = $state<string[]>([]);
+
 let selectedWindow = $state<number | null>(focusedWinId.value ?? null);
+
+function byRuntimeId(): Map<string, WindowEntry> {
+  return new Map(entries.value.map((e) => [e.runtimeWindowId, e] as const));
+}
+
+// `lastForegroundAt` is metadata; default order is the persistent semantic
+// order produced by the native core. MRU / Alphabetical only apply when the
+// user explicitly chooses them in the widget settings.
+let orderedWindows = $derived.by((): WindowEntry[] => {
+  switch (taskSwitcherValue()) {
+    case "MRU":
+      return [...entries.value].sort((a, b) => b.lastForegroundAt - a.lastForegroundAt);
+    case "Alphabetical":
+      return [...entries.value].sort((a, b) => (a.alias || a.displayTitle).localeCompare(b.alias || b.displayTitle));
+    default:
+      return entries.value;
+  }
+});
+
+let baseWindows = $derived.by((): WindowEntry[] => applyMonitorFilter(orderedWindows));
+
+// Session-frozen display order, or the persistent order when hidden.
+// New windows append; metadata patches in place; destroyed ids drop out.
+let filteredWindows = $derived.by((): WindowEntry[] => {
+  if (!showing) {
+    return baseWindows;
+  }
+
+  // session mode: walk the frozen list, patch metadata in place,
+  // remove destroyed ids, append newly created windows without reshuffling.
+  const byId = byRuntimeId();
+  const frozen: WindowEntry[] = [];
+  const seen = new Set<string>();
+  for (const id of sessionOrder) {
+    const entry = byId.get(id);
+    if (entry) {
+      frozen.push(entry);
+      seen.add(id);
+    }
+  }
+  for (const entry of orderedWindows) {
+    if (!seen.has(entry.runtimeWindowId)) {
+      frozen.push(entry);
+    }
+  }
+  return applyMonitorFilter(frozen);
+});
+
+// Persist newly created windows into the frozen session order (append-only).
+$effect.root(() => {
+  $effect(() => {
+    if (!showing) return;
+    const ids = new Set(sessionOrder);
+    const additions = orderedWindows
+      .filter((e) => !ids.has(e.runtimeWindowId))
+      .map((e) => e.runtimeWindowId);
+    if (additions.length > 0) {
+      sessionOrder = [...sessionOrder, ...additions];
+    }
+  });
+});
+
+function applyMonitorFilter(list: WindowEntry[]): WindowEntry[] {
+  const monitor = activeMonitor;
+  if (!widgetConfig.onlyOnActiveMonitor || !monitor) {
+    return list;
+  }
+  return list.filter((w) => String(w.monitor) === String(monitor.id));
+}
+
+function taskSwitcherValue(): "SemanticPersistent" | "MRU" | "Alphabetical" {
+  const value = widgetConfig.ordering;
+  return (value as "SemanticPersistent" | "MRU" | "Alphabetical") ?? "SemanticPersistent";
+}
 
 // Sync selectedWindow with focused window when the switcher is not visible
 $effect.root(() => {
@@ -59,15 +140,6 @@ let activeMonitor = $derived.by(() => {
   return found || monitors.value.find((m) => m.isPrimary) || monitors.value[0];
 });
 
-// Windows shown in the switcher, optionally restricted to the active monitor
-let filteredWindows = $derived.by(() => {
-  const monitor = activeMonitor;
-  if (!widgetConfig.onlyOnActiveMonitor || !monitor) {
-    return windows.value;
-  }
-  return windows.value.filter((w) => w.monitor === monitor.id);
-});
-
 let relativeActiveMonitor = $derived.by(() => {
   const monitor = activeMonitor;
   if (!monitor) {
@@ -100,6 +172,10 @@ class State {
 
   set showing(value: boolean) {
     showing = value;
+    if (!value) {
+      // leave the session: clear the frozen snapshot
+      sessionOrder = [];
+    }
   }
 
   get windows() {
@@ -190,11 +266,12 @@ $effect.root(() => {
 function onAltKeyUp() {
   if (showing && selectedWindow && autoConfirm) {
     showing = false;
-    invoke(SeelenCommand.WegToggleWindowState, {
-      hwnd: selectedWindow,
-      wasFocused: false,
-    });
+    focusByHwnd(selectedWindow);
   }
+}
+
+function focusByHwnd(hwnd: number): void {
+  invoke(SeelenCommand.WegFocusWindow, { identification: hwnd.toString(16) });
 }
 
 widget.onTrigger((payload) => {
@@ -208,6 +285,8 @@ widget.onTrigger((payload) => {
     if (payload.desiredPosition) {
       desiredPosition = payload.desiredPosition;
     }
+    // First press of a new session: freeze the persistent semantic order.
+    sessionOrder = filteredWindows.map((w) => w.runtimeWindowId);
   }
 
   const targetWindows = filteredWindows;
@@ -226,6 +305,17 @@ widget.onTrigger((payload) => {
     if (index === -1) index = 0;
     selectedWindow = targetWindows[(index - 1 + targetWindows.length) % targetWindows.length]?.hwnd ?? null;
   }
+
+  console.debug(
+    "[task-switcher]",
+    JSON.stringify({
+      event: showing ? "navigate" : "open",
+      orderingStrategy: taskSwitcherValue(),
+      sessionId: sessionOrder.length ? sessionOrder.join(",") : null,
+      ordered: targetWindows.map((w) => w.logicalIdentity),
+      selected: targetWindows.find((w) => w.hwnd === selectedWindow)?.logicalIdentity ?? null,
+    }),
+  );
 
   showing = true;
 });

@@ -1,17 +1,19 @@
 <script lang="ts">
-  import { invoke, SeelenCommand } from "@seelen-ui/lib";
+  import { invoke, SeelenCommand, Widget } from "@seelen-ui/lib";
   import { createSortable } from "@dnd-kit/svelte/sortable";
   import { RestrictToHorizontalAxis, RestrictToVerticalAxis } from "@dnd-kit/abstract/modifiers";
   import { Icon, MissingIcon } from "libs/ui/svelte/components/Icon/index.ts";
-  import type { UserAppWindow } from "@seelen-ui/lib/types";
+  import type { WindowEntry } from "@seelen-ui/lib/types";
   import { isHorizontalDock } from "../../weg/state/settings.svelte.ts";
+  import { previewState, type PreviewCard } from "../state.svelte.ts";
 
   interface Props {
-    win: UserAppWindow;
+    entry: WindowEntry;
+    iconPath: string | null;
+    umid: string | null;
     index: number;
-    label: string;
-    tooltip: string | null;
-    preview?: { data: string } | undefined;
+    preview: PreviewCard["preview"];
+    stale: boolean;
     showTitles: boolean;
     titleLines: string;
     radius: number;
@@ -20,11 +22,12 @@
   }
 
   let {
-    win,
+    entry,
+    iconPath,
+    umid,
     index,
-    label,
-    tooltip,
     preview,
+    stale,
     showTitles,
     titleLines,
     radius,
@@ -32,9 +35,12 @@
     ratio,
   }: Props = $props();
 
+  const titleInfo = $derived(previewState.titleInfo(entry));
+
+  let interactionFrozen = false;
   const sortable = createSortable({
     get id() {
-      return win.hwnd;
+      return entry.hwnd;
     },
     get index() {
       return index;
@@ -44,21 +50,31 @@
     },
   });
 
+  // Preview click lifecycle:
+  //   pointerdown inside preview -> freeze the close timer
+  //   click -> resolve exact HWND once -> native focus/restore once
+  //   -> hide only the preview webview, keeping `@seelen/weg` visible
+  function onPointerDown(): void {
+    interactionFrozen = true;
+  }
+
   function onClick() {
-    invoke(SeelenCommand.WegToggleWindowState, {
-      hwnd: win.hwnd,
-      wasFocused: false,
+    invoke(SeelenCommand.WegFocusWindow, {
+      identification: entry.hwnd.toString(16),
     });
+    interactionFrozen = false;
+    // Only the preview webview closes (warm keep, no reload/destroy).
+    Widget.self.hide();
   }
 
   function onClose(e: MouseEvent) {
     e.stopPropagation();
-    invoke(SeelenCommand.WegCloseApp, { hwnd: win.hwnd });
+    invoke(SeelenCommand.WegCloseApp, { hwnd: entry.hwnd });
   }
 
   function onAuxClick(e: MouseEvent) {
     if (e.button === 1) {
-      invoke(SeelenCommand.WegCloseApp, { hwnd: win.hwnd });
+      invoke(SeelenCommand.WegCloseApp, { hwnd: entry.hwnd });
     }
   }
 </script>
@@ -70,14 +86,17 @@
   class="weg-item-preview"
   style="border-radius: {radius}px; {sortable.isDragging ? 'opacity: 0.3;' : ''}"
   data-title-lines={titleLines}
-  data-title={label}
+  data-title={titleInfo.label}
+  onpointerdown={onPointerDown}
   onclick={onClick}
   onauxclick={onAuxClick}
   onkeypress={() => {}}
 >
   {#if showTitles}
     <div class="weg-item-preview-topbar">
-      <div class="weg-item-preview-title" title={tooltip ?? undefined}>{label}</div>
+      <div class="weg-item-preview-title" title={titleInfo.tooltip ?? undefined}>
+        {titleInfo.label}
+      </div>
       <button data-skin="transparent" onclick={onClose}>
         <Icon iconName="IoClose" />
       </button>
@@ -90,13 +109,15 @@
       {aspectFixed ? `aspect-ratio: ${ratio};` : ""}
     "
   >
-    {#if preview}
+    {#if preview && !stale}
       <img
         class="weg-item-preview-image"
         src="data:image/webp;base64,{preview.data}"
-        alt={label}
+        alt={titleInfo.label}
       />
     {:else}
+      <!-- generation mismatch or missing frame: placeholder instead of a
+           confidently wrong bitmap for the current content -->
       <MissingIcon class="weg-item-no-preview" />
     {/if}
   </div>

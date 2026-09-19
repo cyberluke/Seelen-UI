@@ -266,6 +266,7 @@ slu_commands_declaration! {
     WegReportPreviewLatency = weg_report_preview_latency(latency: PreviewLatency),
     WegGetAutomationMetrics = weg_get_automation_metrics() -> AutomationMetrics,
     WegGetTrace = weg_get_trace() -> Vec<TraceFrame>,
+    WegHidePreview = weg_hide_preview(),
 
     // Windows Manager
     WmGetRenderTree = wm_get_render_tree() -> TwmGlobalRuntimeTree,

@@ -18,7 +18,7 @@ use crate::{
     error::{Result, ResultLogExt},
     modules::{
         apps::application::USER_APPS_MANAGER,
-        weg_core::identity::{LogicalWindowIdentity, identity_for},
+        weg_core::identity::{self, LogicalWindowIdentity, identity_for},
     },
     state::application::FULL_STATE,
     utils::constants::SEELEN_COMMON,
@@ -32,6 +32,15 @@ const LATENCY_SAMPLE_WINDOW: usize = 400;
 
 // ============================ persistent state ============================
 
+/// One persisted browser window slot: a stable logical name plus the
+/// geometry/monitor fingerprint used for deterministic reclamation.
+#[derive(Debug, Default, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct SlotRecord {
+    pub name: String,
+    pub fingerprint: String,
+}
+
 #[derive(Debug, Default, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct WegPersistedState {
@@ -41,6 +50,8 @@ pub struct WegPersistedState {
     pub aliases: HashMap<String, String>,
     /// preferred monitor device name per logical identity
     pub monitor_affinity: HashMap<String, String>,
+    /// persistent window slot table per application key (browser identity)
+    pub slots: HashMap<String, Vec<SlotRecord>>,
 }
 
 fn state_path() -> PathBuf {
@@ -69,6 +80,21 @@ fn save_persisted(state: &WegPersistedState) {
         }
         Err(err) => log::error!("Failed to serialize weg state: {err}"),
     }
+}
+
+/// Append newly created slot records to the persisted slot table.
+pub fn save_slots(new_records: Vec<(String, SlotRecord)>) {
+    if new_records.is_empty() {
+        return;
+    }
+    let mut state = PERSISTED.lock().unwrap_or_else(|e| e.into_inner()).clone();
+    for (app, record) in new_records {
+        let list = state.slots.entry(app).or_default();
+        if !list.iter().any(|r| r.name == record.name) {
+            list.push(record);
+        }
+    }
+    save_persisted(&state);
 }
 
 /// Resolve the alias for a full logical identity, if defined.
@@ -242,13 +268,46 @@ pub fn window_entries() -> Vec<WindowEntry> {
     let weg: &SeelenWegSettings = &settings.settings.by_widget.weg;
     let entries: Vec<UserAppWindow> = USER_APPS_MANAGER.interactable_windows.to_vec();
 
-    let persisted = PERSISTED.lock().unwrap_or_else(|e| e.into_inner()).clone();
+    let mut persisted = PERSISTED.lock().unwrap_or_else(|e| e.into_inner()).clone();
 
     let mut ordered_keys: Vec<String> = Vec::new();
     let mut groups: HashMap<String, Vec<WindowEntry>> = HashMap::new();
+    let mut new_slots: Vec<(String, SlotRecord)> = Vec::new();
 
     for win in entries {
         let window = Window::from(win.hwnd);
+        if identity::provider_for(&win) == identity::IdentityProvider::Edge {
+            // Materialize the browser slot once per snapshot against a working
+            // table so simultaneous new windows never reuse a number.
+            let fingerprint = identity::slot_fingerprint(&win);
+            let app = identity::application_key_for(&win);
+            let table = persisted.slots.entry(app.clone()).or_default();
+            let matched = table.iter().find(|r| r.fingerprint == fingerprint).cloned();
+            let record = match matched {
+                Some(record) => record,
+                None => {
+                    let mut used: Vec<u32> = table
+                        .iter()
+                        .filter_map(|r| r.name.strip_prefix("window-")?.parse::<u32>().ok())
+                        .collect();
+                    used.sort_unstable();
+                    let mut next = 1u32;
+                    for n in &used {
+                        if *n == next {
+                            next += 1;
+                        }
+                    }
+                    let record = SlotRecord {
+                        name: format!("window-{next}"),
+                        fingerprint,
+                    };
+                    table.push(record.clone());
+                    new_slots.push((app.clone(), record.clone()));
+                    record
+                }
+            };
+            let _ = &record; // slot is now present in the working table
+        }
         let ident: LogicalWindowIdentity = identity_for(&win, &persisted);
         let entry = make_entry(&win, &window, &ident);
         if !groups.contains_key(&ident.application) {
@@ -292,11 +351,40 @@ pub fn window_entries() -> Vec<WindowEntry> {
             }
         }
     }
+    save_slots(new_slots);
     result
 }
 
+/// Legacy order-storage keys produced by older frontend app-key logic, so
+/// previously persisted manual orders keep resolving after normalization.
+fn legacy_orders_lookup<'a>(key: &str, state: &'a WegPersistedState) -> Option<&'a Vec<String>> {
+    if let Some(saved) = state.orders.get(key) {
+        return Some(saved);
+    }
+    const LEGACY: &[(&str, &[&str])] = &[
+        ("code", &["microsoft.visualstudiocode", "code"]),
+        (
+            "vscode-insiders",
+            &["microsoft.visualstudiocode.insiders", "code - insiders"],
+        ),
+        (
+            "edge-stable",
+            &["msedge", "microsoft.edge", "microsoft.edge.stable"],
+        ),
+        ("edge-beta", &["msedge-beta", "microsoft.edge.beta"]),
+        ("edge-dev", &["msedge-dev", "microsoft.edge.dev"]),
+        ("edge-canary", &["msedge-canary", "microsoft.edge.canary"]),
+        ("wt", &["microsoft.windowsterminal"]),
+        ("wt-canary", &["microsoft.windowsterminal.canary"]),
+    ];
+    let candidates = LEGACY.iter().find(|(k, _)| *k == key)?.1;
+    candidates
+        .iter()
+        .find_map(|legacy| state.orders.get(*legacy))
+}
+
 fn apply_manual_order(key: &str, group: &mut Vec<WindowEntry>, state: &WegPersistedState) {
-    let Some(saved) = state.orders.get(key) else {
+    let Some(saved) = legacy_orders_lookup(key, state) else {
         return;
     };
     let mut indexed: Vec<(usize, WindowEntry)> = Vec::with_capacity(group.len());

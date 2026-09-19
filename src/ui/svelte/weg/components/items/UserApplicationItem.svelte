@@ -8,9 +8,13 @@
   import { windowsState, focused } from "../../state/windows.svelte.ts";
   import { mousePos, notifications } from "../../state/getters.svelte.ts";
   import { previewSettings } from "../../state/preview.svelte.ts";
-  import { Widget } from "@seelen-ui/lib";
   import { getUserApplicationContextMenu, launchItem } from "../../appMenu.ts";
-  import { triggerPreviewWidget } from "../../previewWidget.ts";
+  import {
+    triggerPreviewWidget,
+    schedulePreviewHide,
+    clearPreviewHideTimer,
+    isPointerInsidePreview,
+  } from "../../previewWidget.ts";
   import { CssHandled } from "libs/ui/svelte/utils/animations.ts";
 
   interface Props {
@@ -32,17 +36,13 @@
   let itemEl: HTMLDivElement | null = $state(null);
 
   let openTimer: ReturnType<typeof setTimeout> | null = null;
-  let closeTimer: ReturnType<typeof setTimeout> | null = null;
 
   function triggerNow() {
     if (openTimer !== null) {
       clearTimeout(openTimer);
       openTimer = null;
     }
-    if (closeTimer !== null) {
-      clearTimeout(closeTimer);
-      closeTimer = null;
-    }
+    clearPreviewHideTimer();
     if (windows.length > 1) {
       const action = previewSettings().groupedClickAction;
       switch (action) {
@@ -84,17 +84,12 @@
   }
 
   function scheduleHide() {
-    const { hoverCloseDelay, keepOpenOnTraversal } = previewSettings();
-    if (closeTimer !== null) {
-      clearTimeout(closeTimer);
-    }
-    closeTimer = setTimeout(() => {
-      closeTimer = null;
-      if (keepOpenOnTraversal && isPointerInsideGrace()) {
-        return;
-      }
-      Widget.self.hide();
-    }, hoverCloseDelay);
+    // Preview lifecycle contract:
+    //   UserApplicationItem may request `@seelen/weg-preview` visibility changes.
+    //   It may never call hide() on `@seelen/weg` for the preview lifecycle.
+    // The bridge below owns exactly one close timer and hides the preview
+    // webview only, via the dedicated WegHidePreview command.
+    schedulePreviewHide(() => isPointerInsideGrace() || isPointerInsidePreview());
   }
 
   const graceRect = $derived.by(() => {
@@ -153,19 +148,14 @@
   }
 
   function onPointerMove(e: PointerEvent) {
-    if (closeTimer === null) return;
     if (windows.length < 2) return;
     if (insideRect(graceRect, e.clientX, e.clientY)) {
-      clearTimeout(closeTimer);
-      closeTimer = null;
+      clearPreviewHideTimer();
     }
   }
 
   function onClick() {
-    if (closeTimer !== null) {
-      clearTimeout(closeTimer);
-      closeTimer = null;
-    }
+    clearPreviewHideTimer();
     if (windows.length > 1) {
       triggerNow();
       return;

@@ -33,7 +33,8 @@ pub async fn process(cli: TrayCli) -> Result<Option<String>> {
     Ok(Some(payload))
 }
 
-fn parse_action(s: &str) -> Result<SystrayIconAction> {
+/// Parse a tray action string. Also used by the MCP server surface.
+pub fn parse_action(s: &str) -> Result<SystrayIconAction> {
     Ok(match s.to_ascii_lowercase().as_str() {
         "leftclick" => SystrayIconAction::LeftClick,
         "rightclick" => SystrayIconAction::RightClick,

@@ -289,6 +289,10 @@ impl WidgetPod {
         let handle = get_tokio_handle().spawn(async move {
             let app = get_app_handle();
             let mut was_suspended = false;
+            // Two phases, so failures are not conflated:
+            // `!mounted` -> frontend boot never reached `Ready`;
+            // `mounted`  -> widget was ready once, then stopped responding.
+            let mut mounted = false;
 
             loop {
                 tokio::time::sleep(LIVENESS_PROVE_INTERVAL).await;
@@ -305,16 +309,60 @@ impl WidgetPod {
                     continue;
                 }
 
+                // Mount watchdog: until the widget reaches `Ready` we only poll its status,
+                // because the ping/pong handshake can't get an answer before the frontend
+                // entrypoint registered the `liveness-pong` listener.
+                if !mounted {
+                    let is_ready = WIDGET_MANAGER
+                        .deployments
+                        .get(&label.widget_id, |deployment| {
+                            deployment.pods.get(&label, |pod| pod.is_ready())
+                        })
+                        .flatten()
+                        == Some(true);
+
+                    if is_ready {
+                        mounted = true;
+                        retries.store(0, std::sync::atomic::Ordering::SeqCst);
+                        continue;
+                    }
+
+                    let attempt = retries.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+                    log::warn!(
+                        "Mount prove failed for {label}: frontend never reached Ready (attempt {}/{LIVENESS_PROVE_MAX_RETRIES}), reloading webview.",
+                        attempt + 1
+                    );
+
+                    if attempt < LIVENESS_PROVE_MAX_RETRIES {
+                        WIDGET_MANAGER.deployments.get(&label.widget_id, |deployment| {
+                            deployment.pods.get(&label, |pod| {
+                                pod.soft_restart();
+                            });
+                        });
+                        continue;
+                    }
+
+                    log::error!("Mount prove failed for {label} too many times, giving up.");
+                    Self::report_dead_widget(&label).await;
+                    break;
+                }
+
+                // Runtime liveness watchdog: `enable` registers the waiter before the ping
+                // is emitted, so a pong that arrives before the `select!` polls the future
+                // is stored as a permit instead of being dropped by `notify_waiters`.
+                let mut waiter = std::pin::pin!(live.notified());
+                waiter.as_mut().enable();
+
                 let _ = app.emit_to(&label.raw, "internal::liveness-ping", ());
 
                 tokio::select! {
-                    _ = live.notified() => {
+                    _ = waiter.as_mut() => {
                         // Widget is healthy: reset consecutive failure counter.
                         retries.store(0, std::sync::atomic::Ordering::SeqCst);
                     }
                     _ = tokio::time::sleep(LIVENESS_PROVE_WAIT_TIMEOUT) => {
                         let attempt = retries.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-                        log::warn!("Liveness prove failed for {label} (attempt {}/{LIVENESS_PROVE_MAX_RETRIES}), reloading webview.", attempt + 1);
+                        log::warn!("Liveness prove failed for {label}: widget stopped responding (attempt {}/{LIVENESS_PROVE_MAX_RETRIES}), reloading webview.", attempt + 1);
 
                         if attempt < LIVENESS_PROVE_MAX_RETRIES {
                             WIDGET_MANAGER.deployments.get(&label.widget_id, |deployment| {
@@ -324,20 +372,7 @@ impl WidgetPod {
                             });
                         } else {
                             log::error!("Liveness prove failed for {label} too many times, giving up.");
-                            let lang = rust_i18n::locale();
-                            let widget_name = RESOURCES
-                                .widgets
-                                .read_async(&label.widget_id, |_, w| {
-                                    w.metadata.display_name.get(&lang).to_string()
-                                })
-                                .await
-                                .unwrap_or_else(|| label.widget_id.to_string());
-                            app.dialog()
-                                .message(t!("widget_liveness.failed_description", widget_name = widget_name))
-                                .title(t!("widget_liveness.failed_title"))
-                                .kind(MessageDialogKind::Error)
-                                .buttons(MessageDialogButtons::Ok)
-                                .show(|_| {});
+                            Self::report_dead_widget(&label).await;
                             break;
                         }
                     }
@@ -346,6 +381,28 @@ impl WidgetPod {
         });
 
         self.liveness_prove_handle = Some(handle);
+    }
+
+    /// Error dialog for widgets whose watchdog gave up.
+    async fn report_dead_widget(label: &WidgetWebviewLabel) {
+        let lang = rust_i18n::locale();
+        let widget_name = RESOURCES
+            .widgets
+            .read_async(&label.widget_id, |_, w| {
+                w.metadata.display_name.get(&lang).to_string()
+            })
+            .await
+            .unwrap_or_else(|| label.widget_id.to_string());
+        get_app_handle()
+            .dialog()
+            .message(t!(
+                "widget_liveness.failed_description",
+                widget_name = widget_name
+            ))
+            .title(t!("widget_liveness.failed_title"))
+            .kind(MessageDialogKind::Error)
+            .buttons(MessageDialogButtons::Ok)
+            .show(|_| {});
     }
 }
 

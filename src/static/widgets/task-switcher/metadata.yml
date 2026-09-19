@@ -11,6 +11,17 @@ settings:
     key: onlyOnActiveMonitor
     label: !extend i18n/settings/only-on-active-monitor.yml
     defaultValue: false
+  - type: select
+    key: ordering
+    label: !extend i18n/settings/ordering.yml
+    options:
+      - label: !extend i18n/settings/ordering-semantic-persistent.yml
+        value: SemanticPersistent
+      - label: !extend i18n/settings/ordering-mru.yml
+        value: MRU
+      - label: !extend i18n/settings/ordering-alphabetical.yml
+        value: Alphabetical
+    defaultValue: SemanticPersistent
 shortcuts:
   - id: task-switcher-next-auto
     command: ["task-switcher", "select-next-task", "--auto-confirm"]

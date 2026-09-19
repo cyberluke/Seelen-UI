@@ -166,7 +166,13 @@
     };
   }
 
-  function handleContextMenu() {
+  function handleContextMenu(e: MouseEvent) {
+    // Defense in depth: gestures already claimed by child owners (e.g. the
+    // pinned tray icon's own native menu) arrive consumed / stopped.
+    if (e.defaultPrevented) return;
+    const target = e.target as HTMLElement | null;
+    if (target?.closest?.("[data-context-owner]")) return;
+
     const alignY =
       settingsState.position === FancyToolbarSide.Bottom ? Alignment.End : Alignment.Start;
     invoke(SeelenCommand.TriggerContextMenu, {

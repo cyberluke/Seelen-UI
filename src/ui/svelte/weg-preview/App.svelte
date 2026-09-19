@@ -23,13 +23,13 @@
   });
 
   const s = $derived(previewSettings());
+  const cards = $derived(previewState.currentCards);
   const layout = $derived(
     computePreviewLayout(previewState.currentInteractables.length, systemState.currentMonitor),
   );
 
   const cacheHit = $derived(
-    !s.cacheEnabled ||
-      previewState.currentInteractables.some((w) => previewState.thumbnailOf(w.hwnd)),
+    !s.cacheEnabled || cards.some((c) => c.preview),
   );
 
   let painted = false;
@@ -42,7 +42,17 @@
     });
   });
 
-  function handleDragOver(event: any) {
+  // ── cross-webview pointer bridge (geometry + state only) ──────────────────
+  // The parent `@seelen/weg` controller owns the single close timer; these
+  // events only report pointer presence with the active session id so stale
+  // events from older sessions are ignored.
+  function emitBridge(event: string): void {
+    Widget.self.webview
+      .emit(event, { sessionId: previewState.session })
+      .catch(() => {});
+  }
+
+  function handleDragOver(event: any): void {
     const ids = previewState.currentInteractables.map((w) => w.hwnd);
     const newIds: number[] = move(ids, event);
     const ordered = newIds
@@ -54,6 +64,7 @@
 
 <div
   class="weg-item-preview-container slu-std-popover"
+  role="presentation"
   style="
     padding: {layout.padding}px;
     border-radius: {layout.borderRadius}px;
@@ -63,6 +74,8 @@
       ? `transition: opacity ${previewState.animationDuration}ms ease, transform ${previewState.animationDuration}ms ease;`
       : "transition: none;"}
   "
+  onpointerenter={() => emitBridge("weg-preview:pointer-enter")}
+  onpointerleave={() => emitBridge("weg-preview:pointer-leave")}
 >
   <DragDropProvider {manager} onDragOver={handleDragOver}>
     <div
@@ -74,15 +87,14 @@
         {layout.scrollable ? `overflow-y: auto; max-height: ${layout.popupHeight - layout.padding * 2}px;` : ""}
       "
     >
-      {#each previewState.currentInteractables as win, i (win.hwnd)}
-        {@const preview = previewState.thumbnailOf(win.hwnd)}
-        {@const title = previewState.titleInfo(win)}
+      {#each cards as card, i (card.entry.hwnd)}
         <CardItem
-          {win}
+          entry={card.entry}
+          iconPath={card.iconPath}
+          umid={card.umid}
           index={i}
-          label={title.label}
-          tooltip={title.tooltip}
-          {preview}
+          preview={card.preview}
+          stale={card.stale}
           showTitles={s.showTitles}
           titleLines={s.titleLines}
           radius={layout.borderRadius}

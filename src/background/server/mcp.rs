@@ -126,6 +126,42 @@ pub fn tool_definitions() -> Vec<Value> {
             "Assign a short persistent alias to a logical identity.",
             r#"{"type":"object","properties":{"alias":{"type":"string"},"identity":{"type":"string"}},"required":["alias","identity"]}"#,
         ),
+        // ── system tray ──────────────────────────────────────────────────
+        tool(
+            "list_tray_icons",
+            "List notification-area icons: logical identity, runtime id, tooltip, app metadata, pin/order/online flags.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "list_pinned_tray_icons",
+            "List pinned tray icons in persisted order.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "get_tray_pin_state",
+            "Persisted pinned tray identity order.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "pin_tray_icon",
+            "Pin a tray icon by logical identity key.",
+            r#"{"type":"object","properties":{"logicalId":{"type":"string"}},"required":["logicalId"]}"#,
+        ),
+        tool(
+            "unpin_tray_icon",
+            "Unpin a tray icon by logical identity key.",
+            r#"{"type":"object","properties":{"logicalId":{"type":"string"}},"required":["logicalId"]}"#,
+        ),
+        tool(
+            "set_tray_pin_order",
+            "Persist the pinned tray order.",
+            r#"{"type":"object","properties":{"order":{"type":"array","items":{"type":"string"}}},"required":["order"]}"#,
+        ),
+        tool(
+            "send_tray_action",
+            "Forward a native tray action (LeftClick|RightClick|MiddleClick|LeftDoubleClick|HoverEnter|HoverLeave|HoverMove).",
+            r#"{"type":"object","properties":{"logicalId":{"type":"string"},"action":{"type":"string"}},"required":["logicalId","action"]}"#,
+        ),
     ]
 }
 
@@ -311,6 +347,50 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
         }
         "set_window_alias" => {
             core::set_window_alias(&get("alias"), &get("identity"));
+            json!({ "success": true })
+        }
+        // ── system tray (same native command core as the webviews/CLI) ───
+        "list_tray_icons" => {
+            serde_json::to_value(crate::modules::system_tray::infrastructure::list_tray_icons())
+                .unwrap()
+        }
+        "list_pinned_tray_icons" => serde_json::to_value(
+            crate::modules::system_tray::infrastructure::list_pinned_tray_icons(),
+        )
+        .unwrap(),
+        "get_tray_pin_state" => {
+            serde_json::to_value(crate::modules::system_tray::infrastructure::get_tray_pin_state())
+                .unwrap()
+        }
+        "pin_tray_icon" => {
+            crate::modules::system_tray::infrastructure::pin_tray_icon(get("logicalId"))
+                .map_err(|e| e.to_string())?;
+            json!({ "success": true })
+        }
+        "unpin_tray_icon" => {
+            crate::modules::system_tray::infrastructure::unpin_tray_icon(get("logicalId"))
+                .map_err(|e| e.to_string())?;
+            json!({ "success": true })
+        }
+        "set_tray_pin_order" => {
+            let order: Vec<String> = args
+                .get("order")
+                .and_then(|v| v.as_array())
+                .map(|a| {
+                    a.iter()
+                        .filter_map(|v| v.as_str().map(String::from))
+                        .collect()
+                })
+                .unwrap_or_default();
+            crate::modules::system_tray::infrastructure::set_tray_pin_order(order)
+                .map_err(|e| e.to_string())?;
+            json!({ "success": true })
+        }
+        "send_tray_action" => {
+            let parsed =
+                crate::cli::tray_cli::parse_action(&get("action")).map_err(|e| e.to_string())?;
+            crate::modules::system_tray::infrastructure::send_tray_action(get("logicalId"), parsed)
+                .map_err(|e| e.to_string())?;
             json!({ "success": true })
         }
         other => return Err(format!("unknown tool: {other}")),

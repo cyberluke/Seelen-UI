@@ -1,40 +1,70 @@
 import { invoke, SeelenCommand, SeelenEvent, subscribe, Widget } from "@seelen-ui/lib";
-import { SeelenWegSide, type UserAppWindow } from "@seelen-ui/lib/types";
+import { SeelenWegSide, type UserAppWindow, type WindowEntry } from "@seelen-ui/lib/types";
 import { lazyRune } from "libs/ui/svelte/utils";
 import {
-  appKeyOf,
-  applyOrder,
-  getOrder,
-  localIdentity,
   markLayout,
   markMetadata,
   markThumbnail,
   previewSettings,
   reportFirstPaint,
-  setOrder,
   startTiming,
 } from "../weg/state/preview.svelte.ts";
 
-// Layer A: window metadata (shared, kept hot via events - no polling).
-export const interactables = lazyRune<UserAppWindow[]>(() => invoke(SeelenCommand.GetUserAppWindows));
+// Layer A: raw window metadata (kept hot via events - no polling).
+export const interactables = lazyRune<UserAppWindow[]>(
+  () => invoke(SeelenCommand.GetUserAppWindows),
+);
 subscribe(SeelenEvent.UserAppWindowsChanged, interactables.setByPayload);
 
+// Semantic layer: native ordered window entries with persistent logical
+// identities. This is the single source of spatial order for the grouped
+// preview (same order the Task Switcher / CLI / MCP see).
+export const entries = lazyRune<WindowEntry[]>(() => invoke(SeelenCommand.WegGetWindowEntries));
+let entriesRefresh: Promise<void> | null = null;
+function refreshEntries(): void {
+  entriesRefresh ??= invoke(SeelenCommand.WegGetWindowEntries)
+    .then((value) => {
+      entries.value = value;
+    })
+    .finally(() => {
+      entriesRefresh = null;
+    });
+}
+subscribe(SeelenEvent.UserAppWindowsChanged, refreshEntries);
+
 // Layer B: thumbnail cache (kept hot via capture events).
-export const previews = lazyRune<Record<number, { data: string; hash: string }>>(
+export const previews = lazyRune<Record<number, UserAppWindowPreviewLike>>(
   () => invoke(SeelenCommand.GetUserAppWindowsPreviews),
 );
 subscribe(SeelenEvent.UserAppWindowsPreviewsChanged, previews.setByPayload);
 
-await Promise.all([interactables.init(), previews.init()]);
+interface UserAppWindowPreviewLike {
+  data: string;
+  hash: string;
+  capturedAtMs?: number;
+  titleAtCapture?: string;
+  generation?: number;
+}
+
+function previewOf(hwnd: number): UserAppWindowPreviewLike | null {
+  const preview = previews.value[hwnd];
+  if (preview) {
+    markThumbnail();
+  }
+  return preview ?? null;
+}
+
+await Promise.all([interactables.init(), previews.init(), entries.init()]);
 
 let hwnds = $state<number[]>([]);
 let position = $state<SeelenWegSide>(SeelenWegSide.Bottom);
+let previewSessionId = $state<string>("");
 let t0Date = $state<number | undefined>(undefined);
 let animated = $state(true);
 let animationDuration = $state(150);
-let orderVersion = $state(0);
 
 Widget.self.onTrigger(({ customArgs }) => {
+  previewSessionId = (customArgs?.previewSessionId as string) ?? "";
   t0Date = customArgs?.t0Date as number | undefined;
   if (t0Date) {
     startTiming(t0Date);
@@ -50,107 +80,104 @@ Widget.self.onTrigger(({ customArgs }) => {
   }
 });
 
-const _filtered = $derived(interactables.value.filter((w) => hwnds.includes(w.hwnd)));
-
-const _appKeys = $derived.by(() => {
-  const keys = new Set<string>();
-  for (const w of _filtered) {
-    keys.add(appKeyOf(w));
+/// cards ordered by the persistent semantic order, never by live MRU unless
+/// the user configured the MRU strategy.
+const _ordered = $derived.by((): WindowEntry[] => {
+  const matched = entries.value.filter((e) => hwnds.includes(e.hwnd));
+  if (matched.length === 0) {
+    return [];
   }
-  return [...keys];
+  if (previewSettings().nearestFirstProjection && matched.length > 1) {
+    // visual-only projection: most recently active first, relative order kept
+    return [...matched].sort((a, b) => b.lastForegroundAt - a.lastForegroundAt);
+  }
+  return matched;
 });
 
-// load persisted manual order per app (event-driven, one fetch per app)
-$effect.root(() => {
-  $effect(() => {
-    for (const key of _appKeys) {
-      getOrder(key)
-        .then(() => orderVersion++)
-        .catch(() => {});
-    }
+export interface PreviewCard {
+  entry: WindowEntry;
+  iconPath: string | null;
+  umid: string | null;
+  preview: UserAppWindowPreviewLike | null;
+  stale: boolean;
+}
+
+const _cards = $derived.by((): PreviewCard[] => {
+  const rawByHwnd = new Map(interactables.value.map((w) => [w.hwnd, w] as const));
+  return _ordered.map((entry) => {
+    const raw = rawByHwnd.get(entry.hwnd);
+    const preview = previewOf(entry.hwnd);
+    const stale = !!preview && !!preview.titleAtCapture && preview.titleAtCapture !== entry.title;
+    return {
+      entry,
+      iconPath: raw?.relaunch?.icon || raw?.process?.path || null,
+      umid: raw?.umid ?? null,
+      preview,
+      stale,
+    };
   });
 });
 
-/// ordered + nearest-pointer projection (visual only)
-const _ordered = $derived.by(() => {
-  void orderVersion;
+function titlesFor(entry: WindowEntry): { label: string; tooltip: string | null } {
   const s = previewSettings();
-  const results: UserAppWindow[] = [];
-  for (const key of _appKeys) {
-    const group = _filtered.filter((w) => appKeyOf(w) === key);
-    let list = applyOrder(key, group);
-    if (s.nearestFirstProjection && list.length > 1) {
-      // visual-only projection: most recently active first, others keep relative order
-      list = [...list].sort((a, b) => b.lastForegroundAt - a.lastForegroundAt);
-    }
-    results.push(...list);
-  }
-  return results;
-});
-
-function titlesFor(w: UserAppWindow): { label: string; tooltip: string | null } {
-  const s = previewSettings();
-  const label = s.compactTitles ? localIdentity(w) : w.title;
+  const label = s.compactTitles ? localPart(entry) : entry.title;
   return {
-    label,
-    tooltip: s.showTitles && s.titleTooltip && label !== w.title ? w.title : null,
+    label: label || entry.displayTitle,
+    tooltip: s.showTitles && s.titleTooltip && label !== entry.title ? entry.title : null,
   };
+}
+
+/// The logical local id part of `<application>:<localId>`.
+function localPart(entry: WindowEntry): string {
+  const idx = entry.logicalIdentity.indexOf(":");
+  return idx >= 0 ? entry.logicalIdentity.slice(idx + 1) : entry.logicalIdentity;
 }
 
 let firstPaintReported = 0;
 
 class PreviewState {
-  get currentInteractables() {
+  get session(): string {
+    return previewSessionId;
+  }
+
+  get currentCards(): PreviewCard[] {
+    return _cards;
+  }
+
+  get currentInteractables(): WindowEntry[] {
     return _ordered;
   }
 
-  get position() {
+  get position(): SeelenWegSide {
     return position;
   }
 
-  get animated() {
+  get animated(): boolean {
     return animated;
   }
 
-  get animationDuration() {
+  get animationDuration(): number {
     return animationDuration;
   }
 
-  titleInfo(w: UserAppWindow) {
-    return titlesFor(w);
+  titleInfo(entry: WindowEntry): { label: string; tooltip: string | null } {
+    return titlesFor(entry);
   }
 
-  thumbnailOf(hwnd: number) {
-    const preview = previews.value[hwnd];
-    if (preview) {
-      markThumbnail();
-    }
-    return preview;
-  }
-
-  reportPaint(cacheHit: boolean) {
+  reportPaint(cacheHit: boolean): void {
     const stamp = Date.now();
     if (firstPaintReported === stamp) return;
     firstPaintReported = stamp;
     reportFirstPaint(cacheHit);
   }
 
-  async persistOrder(list: UserAppWindow[]): Promise<void> {
+  async persistOrder(list: WindowEntry[]): Promise<void> {
     if (!list.length) {
       return;
     }
-    const app = appKeyOf(list[0]!);
-    const ids = list.map((w) => localIdentity(w));
-    await setOrder(app, ids);
-  }
-
-  reorder(from: number, to: number): UserAppWindow[] {
-    const list = [..._ordered];
-    const [moved] = list.splice(from, 1);
-    if (moved !== undefined) {
-      list.splice(to, 0, moved);
-    }
-    return list;
+    const app = list[0]!.application;
+    const ids = list.map((e) => localPart(e));
+    await invoke(SeelenCommand.WegSetWindowOrder, { app, identities: ids });
   }
 }
 

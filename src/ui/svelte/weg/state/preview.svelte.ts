@@ -190,83 +190,39 @@ export function computePreviewLayout(
   };
 }
 
-// ------------------- ordering -------------------
+// ------------------- group identity (mirrors the native identity core) -------------------
 
-const manualOrders = new Map<string, string[]>();
-
-const SKIP_SEGMENTS = new Set([
-  "visual studio code",
-  "visual studio code - insiders",
-  "microsoft visual studio code",
-  "microsoft visual studio code - insiders",
-  "insiders",
-  "microsoft edge",
-  "microsoft edge beta",
-  "microsoft edge dev",
-  "microsoft edge canary",
-  "microsoft edge for business",
-  "windows terminal",
-  "terminal",
-  "nushell",
-  "command prompt",
-  "powershell",
-  "pwsh",
-]);
-
-const NUM_SEGMENT = /^\d+:?$/;
-const PATH_SEGMENT = /^[a-zA-Z]:[\\/]/;
-
-export function localIdentity(w: UserAppWindow): string {
-  const title = w.title.trim();
-  if (!title) {
-    return w.hwnd.toString(16);
-  }
-  const segs = title.split(" - ").map((s) => s.trim()).filter(Boolean);
-  for (const seg of segs) {
-    if (SKIP_SEGMENTS.has(seg.toLowerCase())) continue;
-    if (NUM_SEGMENT.test(seg)) continue;
-    if (PATH_SEGMENT.test(seg)) continue;
-    return seg;
-  }
-  return title;
-}
-
+/// Mirrors `identity.rs` application-key normalization so all surfaces use
+/// ONE semantic identity model. Keep in sync with
+/// `src/background/modules/weg_core/identity.rs`.
 export function appKeyOf(w: UserAppWindow): string {
-  if (w.umid) return w.umid.toLowerCase();
-  const exe = w.process?.path?.toLowerCase() ?? "";
-  const stem = exe.split(/[\\/]/).pop() ?? w.appName?.toLowerCase() ?? "";
-  const key = stem.replace(/\.exe$/, "");
-  if (key.includes("insiders")) return "vscode-insiders";
-  return key;
-}
+  const umid = w.umid?.toLowerCase().replace(/ /g, ".") ?? "";
+  const stem = (w.process?.path?.toLowerCase().split(/[\\/]/).pop() ?? "")
+    .replace(/\.exe$/, "");
+  const path = w.process?.path?.toLowerCase() ?? "";
+  const app = w.appName?.toLowerCase() ?? "";
 
-export function applyOrder(app: string, windows: UserAppWindow[]): UserAppWindow[] {
-  const saved = manualOrders.get(app);
-  if (!saved || saved.length === 0) {
-    return windows;
+  if (stem.startsWith("msedge") || stem === "edge" || umid.startsWith("microsoft.edge")) {
+    if (stem.endsWith("_beta") || umid.endsWith(".beta") || path.includes("edge beta")) {
+      return "edge-beta";
+    }
+    if (stem.endsWith("_dev") || umid.endsWith(".dev") || path.includes("edge dev")) {
+      return "edge-dev";
+    }
+    if (stem.endsWith("_canary") || umid.endsWith(".canary") || path.includes("edge canary")) {
+      return "edge-canary";
+    }
+    return "edge-stable";
   }
-  const numbered = windows.map((w, i) => ({ w, pos: i }));
-  for (const entry of numbered) {
-    const local = localIdentity(entry.w).toLowerCase();
-    const idx = saved.findIndex((id) => id.toLowerCase() === local);
-    entry.pos = idx >= 0 ? idx : saved.length + entry.pos;
+  if (stem === "code" || stem === "code - insiders" || umid.startsWith("microsoft.visualstudiocode")) {
+    const insiders = stem === "code - insiders" || umid.includes(".insiders") || path.includes("insiders");
+    return insiders ? "vscode-insiders" : "code";
   }
-  numbered.sort((a, b) => a.pos - b.pos);
-  return numbered.map((n) => n.w);
-}
-
-export async function getOrder(app: string): Promise<string[]> {
-  if (manualOrders.has(app)) {
-    return manualOrders.get(app)!;
+  if (stem === "wt" || umid.startsWith("microsoft.windowsterminal")) {
+    if (umid.endsWith(".canary") || path.includes("canary")) return "wt-canary";
+    return "wt";
   }
-  const order = await invoke(SeelenCommand.WegGetWindowOrder, { app });
-  manualOrders.set(app, order);
-  return order;
-}
-
-export async function setOrder(app: string, ids: string[]): Promise<void> {
-  manualOrders.set(app, ids);
-  await invoke(SeelenCommand.WegSetWindowOrder, { app, identities: ids });
+  return umid || stem || app;
 }
 
 // ------------------- hover timing (stage model) -------------------

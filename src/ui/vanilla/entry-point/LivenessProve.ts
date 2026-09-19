@@ -13,4 +13,4 @@ listen<string>(
       label: webviewInfo.rawLabel,
     },
   },
-);
+).then(() => console.debug("boot: LivenessProve registered"));

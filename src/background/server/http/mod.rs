@@ -270,6 +270,106 @@ async fn v1_trace(res: &mut Response) {
     write_json(res, &crate::modules::weg_core::application::get_trace());
 }
 
+// ============================ v1 system tray ============================
+// Same native `system_tray` command core used by the webviews, MCP and CLI.
+
+/// GET /v1/tray/icons
+#[handler]
+async fn v1_tray_icons(res: &mut Response) {
+    write_json(
+        res,
+        &crate::modules::system_tray::infrastructure::list_tray_icons(),
+    );
+}
+
+/// GET /v1/tray/pinned
+#[handler]
+async fn v1_tray_pinned(res: &mut Response) {
+    write_json(
+        res,
+        &crate::modules::system_tray::infrastructure::list_pinned_tray_icons(),
+    );
+}
+
+/// GET /v1/tray/pins
+#[handler]
+async fn v1_tray_pins(res: &mut Response) {
+    write_json(
+        res,
+        &crate::modules::system_tray::infrastructure::get_tray_pin_state(),
+    );
+}
+
+fn write_tray_result(res: &mut Response, result: crate::error::Result<()>) {
+    match result {
+        Ok(()) => {
+            res.status_code(StatusCode::NO_CONTENT);
+        }
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err.to_string()));
+        }
+    }
+}
+
+/// POST /v1/tray/{id}/pin
+#[handler]
+async fn v1_tray_pin(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_tray_result(
+        res,
+        crate::modules::system_tray::infrastructure::pin_tray_icon(id),
+    );
+}
+
+/// POST /v1/tray/{id}/unpin
+#[handler]
+async fn v1_tray_unpin(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_tray_result(
+        res,
+        crate::modules::system_tray::infrastructure::unpin_tray_icon(id),
+    );
+}
+
+/// PATCH /v1/tray/order  body: ["keyA","keyB",...]
+#[handler]
+async fn v1_tray_order(req: &mut Request, res: &mut Response) {
+    let body = match req.payload().await {
+        Ok(bytes) => String::from_utf8_lossy(bytes).to_string(),
+        Err(_) => String::new(),
+    };
+    match serde_json::from_str::<Vec<String>>(&body) {
+        Ok(order) => write_tray_result(
+            res,
+            crate::modules::system_tray::infrastructure::set_tray_pin_order(order),
+        ),
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(format!("invalid body: {err}")));
+        }
+    }
+}
+
+/// POST /v1/tray/{id}/{action}
+#[handler]
+async fn v1_tray_action(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    let action = req.param::<String>("action").unwrap_or_default();
+    let parsed = match crate::cli::tray_cli::parse_action(&action) {
+        Ok(parsed) => parsed,
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err.to_string()));
+            return;
+        }
+    };
+    write_tray_result(
+        res,
+        crate::modules::system_tray::infrastructure::send_tray_action(id, parsed),
+    );
+}
+
 // ============================ mcp json-rpc ============================
 
 /// Minimal stateless MCP (JSON-RPC 2.0) over the same native core.
@@ -315,6 +415,19 @@ pub async fn start_server() {
                 .patch(v1_set_group_order),
         )
         .push(Router::with_path("taskbar/items").get(v1_taskbar_items))
+        .push(
+            Router::with_path("tray")
+                .push(Router::with_path("icons").get(v1_tray_icons))
+                .push(Router::with_path("pinned").get(v1_tray_pinned))
+                .push(Router::with_path("pins").get(v1_tray_pins))
+                .push(Router::with_path("order").patch(v1_tray_order))
+                .push(
+                    Router::with_path("{id}")
+                        .push(Router::with_path("pin").post(v1_tray_pin))
+                        .push(Router::with_path("unpin").post(v1_tray_unpin))
+                        .push(Router::with_path("{action}").post(v1_tray_action)),
+                ),
+        )
         .push(Router::with_path("metrics").get(v1_metrics))
         .push(Router::with_path("trace").get(v1_trace));
 

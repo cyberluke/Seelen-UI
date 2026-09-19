@@ -211,11 +211,7 @@ pub fn is_interactable_window(window: &Window) -> bool {
         return false;
     }
 
-    // this class is used for edge tabs to be shown as independent windows on alt + tab
-    // this only applies when the new tab is created it is binded to explorer.exe for some reason
-    // maybe we can search/learn more about edge tabs later.
-    // fix: https://github.com/eythaann/Seelen-UI/issues/83
-    if window.class() == "Windows.Internal.Shell.TabProxyWindow" {
+    if is_shell_tab_proxy_window(window) {
         return false;
     }
 
@@ -270,4 +266,20 @@ pub fn is_interactable_window(window: &Window) -> bool {
     }
 
     true
+}
+
+/// Single classifier for shell "tab proxy" helper windows.
+///
+/// These are Explorer-owned representations of Edge tabs (shown as independent
+/// entries in the native Alt+Tab list); they are not real browser windows, so
+/// they must stay out of the semantic window registry. All proven proxy
+/// classifications live here - do not scatter class-string checks elsewhere.
+pub fn is_shell_tab_proxy_window(window: &Window) -> bool {
+    // this class is used for edge tabs to be shown as independent windows on alt + tab
+    // this only applies when the new tab is created it is binded to explorer.exe for some reason
+    // fix: https://github.com/eythaann/Seelen-UI/issues/83
+    matches!(
+        window.class().as_str(),
+        "Windows.Internal.Shell.TabProxyWindow"
+    )
 }

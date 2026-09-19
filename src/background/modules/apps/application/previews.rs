@@ -1,4 +1,11 @@
-use std::{collections::HashMap, sync::LazyLock, time::Duration};
+use std::{
+    collections::HashMap,
+    sync::{
+        LazyLock,
+        atomic::{AtomicIsize, Ordering},
+    },
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
+};
 
 use base64::{Engine as _, engine::general_purpose::STANDARD};
 use image::{DynamicImage, RgbaImage};
@@ -25,6 +32,44 @@ const SAMPLING: usize = 7;
 
 static WINDOWS_PREVIEWS: LazyLock<WinPreviewManager> = LazyLock::new(WinPreviewManager::create);
 
+/// Why a capture was requested; kept on the record so consumers can tell
+/// whether a bitmap is the authoritative frame for the current content.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CaptureReason {
+    Initial,
+    ForegroundEntered,
+    ForegroundLost,
+    TitleChanged,
+    GeometryChanged,
+    BeforeMinimize,
+    Restored,
+}
+
+impl CaptureReason {
+    fn as_str(&self) -> &'static str {
+        match self {
+            CaptureReason::Initial => "initial",
+            CaptureReason::ForegroundEntered => "foreground-entered",
+            CaptureReason::ForegroundLost => "foreground-lost",
+            CaptureReason::TitleChanged => "title-changed",
+            CaptureReason::GeometryChanged => "geometry-changed",
+            CaptureReason::BeforeMinimize => "before-minimize",
+            CaptureReason::Restored => "restored",
+        }
+    }
+}
+
+/// Last window that owned the foreground, used to keep the previous frame
+/// authoritative when focus moves away.
+static PREV_FOREGROUND: AtomicIsize = AtomicIsize::new(0);
+
+fn now_millis() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0)
+}
+
 /// One-by-one capture queue: sender side, receiver processes in a dedicated thread.
 static CAPTURE_TX: LazyLock<crossbeam_channel::Sender<isize>> = LazyLock::new(|| {
     let (tx, rx) = crossbeam_channel::unbounded::<isize>();
@@ -50,6 +95,12 @@ struct UserAppWindowPreviewWrap {
     preview: Option<UserAppWindowPreview>,
     colors: Option<UserAppWindowColors>,
     capture: Debounce<()>,
+    /// content generation: bumped on every content-relevant change
+    generation: u64,
+    /// generation frozen during minimize (last-visible contract)
+    frozen_generation: Option<u64>,
+    /// reason the next due capture was requested
+    reason: CaptureReason,
 }
 
 pub struct WinPreviewManager {
@@ -109,12 +160,41 @@ impl WinPreviewManager {
             }
             let addr = window.address();
             match event {
-                WinEvent::ObjectNameChange | WinEvent::SynDebouncedRectChange => {
+                WinEvent::ObjectNameChange => {
+                    // Content changed: advance the live generation so older
+                    // captures can be identified as stale, then re-capture.
+                    WINDOWS_PREVIEWS.bump_generation(addr, CaptureReason::TitleChanged);
+                    WINDOWS_PREVIEWS.enqueue_capture(addr);
+                }
+                WinEvent::SynDebouncedRectChange => {
+                    WINDOWS_PREVIEWS.set_reason(addr, CaptureReason::GeometryChanged);
+                    WINDOWS_PREVIEWS.enqueue_capture(addr);
+                }
+                WinEvent::SystemForeground => {
+                    // Keep both sides of the transition authoritative: the
+                    // outgoing window gets a final capture while still
+                    // rendered, the incoming one is captured after the
+                    // compositor settles (the shared debounce does this).
+                    let previous = PREV_FOREGROUND.swap(addr, Ordering::AcqRel);
+                    if previous != 0 && previous != addr {
+                        WINDOWS_PREVIEWS.set_reason(previous, CaptureReason::ForegroundLost);
+                        WINDOWS_PREVIEWS.enqueue_capture(previous);
+                    }
+                    WINDOWS_PREVIEWS.set_reason(addr, CaptureReason::ForegroundEntered);
+                    WINDOWS_PREVIEWS.enqueue_capture(addr);
+                }
+                WinEvent::SystemMinimizeStart => {
+                    // Freeze the latest visible frame + its revision; attempt
+                    // one final capture while the window may still be drawn.
+                    WINDOWS_PREVIEWS.freeze(addr);
+                    WINDOWS_PREVIEWS.set_reason(addr, CaptureReason::BeforeMinimize);
                     WINDOWS_PREVIEWS.enqueue_capture(addr);
                 }
                 WinEvent::SystemMinimizeEnd => {
+                    WINDOWS_PREVIEWS.unfreeze(addr);
                     std::thread::spawn(move || {
                         std::thread::sleep(Duration::from_millis(300));
+                        WINDOWS_PREVIEWS.set_reason(addr, CaptureReason::Restored);
                         WINDOWS_PREVIEWS.enqueue_capture(addr);
                     });
                 }
@@ -140,6 +220,9 @@ impl WinPreviewManager {
                 preview: None,
                 colors: None,
                 capture,
+                generation: 0,
+                frozen_generation: None,
+                reason: CaptureReason::Initial,
             },
         );
         self.enqueue_capture(addr);
@@ -151,7 +234,38 @@ impl WinPreviewManager {
         });
     }
 
+    fn set_reason(&self, addr: isize, reason: CaptureReason) {
+        self.previews.get(&addr, |wrap| {
+            wrap.reason = reason;
+        });
+    }
+
+    fn bump_generation(&self, addr: isize, reason: CaptureReason) {
+        self.previews.get(&addr, |wrap| {
+            // While minimized the content is not repainted: the frozen frame
+            // stays authoritative, so the live generation must not advance.
+            if wrap.frozen_generation.is_none() {
+                wrap.generation += 1;
+            }
+            wrap.reason = reason;
+        });
+    }
+
+    fn freeze(&self, addr: isize) {
+        self.previews.get(&addr, |wrap| {
+            wrap.frozen_generation = Some(wrap.generation);
+        });
+    }
+
+    fn unfreeze(&self, addr: isize) {
+        self.previews.get(&addr, |wrap| {
+            wrap.frozen_generation = None;
+            wrap.generation += 1;
+        });
+    }
+
     fn do_capture(&self, window: &Window) -> Result<()> {
+        let start = Instant::now();
         if window.is_minimized() {
             return Ok(());
         }
@@ -186,15 +300,31 @@ impl WinPreviewManager {
         let image_hash = image_to_hash(&image);
 
         let mut unchanged = false;
+        let mut generation = 0u64;
+        let mut reason = CaptureReason::Initial;
         self.previews.get(&addr, |wrap| {
             unchanged = wrap
                 .preview
                 .as_ref()
                 .map(|p| p.hash == image_hash)
                 .unwrap_or(false);
+            generation = wrap.generation;
+            reason = wrap.reason;
         });
+        let title = window.title();
+        let captured_at = now_millis();
 
-        if !unchanged {
+        if unchanged {
+            // Same pixels: keep the existing bitmap but refresh the record so
+            // it remains the authoritative frame for the new generation.
+            self.previews.get(&addr, |wrap| {
+                if let Some(preview) = wrap.preview.as_mut() {
+                    preview.captured_at_ms = captured_at;
+                    preview.title_at_capture = title.clone();
+                    preview.generation = generation;
+                }
+            });
+        } else {
             let dynamic = DynamicImage::ImageRgba8(image);
             let webp_bytes = webp::Encoder::from_image(&dynamic)
                 .map_err(|e| e.to_string())?
@@ -203,10 +333,13 @@ impl WinPreviewManager {
 
             self.previews.get(&addr, |wrap| {
                 wrap.preview = Some(UserAppWindowPreview {
-                    hash: image_hash,
+                    hash: image_hash.clone(),
                     data,
                     width: dynamic.width(),
                     height: dynamic.height(),
+                    captured_at_ms: captured_at,
+                    title_at_capture: title.clone(),
+                    generation,
                 });
             });
             Self::send(WinPreviewEvent::Captured(addr));
@@ -216,6 +349,12 @@ impl WinPreviewManager {
             wrap.colors = Some(colors);
         });
         Self::send(WinPreviewEvent::ColorsUpdated(addr));
+
+        log::debug!(
+            "preview capture: hwnd={addr:x} reason={} title=\"{title}\" contentGeneration={generation} previewGeneration={generation} hash={image_hash} capturedAt={captured_at} latencyUs={}",
+            reason.as_str(),
+            start.elapsed().as_micros()
+        );
 
         Ok(())
     }

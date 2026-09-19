@@ -87,3 +87,30 @@ pub fn weg_get_automation_metrics() -> Result<AutomationMetrics> {
 pub fn weg_get_trace() -> Result<Vec<TraceFrame>> {
     Ok(crate::modules::weg_core::application::get_trace())
 }
+
+/// Hide only the `@seelen/weg-preview` webview (grouped window popup).
+///
+/// The preview is kept warm: the window is hidden, not destroyed, not reloaded,
+/// so the next trigger paints immediately from the still-valid model. The main
+/// `@seelen/weg` webview is never touched by this command. Calling it while the
+/// preview is already hidden is a no-op.
+#[tauri::command(async)]
+pub fn weg_hide_preview() -> Result<()> {
+    use tauri::Manager;
+
+    use crate::widgets::webview::WidgetWebviewLabel;
+
+    let app = crate::app::get_app_handle();
+    // `@seelen/weg-preview` is a `Single` instance widget: the raw label is
+    // the plain widget id encoded exactly like the loader created it.
+    let label = WidgetWebviewLabel::new(
+        &seelen_core::resource::WidgetId::from("@seelen/weg-preview"),
+        None,
+        None,
+    );
+    if let Some(window) = app.get_webview_window(&label.raw) {
+        let _ = window.hide();
+        log::trace!("preview lifecycle: preview-hidden via WegHidePreview");
+    }
+    Ok(())
+}
