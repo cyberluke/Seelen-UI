@@ -86,7 +86,9 @@ export const SeelenWegSettings = () => {
             <SettingsOption>
               <b>{t("weg.auto_hide")}</b>
               {/* disabled on touch devices: autohide requires hover/pointer events that touchscreens don't fire */}
-              <Tooltip title={isTouchPrimary ? t("weg.auto_hide_touch_disabled") : undefined}>
+              <Tooltip
+                title={isTouchPrimary ? t("weg.auto_hide_touch_disabled") : undefined}
+              >
                 <Select
                   style={{ width: "120px" }}
                   value={settings.hideMode}
@@ -272,7 +274,10 @@ const WindowPreviewSection = ({ settings }: { settings: AnySettings }) => {
             options={[
               { value: "Hover", label: t("weg.preview.trigger_hover") },
               { value: "Click", label: t("weg.preview.trigger_click") },
-              { value: "HoverAndClick", label: t("weg.preview.trigger_hover_and_click") },
+              {
+                value: "HoverAndClick",
+                label: t("weg.preview.trigger_hover_and_click"),
+              },
             ]}
             onChange={(value) => patch({ trigger: value })}
           />
@@ -464,7 +469,10 @@ const WindowPreviewSection = ({ settings }: { settings: AnySettings }) => {
               { value: "Manual", label: t("weg.preview.ordering_manual") },
               { value: "Stable", label: t("weg.preview.ordering_stable") },
               { value: "Mru", label: t("weg.preview.ordering_mru") },
-              { value: "Alphabetical", label: t("weg.preview.ordering_alphabetical") },
+              {
+                value: "Alphabetical",
+                label: t("weg.preview.ordering_alphabetical"),
+              },
               {
                 value: "ApplicationDefined",
                 label: t("weg.preview.ordering_application_defined"),
@@ -480,8 +488,14 @@ const WindowPreviewSection = ({ settings }: { settings: AnySettings }) => {
             style={{ width: "160px" }}
             value={preview.groupedClickAction ?? "OpenPreview"}
             options={[
-              { value: "OpenPreview", label: t("weg.preview.grouped_click_preview") },
-              { value: "ActivateLastUsed", label: t("weg.preview.grouped_click_last_used") },
+              {
+                value: "OpenPreview",
+                label: t("weg.preview.grouped_click_preview"),
+              },
+              {
+                value: "ActivateLastUsed",
+                label: t("weg.preview.grouped_click_last_used"),
+              },
               {
                 value: "MinimizeRestoreGroup",
                 label: t("weg.preview.grouped_click_minimize_restore"),
@@ -570,7 +584,22 @@ const AutomationSection = ({ settings }: { settings: AnySettings }) => {
   const { t } = useTranslation();
   const automation: AnySettings = settings.automation ?? {};
 
-  const patch = (value: Partial<AnySettings>) => patchWegConfig({ automation: { ...automation, ...value } } as any);
+  // serde serializes `automation` in camelCase (`flightRecorder`) and also accepts the
+  // snake_case aliases (`flight_recorder`) on load. If both spellings end up in the same
+  // object, serde rejects the save with "duplicate field". Normalize every key to its
+  // canonical camelCase form on each patch so the result is stable and idempotent.
+  const toCamel = (key: string) => key.replace(/_([a-z])/g, (_, c: string) => c.toUpperCase());
+  const patch = (value: Partial<AnySettings>) => {
+    const merged: AnySettings = {};
+    for (const [key, val] of Object.entries(automation)) {
+      const camel = toCamel(key);
+      if (!(camel in merged)) merged[camel] = val;
+    }
+    for (const [key, val] of Object.entries(value)) {
+      merged[toCamel(key)] = val;
+    }
+    patchWegConfig({ automation: merged } as any);
+  };
 
   return (
     <SettingsGroup>
@@ -585,31 +614,31 @@ const AutomationSection = ({ settings }: { settings: AnySettings }) => {
         <SettingsOption>
           <div>{t("weg.automation.rest_enabled")}</div>
           <Switch
-            checked={automation.rest_enabled ?? true}
-            onChange={(value) => patch({ rest_enabled: value })}
+            checked={automation.restEnabled ?? automation.rest_enabled ?? true}
+            onChange={(value) => patch({ restEnabled: value })}
           />
         </SettingsOption>
         <SettingsOption>
           <div>{t("weg.automation.rest_port")}</div>
           <InputNumber
-            value={automation.rest_port}
+            value={automation.restPort ?? automation.rest_port}
             min={0}
             max={65535}
-            onChange={(value) => patch({ rest_port: value || 0 })}
+            onChange={(value) => patch({ restPort: value || 0 })}
           />
         </SettingsOption>
         <SettingsOption>
           <div>{t("weg.automation.mcp_enabled")}</div>
           <Switch
-            checked={automation.mcp_enabled ?? true}
-            onChange={(value) => patch({ mcp_enabled: value })}
+            checked={automation.mcpEnabled ?? automation.mcp_enabled ?? true}
+            onChange={(value) => patch({ mcpEnabled: value })}
           />
         </SettingsOption>
         <SettingsOption>
           <div>{t("weg.automation.flight_recorder")}</div>
           <Switch
-            checked={automation.flight_recorder ?? true}
-            onChange={(value) => patch({ flight_recorder: value })}
+            checked={automation.flightRecorder ?? automation.flight_recorder ?? true}
+            onChange={(value) => patch({ flightRecorder: value })}
           />
         </SettingsOption>
       </SettingsSubGroup>

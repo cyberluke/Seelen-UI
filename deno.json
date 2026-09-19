@@ -1,9 +1,12 @@
 {
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1.0.19",
+    "@seelen-ui/lib": "./libs/core/src/lib.ts",
+    "@seelen-ui/lib/types": "./libs/core/gen/types/mod.ts"
+  },
   "lint": {
     "rules": {
-      "include": [
-        "verbatim-module-syntax"
-      ],
+      "include": ["verbatim-module-syntax"],
       "exclude": [
         "prefer-const",
         "jsx-button-has-type",
@@ -17,8 +20,6 @@
   },
   "fmt": {
     "lineWidth": 120,
-    "exclude": [
-      "**/i18n/translations/**"
-    ]
+    "exclude": ["**/i18n/translations/**"]
   }
 }

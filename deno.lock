@@ -1,0 +1,93 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@std/assert@^1.0.19": "1.0.19",
+    "jsr:@std/internal@^1.0.12": "1.0.14"
+  },
+  "jsr": {
+    "@std/assert@1.0.19": {
+      "integrity": "eaada96ee120cb980bc47e040f82814d786fe8162ecc53c91d8df60b8755991e",
+      "dependencies": [
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/internal@1.0.14": {
+      "integrity": "291516b3d4c35024d6ffbc0a9df5bf4c64116e05b50012cf846710152d2ffdf7"
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "jsr:@std/assert@^1.0.19"
+    ],
+    "packageJson": {
+      "dependencies": [
+        "npm:@commitlint/cli@^20.5.0",
+        "npm:@commitlint/config-conventional@^20.5.0",
+        "npm:@dnd-kit/abstract@0.5",
+        "npm:@dnd-kit/helpers@0.5",
+        "npm:@dnd-kit/react@0.5",
+        "npm:@dnd-kit/svelte@0.5",
+        "npm:@nyariv/sandboxjs@~0.9.4",
+        "npm:@preact/compat@^18.3.2",
+        "npm:@preact/signals@^2.9.0",
+        "npm:@seelen/translation-toolkit@^1.2.4",
+        "npm:@tauri-apps/api@^2.11.0",
+        "npm:@tauri-apps/cli@^2.11.2",
+        "npm:@types/express@5",
+        "npm:@types/js-yaml@^4.0.9",
+        "npm:@types/lodash@^4.17.24",
+        "npm:@types/node@^25.6.0",
+        "npm:@types/object-inspect@^1.13.0",
+        "npm:@types/qrcode@^1.5.6",
+        "npm:@types/react-dom@19",
+        "npm:@types/yargs@^17.0.33",
+        "npm:antd@^6.3.6",
+        "npm:dompurify@^3.4.11",
+        "npm:esbuild-css-modules-plugin@^3.1.4",
+        "npm:esbuild-svelte@~0.9.3",
+        "npm:esbuild@0.28",
+        "npm:express@^5.2.1",
+        "npm:flexsearch@~0.8.212",
+        "npm:framer-motion@^12.38.0",
+        "npm:i18next@^26.0.6",
+        "npm:js-yaml@^4.1.0",
+        "npm:lefthook@^2.1.6",
+        "npm:lodash@^4.18.1",
+        "npm:moment@^2.30.1",
+        "npm:object-inspect@^1.13.4",
+        "npm:preact-render-to-string@^6.6.7",
+        "npm:preact@^10.29.1",
+        "npm:qrcode@^1.5.4",
+        "npm:react-dom@19",
+        "npm:react-i18next@^17.0.4",
+        "npm:react-icons@^5.6.0",
+        "npm:react-router@^8.3.0",
+        "npm:rehype-stringify@^10.0.1",
+        "npm:remark-gfm@^4.0.1",
+        "npm:remark-parse@11",
+        "npm:remark-rehype@^11.1.2",
+        "npm:svelte-check@^4.4.6",
+        "npm:svelte-preprocess@^6.0.3",
+        "npm:svelte@^5.55.4",
+        "npm:toml@^4.1.1",
+        "npm:tsx@^4.19.3",
+        "npm:typescript@^5.9.3",
+        "npm:unified@^11.0.5",
+        "npm:yargs@18",
+        "npm:zod@^3.24.3"
+      ]
+    },
+    "links": {
+      "jsr:@seelen-ui/lib@2.8.6": {
+        "dependencies": [
+          "jsr:@deno/dnt@0.42.3",
+          "jsr:@std/assert@^1.0.19",
+          "jsr:@std/encoding@^1.0.10",
+          "npm:@tauri-apps/api@^2.11.0",
+          "npm:@tauri-apps/plugin-dialog@^2.7.1",
+          "npm:@tauri-apps/plugin-process@^2.3.1"
+        ]
+      }
+    }
+  }
+}

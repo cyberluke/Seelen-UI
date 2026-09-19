@@ -1,9 +1,8 @@
 import { invoke, RuntimeStyleSheet, SeelenCommand, SeelenEvent, Settings, subscribe, Widget } from "@seelen-ui/lib";
 import { declareDocumentAsLayeredHitbox } from "libs/ui/react/utils/layered";
 import type { FocusedApp, TwmReservation, TwmRuntimeTree, WindowManagerSettings } from "@seelen-ui/lib/types";
-import { FancyToolbarSide, HideMode } from "@seelen-ui/lib/types";
-import { SeelenWegSide } from "node_modules/@seelen-ui/lib/esm/gen/types/SeelenWegSide";
 
+import { computeWmCanvasRect } from "./state/geometry.ts";
 import { lazyRune } from "libs/ui/svelte/utils/LazyRune.svelte.ts";
 import { isTouchPrimary } from "libs/ui/svelte/utils/signals.svelte.ts";
 
@@ -44,7 +43,9 @@ subscribe(SeelenEvent.GlobalFocusChanged, (e) => {
 });
 
 let fullSettings = $state(settingsInit);
-let settings = $state<WindowManagerSettings>(settingsInit.byWidget["@seelen/window-manager"]);
+let settings = $state<WindowManagerSettings>(
+  settingsInit.byWidget["@seelen/window-manager"],
+);
 Settings.onChange((s) => {
   fullSettings = s;
   settings = s.byWidget["@seelen/window-manager"];
@@ -59,10 +60,22 @@ $effect.root(() => {
     const sheet = new RuntimeStyleSheet("@config/window-manager");
     sheet.addVariable("--config-padding", `${settings.workspacePadding}px`);
     sheet.addVariable("--config-containers-gap", `${settings.workspaceGap}px`);
-    sheet.addVariable("--config-margin-top", `${settings.workspaceMargin.top}px`);
-    sheet.addVariable("--config-margin-left", `${settings.workspaceMargin.left}px`);
-    sheet.addVariable("--config-margin-right", `${settings.workspaceMargin.right}px`);
-    sheet.addVariable("--config-margin-bottom", `${settings.workspaceMargin.bottom}px`);
+    sheet.addVariable(
+      "--config-margin-top",
+      `${settings.workspaceMargin.top}px`,
+    );
+    sheet.addVariable(
+      "--config-margin-left",
+      `${settings.workspaceMargin.left}px`,
+    );
+    sheet.addVariable(
+      "--config-margin-right",
+      `${settings.workspaceMargin.right}px`,
+    );
+    sheet.addVariable(
+      "--config-margin-bottom",
+      `${settings.workspaceMargin.bottom}px`,
+    );
     sheet.addVariable("--config-border-offset", `${settings.border.offset}px`);
     sheet.addVariable("--config-border-width", `${settings.border.width}px`);
     sheet.applyToDocument();
@@ -80,65 +93,34 @@ const widgetRect = $derived.by(() => {
   if (!monitor) {
     throw new Error("Current monitor not found");
   }
-
-  const rect = { ...monitor.rect };
-  const tbConfig = fullSettings.byWidget["@seelen/fancy-toolbar"];
-  const tbMonitorConfig = (fullSettings.monitorsV3[monitor.id] as any)?.byWidget?.[
-    "@seelen/fancy-toolbar"
-  ] ?? {
-    enabled: true,
-  };
-
-  if (
-    tbConfig.enabled &&
-    tbMonitorConfig.enabled &&
-    (tbConfig.hideMode === HideMode.Never || isTouchPrimary.value)
-  ) {
-    const tbSize = Math.round(
-      (tbConfig.itemSize + tbConfig.padding * 2 + tbConfig.margin * 2) * monitor.scaleFactor,
-    );
-    switch (tbConfig.position) {
-      case FancyToolbarSide.Top:
-        rect.top += tbSize;
-        break;
-      case FancyToolbarSide.Bottom:
-        rect.bottom -= tbSize;
-        break;
-    }
-  }
-
-  const wegConfig = fullSettings.byWidget["@seelen/weg"];
-  const wegMonitorConfig = (fullSettings.monitorsV3[monitor.id] as any)?.byWidget?.[
-    "@seelen/weg"
-  ] ?? {
-    enabled: true,
-  };
-
-  if (
-    wegConfig.enabled &&
-    wegMonitorConfig.enabled &&
-    (wegConfig.hideMode === HideMode.Never || isTouchPrimary.value)
-  ) {
-    const wegSize = Math.round(
-      (wegConfig.size + wegConfig.padding * 2 + wegConfig.margin * 2) * monitor.scaleFactor,
-    );
-    switch (wegConfig.position) {
-      case SeelenWegSide.Top:
-        rect.top += wegSize;
-        break;
-      case SeelenWegSide.Bottom:
-        rect.bottom -= wegSize;
-        break;
-      case SeelenWegSide.Left:
-        rect.left += wegSize;
-        break;
-      case SeelenWegSide.Right:
-        rect.right -= wegSize;
-        break;
-    }
-  }
-
-  return rect;
+  const tb = fullSettings.byWidget["@seelen/fancy-toolbar"];
+  const weg = fullSettings.byWidget["@seelen/weg"];
+  return computeWmCanvasRect({
+    monitor: monitor.rect,
+    scaleFactor: monitor.scaleFactor,
+    isTouch: isTouchPrimary.value,
+    toolbar: {
+      enabled: tb.enabled,
+      enabledOnMonitor: (fullSettings.monitorsV3[monitor.id] as any)?.byWidget?.[
+        "@seelen/fancy-toolbar"
+      ]?.enabled ?? true,
+      hideMode: tb.hideMode,
+      position: tb.position,
+      itemSize: tb.itemSize,
+      padding: tb.padding,
+      margin: tb.margin,
+    },
+    weg: {
+      enabled: weg.enabled,
+      enabledOnMonitor: (fullSettings.monitorsV3[monitor.id] as any)?.byWidget?.["@seelen/weg"]
+        ?.enabled ?? true,
+      hideMode: weg.hideMode,
+      position: weg.position,
+      size: weg.size,
+      padding: weg.padding,
+      margin: weg.margin,
+    },
+  });
 });
 
 $effect.root(() => {
@@ -151,7 +133,12 @@ $effect.root(() => {
 await declareDocumentAsLayeredHitbox({
   getPhysicalRect: () => {
     const r = widgetRect;
-    return { x: r.left, y: r.top, width: r.right - r.left, height: r.bottom - r.top };
+    return {
+      x: r.left,
+      y: r.top,
+      width: r.right - r.left,
+      height: r.bottom - r.top,
+    };
   },
   shouldAllowMouseEvent: (e) => e.getAttribute("data-allow-mouse-events") === "true",
 });

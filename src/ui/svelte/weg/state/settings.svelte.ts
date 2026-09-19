@@ -1,6 +1,7 @@
 import { invoke, RuntimeStyleSheet, SeelenCommand, Widget } from "@seelen-ui/lib";
-import { Alignment, FancyToolbarSide, HideMode, SeelenWegSide } from "@seelen-ui/lib/types";
+import { Alignment, HideMode, SeelenWegSide } from "@seelen-ui/lib/types";
 import { isTouchPrimary } from "libs/ui/svelte/utils";
+import { computeWegRects, isHorizontalDockSide } from "./geometry.ts";
 import { locale } from "../i18n/index.ts";
 import { declareDocumentAsLayeredHitbox } from "libs/ui/react/utils/layered.ts";
 import { systemState } from "./system.svelte.ts";
@@ -10,62 +11,28 @@ import { dateState } from "libs/ui/svelte/runes/date.svelte.ts";
 let isWidgetReady = $state(false);
 const settings = $derived(_settings.value.byWidget["@seelen/weg"]);
 
-const workArea = $derived.by(() => {
-  const workArea = systemState.currentMonitor.rect;
-  const tbConfig = _settings.value.byWidget["@seelen/fancy-toolbar"];
-  const tbMonitorConfig = (_settings.value.monitorsV3[systemState.currentMonitor.id] as any)
-    ?.byWidget?.["@seelen/fancy-toolbar"] || { enabled: true };
-
-  if (!tbConfig?.enabled || !tbMonitorConfig?.enabled) {
-    return workArea;
-  }
-
-  const tbSize = Math.round(
-    (tbConfig.itemSize + tbConfig.padding * 2 + tbConfig.margin * 2) *
-      systemState.currentMonitor.scaleFactor,
-  );
-
-  switch (tbConfig.position) {
-    case FancyToolbarSide.Top:
-      return { ...workArea, top: workArea.top + tbSize };
-    case FancyToolbarSide.Bottom:
-      return { ...workArea, bottom: workArea.bottom - tbSize };
-  }
-
-  return workArea;
-});
-
-const widgetRect = $derived.by(() => {
-  const wa = workArea;
-  const hitboxRect = { ...workArea };
-  const webviewRect = { ...workArea };
-
-  const size = Math.round(
-    (settings.size + settings.padding * 2 + settings.margin * 2) *
-      systemState.currentMonitor.scaleFactor,
-  );
-
-  switch (settings.position) {
-    case SeelenWegSide.Left:
-      hitboxRect.right = hitboxRect.left + size;
-      webviewRect.right = isTouchPrimary.value ? hitboxRect.right : wa.right - Math.round((wa.right - wa.left) / 2);
-      break;
-    case SeelenWegSide.Right:
-      hitboxRect.left = hitboxRect.right - size;
-      webviewRect.left = isTouchPrimary.value ? hitboxRect.left : wa.left + Math.round((wa.right - wa.left) / 2);
-      break;
-    case SeelenWegSide.Top:
-      hitboxRect.bottom = hitboxRect.top + size;
-      webviewRect.bottom = isTouchPrimary.value ? hitboxRect.bottom : wa.top + Math.round((wa.bottom - wa.top) / 2);
-      break;
-    case SeelenWegSide.Bottom:
-      hitboxRect.top = hitboxRect.bottom - size;
-      webviewRect.top = isTouchPrimary.value ? hitboxRect.top : wa.bottom - Math.round((wa.bottom - wa.top) / 2);
-      break;
-  }
-
-  return { hitboxRect, webviewRect };
-});
+const widgetRect = $derived(
+  computeWegRects({
+    monitor: systemState.currentMonitor.rect,
+    scaleFactor: systemState.currentMonitor.scaleFactor,
+    isTouch: isTouchPrimary.value,
+    toolbar: {
+      enabled: _settings.value.byWidget["@seelen/fancy-toolbar"]?.enabled ?? true,
+      enabledOnMonitor: (_settings.value.monitorsV3[systemState.currentMonitor.id] as any)
+        ?.byWidget?.["@seelen/fancy-toolbar"]?.enabled ?? true,
+      position: _settings.value.byWidget["@seelen/fancy-toolbar"].position,
+      itemSize: _settings.value.byWidget["@seelen/fancy-toolbar"].itemSize,
+      padding: _settings.value.byWidget["@seelen/fancy-toolbar"].padding,
+      margin: _settings.value.byWidget["@seelen/fancy-toolbar"].margin,
+    },
+    dock: {
+      position: settings.position,
+      size: settings.size,
+      padding: settings.padding,
+      margin: settings.margin,
+    },
+  }),
+);
 
 $effect.root(() => {
   $effect(() => {
@@ -168,8 +135,7 @@ class SettingsState {
 export const settingsState = new SettingsState();
 
 export function isHorizontalDock(): boolean {
-  const pos = settings.position;
-  return pos === SeelenWegSide.Top || pos === SeelenWegSide.Bottom;
+  return isHorizontalDockSide(settings.position);
 }
 
 async function updateWidgetPosition() {
@@ -220,7 +186,12 @@ $effect.root(() => {
     declareDocumentAsLayeredHitbox({
       getPhysicalRect: () => {
         const r = widgetRect.webviewRect;
-        return { x: r.left, y: r.top, width: r.right - r.left, height: r.bottom - r.top };
+        return {
+          x: r.left,
+          y: r.top,
+          width: r.right - r.left,
+          height: r.bottom - r.top,
+        };
       },
     }).then((unlistenFn) => {
       unlisten = unlistenFn;

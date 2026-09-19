@@ -9,6 +9,7 @@ const ALLOWED_COMMANDS = [
   SeelenCommand.SwitchWorkspace,
   SeelenCommand.SetVolumeLevel,
   SeelenCommand.OpenFile,
+  SeelenCommand.GetRuntimeExePath,
 ];
 
 const ActionsScope = {

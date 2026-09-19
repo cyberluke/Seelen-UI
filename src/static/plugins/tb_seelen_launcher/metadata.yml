@@ -1,0 +1,15 @@
+id: "@seelen/tb-seelen-launcher"
+metadata:
+  displayName: !extend i18n/display_name.yml
+  description: !extend i18n/description.yml
+icon: TbApps
+target: "@seelen/fancy-toolbar"
+plugin:
+  tooltip: |-
+    return "Seelen UI";
+  template: |-
+    return Icon({ name: "TbApps" });
+  onClickV2: |-
+    invoke(SeelenCommand.GetRuntimeExePath).then((path) =>
+      invoke(SeelenCommand.OpenFile, { path }),
+    );

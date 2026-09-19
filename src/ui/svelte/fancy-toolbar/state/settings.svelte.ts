@@ -7,6 +7,8 @@ import {
   HideMode,
 } from "@seelen-ui/lib/types";
 import { isTouchPrimary } from "libs/ui/svelte/utils/signals.svelte.ts";
+import { computeToolbarRect } from "./geometry.ts";
+import type { Rect } from "@seelen-ui/lib/types";
 import { locale } from "../i18n/index.ts";
 import { declareDocumentAsLayeredHitbox } from "libs/ui/react/utils/layered.ts";
 import { systemState } from "./system.svelte.ts";
@@ -14,21 +16,6 @@ import { settings as _settings } from "./getters.svelte.ts";
 import { dateState } from "libs/ui/svelte/runes/date.svelte.ts";
 
 let isWidgetReady = $state(false);
-
-const widgetRect = $derived.by(() => {
-  const { itemSize, margin, padding } = settingsState;
-  const height = Math.round(
-    (itemSize + padding * 2 + margin * 2) * systemState.currentMonitor.scaleFactor,
-  );
-  const rect = { ...systemState.currentMonitor.rect };
-
-  if (settingsState.position === FancyToolbarSide.Top) {
-    rect.bottom = systemState.currentMonitor.rect.top + height;
-  } else if (settingsState.position === FancyToolbarSide.Bottom) {
-    rect.top = systemState.currentMonitor.rect.bottom - height;
-  }
-  return rect;
-});
 
 class SettingsState {
   get isReady() {
@@ -39,8 +26,17 @@ class SettingsState {
     isWidgetReady = v;
   }
 
-  get widgetRect() {
-    return widgetRect;
+  get widgetRect(): Rect {
+    return computeToolbarRect(
+      systemState.currentMonitor.rect,
+      {
+        itemSize: this.itemSize,
+        padding: this.padding,
+        margin: this.margin,
+      },
+      systemState.currentMonitor.scaleFactor,
+      this.position,
+    );
   }
 
   get value(): FancyToolbarSettings {
@@ -94,7 +90,7 @@ $effect.root(() => {
 });
 
 async function updateWidgetPosition() {
-  const rect = widgetRect;
+  const rect = settingsState.widgetRect;
   const isTouch = isTouchPrimary.value;
   const hideMode = settingsState.hideMode;
   const position = settingsState.position;
@@ -126,7 +122,10 @@ $effect.root(() => {
     sheet.addVariable("--config-item-size", `${itemSize}px`);
     sheet.addVariable("--config-margin", `${margin}px`);
     sheet.addVariable("--config-padding", `${padding}px`);
-    sheet.addVariable("--config-height", `${itemSize + padding * 2 + margin * 2}px`);
+    sheet.addVariable(
+      "--config-height",
+      `${itemSize + padding * 2 + margin * 2}px`,
+    );
     sheet.applyToDocument();
   });
 
@@ -140,8 +139,13 @@ $effect.root(() => {
     let unlisten: (() => void) | null = null;
     declareDocumentAsLayeredHitbox({
       getPhysicalRect: () => {
-        const r = widgetRect;
-        return { x: r.left, y: r.top, width: r.right - r.left, height: r.bottom - r.top };
+        const r = settingsState.widgetRect;
+        return {
+          x: r.left,
+          y: r.top,
+          width: r.right - r.left,
+          height: r.bottom - r.top,
+        };
       },
     }).then((unlistenFn) => {
       unlisten = unlistenFn;

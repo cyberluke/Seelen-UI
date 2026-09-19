@@ -124,6 +124,7 @@ slu_commands_declaration! {
     IsDevMode = is_dev_mode() -> bool,
     IsAppxPackage = is_appx_package() -> bool,
     HasFixedRuntime = has_fixed_runtime() -> bool,
+    GetRuntimeExePath = get_runtime_exe_path() -> String,
 
     GetFocusedApp = get_focused_app() -> FocusedApp,
     GetMousePosition = get_mouse_position() -> [i32; 2],

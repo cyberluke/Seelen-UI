@@ -126,6 +126,7 @@ export function restoreStateToDefault() {
     center: ["@seelen/tb-calendar-popup" as PluginId],
     right: [
       "@seelen/tb-system-tray" as PluginId,
+      "@seelen/tb-seelen-launcher" as PluginId,
       "@seelen/tb-keyboard-selector" as PluginId,
       "@seelen/tb-bluetooth-popup" as PluginId,
       "@seelen/tb-network-popup" as PluginId,
@@ -199,6 +200,27 @@ $effect.root(() => {
       ..._toolbarState,
       items: _toolbarState.items.filter((item) => !isStale(item)),
     };
+  });
+});
+
+// One-time append for existing users: tb-seelen-launcher shipped after the first
+// default state files were written, so saved states miss it. Insert it right
+// after the system-tray cluster to match the new defaults.
+$effect.root(() => {
+  $effect(() => {
+    const pluginIds = new Set(plugins.value.map((p) => p.id));
+    const id = "@seelen/tb-seelen-launcher" as PluginId;
+    if (!pluginIds.has(id)) return;
+    if (_toolbarState.items.some((item) => matchIds(item, id))) return;
+
+    const items = [..._toolbarState.items];
+    const trayIdx = items.findIndex((item) => matchIds(item, "@seelen/tb-system-tray"));
+    if (trayIdx >= 0) {
+      items.splice(trayIdx + 1, 0, id);
+    } else {
+      items.push(id);
+    }
+    _toolbarState = { ..._toolbarState, items };
   });
 });
 

@@ -91,6 +91,20 @@ fn has_fixed_runtime() -> bool {
     crate::utils::has_fixed_runtime()
 }
 
+/// Path of the executable produced by the most recent build. Baked in by
+/// `build.rs` per profile (debug / release, triple-specific dirs included),
+/// with `current_exe` as fallback for non-cargo launchers.
+#[tauri::command(async)]
+fn get_runtime_exe_path() -> String {
+    option_env!("SUL_EXE_PATH")
+        .map(|path| path.to_owned())
+        .unwrap_or_else(|| {
+            std::env::current_exe()
+                .map(|path| path.to_string_lossy().into_owned())
+                .unwrap_or_default()
+        })
+}
+
 #[tauri::command(async)]
 fn is_appx_package() -> bool {
     crate::utils::is_running_as_appx()

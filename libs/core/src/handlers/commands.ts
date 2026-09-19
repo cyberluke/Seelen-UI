@@ -19,6 +19,7 @@ export enum SeelenCommand {
   IsDevMode = "is_dev_mode",
   IsAppxPackage = "is_appx_package",
   HasFixedRuntime = "has_fixed_runtime",
+  GetRuntimeExePath = "get_runtime_exe_path",
   GetFocusedApp = "get_focused_app",
   GetMousePosition = "get_mouse_position",
   GetKeyState = "get_key_state",

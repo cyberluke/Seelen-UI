@@ -81,6 +81,7 @@ fn initial_items() -> ToolbarState {
         center: vec![ToolbarItem2::Plugin("@seelen/tb-calendar-popup".into())],
         right: vec![
             ToolbarItem2::Plugin("@seelen/tb-system-tray".into()),
+            ToolbarItem2::Plugin("@seelen/tb-seelen-launcher".into()),
             ToolbarItem2::Plugin("@seelen/tb-keyboard-selector".into()),
             ToolbarItem2::Plugin("@seelen/tb-bluetooth-popup".into()),
             ToolbarItem2::Plugin("@seelen/tb-network-popup".into()),

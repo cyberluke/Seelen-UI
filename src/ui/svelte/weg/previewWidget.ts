@@ -3,6 +3,7 @@ import { Alignment, SeelenWegSide, type UserAppWindow, type WidgetId } from "@se
 import { settingsState } from "./state/settings.svelte.ts";
 import { systemState } from "./state/system.svelte.ts";
 import { appKeyOf, previewSettings } from "./state/preview.svelte.ts";
+import { computeScreenCenter, isLargePreviewCard } from "./state/geometry.ts";
 
 // ── Cross-webview preview lifecycle controller ──────────────────────────────
 // ONE semantic model for the grouped preview: a small state machine with a
@@ -143,6 +144,18 @@ function computeAnchor(itemEl: HTMLElement): PreviewAnchor {
   const viewRect = settingsState.widgetRect.hitboxRect;
   const scaleFactor = systemState.currentMonitor.scaleFactor || globalThis.devicePixelRatio || 1;
   const toPhysical = (n: number) => Math.round(n * scaleFactor);
+
+  // size-aware placement: large cards (e.g. 256) are centered on the screen,
+  // small cards (e.g. 128) stay anchored above/beside the clicked dock item
+  if (isLargePreviewCard(previewSettings().cardWidth, scaleFactor)) {
+    const center = computeScreenCenter(systemState.currentMonitor.rect);
+    return {
+      x: center.x,
+      y: center.y,
+      alignX: Alignment.Center,
+      alignY: Alignment.Center,
+    };
+  }
 
   switch (dockSide) {
     case SeelenWegSide.Bottom:

@@ -28,6 +28,7 @@ import {
 import { prefersDarkColorScheme } from "libs/ui/svelte/runes/DarkMode.svelte.ts";
 import { CssHandled } from "libs/ui/svelte/utils/animations.ts";
 import SystemTrayToolbarItem from "./SystemTrayToolbarItem.svelte";
+import SeelenLauncherToolbarItem from "./SeelenLauncherToolbarItem.svelte";
 
 interface Props {
     module: ToolbarItem;
@@ -39,6 +40,7 @@ interface Props {
 
   const noopAttach = () => {};
   const isSystemTrayCluster = $derived(pluginId === "@seelen/tb-system-tray");
+  const isSeelenLauncher = $derived(pluginId === "@seelen/tb-seelen-launcher");
 
   // ── Context menu listener ────────────────────────────────────────────────
 
@@ -195,6 +197,22 @@ interface Props {
     }}
   >
     <SystemTrayToolbarItem />
+  </div>
+{:else if isSeelenLauncher}
+  <div
+    id={self.id}
+    {@attach sortable?.attach ?? noopAttach}
+    data-plugin-id={pluginId}
+    data-dragging={sortable?.isDragging}
+    style={itemStyle}
+    class="ft-bar-item ft-bar-item-tray"
+    transition:CssHandled|global={{
+      enabled() {
+        return !!sortable && !sortable.isDragging;
+      },
+    }}
+  >
+    <SeelenLauncherToolbarItem />
   </div>
 {:else if !fetching && (content || self.render)}
   {#if self.id.startsWith("hardcoded-separator")}

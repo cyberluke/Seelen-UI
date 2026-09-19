@@ -25,8 +25,18 @@ fn main() {
     }
 
     emit_provenance_env(&sums_path);
+    emit_exe_path_env();
 
     tauri_build::build();
+}
+
+/// Build-time exe location for the toolbar launcher icon (`get_runtime_exe_path`).
+/// Points at the exact artifact produced by this build: the profile directory is
+/// resolved from `OUT_DIR`, so both plain (`target/debug`) and triple-specific
+/// (`target/<triple>/release`) layouts are covered automatically.
+fn emit_exe_path_env() {
+    let exe_path = target_dir().join("seelen-ui.exe");
+    println!("cargo:rustc-env=SUL_EXE_PATH={}", exe_path.display());
 }
 
 /// Build-time provenance baked into the binary (`slu runtime provenance`).
