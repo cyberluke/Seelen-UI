@@ -276,6 +276,8 @@ slu_commands_declaration! {
     NaiActivate = nai_activate(identification: String) -> serde_json::Value,
     NaiNode = nai_node(identification: String) -> Option<WindowEntry>,
     NaiUndoLast = nai_undo_last() -> Option<serde_json::Value>,
+    NaiApps = nai_apps() -> Vec<serde_json::Value>,
+    NaiLaunch = nai_launch(id: String) -> serde_json::Value,
 
     // Windows Manager
     WmGetRenderTree = wm_get_render_tree() -> TwmGlobalRuntimeTree,

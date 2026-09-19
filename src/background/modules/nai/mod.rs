@@ -5,6 +5,7 @@
 //! (`weg_core`, monitors, virtual desktops, widget pods) plus the persistent
 //! logical identities. UI stores are views, never the source of truth.
 
+pub mod apps;
 pub mod infrastructure;
 
 use std::sync::{LazyLock, Mutex};
@@ -407,6 +408,8 @@ pub fn process_cli(cli: NaiCli) -> Result<Option<String>> {
         NaiCommand::Trace => {
             serde_json::to_value(crate::modules::weg_core::application::get_trace()).unwrap()
         }
+        NaiCommand::Apps => serde_json::to_value(apps::apps()).unwrap(),
+        NaiCommand::Launch { name } => apps::launch(&name)?,
     };
     Ok(Some(value.to_string()))
 }

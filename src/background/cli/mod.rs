@@ -32,7 +32,7 @@ use crate::{
 ///
 /// Use `slu` instead.
 #[derive(Debug, clap::Parser)]
-#[command(version, name = "Seelen UI")]
+#[command(version, name = "NAI OS")]
 struct MainCli {
     #[arg(long, default_value_t)]
     silent: bool,

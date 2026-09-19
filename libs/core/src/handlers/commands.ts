@@ -137,6 +137,8 @@ export enum SeelenCommand {
   NaiActivate = "nai_activate",
   NaiNode = "nai_node",
   NaiUndoLast = "nai_undo_last",
+  NaiApps = "nai_apps",
+  NaiLaunch = "nai_launch",
   WmGetRenderTree = "wm_get_render_tree",
   SetAppWindowsPositions = "set_app_windows_positions",
   RequestFocus = "request_focus",

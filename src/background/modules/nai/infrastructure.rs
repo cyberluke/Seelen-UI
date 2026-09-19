@@ -40,6 +40,18 @@ pub fn nai_undo_last() -> Result<Option<serde_json::Value>> {
     Ok(nai::undo_last())
 }
 
+/// NAI app registry (launcher table across all fork surfaces).
+#[tauri::command(async)]
+pub fn nai_apps() -> Result<Vec<nai::apps::AppDescriptor>> {
+    Ok(nai::apps::apps())
+}
+
+/// Launch one registry entry by id or displayed name.
+#[tauri::command(async)]
+pub fn nai_launch(id: String) -> Result<serde_json::Value> {
+    nai::apps::launch(&id)
+}
+
 // ===================== CLI surface (`slu nai ...`) =====================
 
 pub fn process_cli(cli: NaiCli) -> Result<Option<String>> {

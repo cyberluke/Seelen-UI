@@ -183,6 +183,16 @@ pub fn tool_definitions() -> Vec<Value> {
             "Reverse the last reversible NAI action.",
             r#"{"type":"object"}"#,
         ),
+        tool(
+            "nai_apps",
+            "NAI app registry: launcher table for browser, mail, office, voice, memory, search, qos, governor.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_launch",
+            "Launch one NAI app by id (e.g. email) or displayed name (e.g. NAI E-Mail).",
+            r#"{"type":"object","properties":{"name":{"type":"string"}},"required":["name"]}"#,
+        ),
     ]
 }
 
@@ -422,6 +432,11 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
         )
         .unwrap(),
         "nai_undo_last" => serde_json::to_value(crate::modules::nai::undo_last()).unwrap(),
+        "nai_apps" => serde_json::to_value(crate::modules::nai::apps::apps()).unwrap(),
+        "nai_launch" => serde_json::to_value(
+            crate::modules::nai::apps::launch(&get("name")).map_err(|e| e.to_string())?,
+        )
+        .unwrap(),
         other => return Err(format!("unknown tool: {other}")),
     };
     Ok(value)
@@ -449,7 +464,7 @@ pub fn handle_jsonrpc(body: &str) -> String {
         "initialize" => Ok(json!({
             "protocolVersion": PROTOCOL_VERSION,
             "capabilities": { "tools": {} },
-            "serverInfo": { "name": "seelen-ui", "version": env!("CARGO_PKG_VERSION") }
+            "serverInfo": { "name": "nai-os", "version": env!("CARGO_PKG_VERSION") }
         })),
         "ping" => Ok(json!({})),
         "tools/list" => Ok(json!({ "tools": tool_definitions() })),

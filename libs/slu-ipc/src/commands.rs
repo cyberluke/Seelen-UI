@@ -19,9 +19,9 @@ pub trait SluCliCommand {
 
 // ===== Top-level =====
 
-/// Seelen UI Command Line Interface
+/// NAI OS Command Line Interface
 #[derive(Debug, clap::Parser)]
-#[command(version, name = "Seelen UI")]
+#[command(version, name = "NAI OS")]
 pub struct AppCli {
     /// Prints some extra information on the console.
     #[arg(long, default_value_t)]
@@ -304,6 +304,13 @@ pub enum NaiCommand {
     Undo,
     /// Flight-recorder trace
     Trace,
+    /// NAI app registry (launcher table: browser, mail, office, voice, ...)
+    Apps,
+    /// Launch one registry entry by id or name
+    Launch {
+        /// app id (e.g. email) or displayed name (e.g. "NAI E-Mail")
+        name: String,
+    },
 }
 
 // ===== Popups =====
