@@ -166,36 +166,49 @@ export function computePreviewAnchor(input: PreviewAnchorInput): PreviewAnchorRe
   const toPhysicalX = (n: number) => input.hitbox.left + Math.round(n * (input.scaleFactor || 1));
   const toPhysicalY = (n: number) => input.hitbox.top + Math.round(n * (input.scaleFactor || 1));
 
+  // Native geometry invariant: the anchor origin must stay inside the monitor,
+  // so the aligned popup rect is always contained by the work area.
+  const clampX = (n: number) => Math.max(input.monitor.left, Math.min(input.monitor.right, n));
+  const clampY = (n: number) => Math.max(input.monitor.top, Math.min(input.monitor.bottom, n));
+
+  let anchor: PreviewAnchorResult;
   switch (input.dockSide) {
     case SeelenWegSide.Bottom:
-      return {
+      anchor = {
         x: toPhysicalX(input.itemCenterX),
         y: input.hitbox.top - gap,
         alignX: Alignment.Center,
         alignY: Alignment.End,
       };
+      break;
     case SeelenWegSide.Top:
-      return {
+      anchor = {
         x: toPhysicalX(input.itemCenterX),
         y: input.hitbox.bottom + gap,
         alignX: Alignment.Center,
         alignY: Alignment.Start,
       };
+      break;
     case SeelenWegSide.Left:
-      return {
+      anchor = {
         x: input.hitbox.right + gap,
         y: toPhysicalY(input.itemCenterY),
         alignX: Alignment.Start,
         alignY: Alignment.Center,
       };
+      break;
     default:
-      return {
+      anchor = {
         x: input.hitbox.left - gap,
         y: toPhysicalY(input.itemCenterY),
         alignX: Alignment.End,
         alignY: Alignment.Center,
       };
+      break;
   }
+  anchor.x = clampX(anchor.x);
+  anchor.y = clampY(anchor.y);
+  return anchor;
 }
 
 export { HideMode };

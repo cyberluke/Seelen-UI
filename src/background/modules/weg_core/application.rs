@@ -52,6 +52,10 @@ pub struct WegPersistedState {
     pub monitor_affinity: HashMap<String, String>,
     /// persistent window slot table per application key (browser identity)
     pub slots: HashMap<String, Vec<SlotRecord>>,
+    /// global persistent spatial order used by the Task Switcher, keyed by
+    /// full logical identity; destroyed ids stay as tombstones so recreated
+    /// windows recover their old slot
+    pub switcher_order: Vec<String>,
 }
 
 fn state_path() -> PathBuf {
@@ -403,6 +407,75 @@ fn apply_manual_order(key: &str, group: &mut Vec<WindowEntry>, state: &WegPersis
     }
     indexed.sort_by_key(|(pos, _)| *pos);
     group.extend(indexed.into_iter().map(|(_, e)| e));
+}
+
+/// Tombstones older than this are dropped when rebuilding the global order.
+const SWITCHER_TOMBSTONE_CAP: usize = 200;
+
+/// Globally persistent Task Switcher order.
+///
+/// `window_entries()` is grouped per application; the switcher needs one flat
+/// spatial order across all apps. The persisted list fixes the cross-group
+/// interleaving (stored rank of each application's first known identity;
+/// unknown groups append, destroyed ids stay as tombstones so recreated
+/// windows recover their slot). Inside one group the freshest per-group
+/// strategy order (manual/strategy from `window_entries`) wins, so recent
+/// drags are never stale. The rebuilt list is persisted.
+pub fn task_switcher_entries() -> Vec<WindowEntry> {
+    let entries = window_entries();
+
+    let mut state = PERSISTED.lock().unwrap_or_else(|e| e.into_inner()).clone();
+
+    // first appearance rank of every application key in the persisted order
+    let mut group_rank: HashMap<&str, usize> = HashMap::with_capacity(state.switcher_order.len());
+    let mut next_rank = 0usize;
+    for id in &state.switcher_order {
+        let app = id.split(':').next().unwrap_or(id.as_str());
+        if !group_rank.contains_key(app) {
+            group_rank.insert(app, next_rank);
+            next_rank += 1;
+        }
+    }
+
+    // (group rank, fresh index) keys; the fresh index keeps per-group order
+    let mut keyed: Vec<(usize, usize, WindowEntry)> = Vec::with_capacity(entries.len());
+    for (fresh, entry) in entries.into_iter().enumerate() {
+        let app = entry
+            .logical_identity
+            .split(':')
+            .next()
+            .unwrap_or(entry.logical_identity.as_str());
+        let group = group_rank.get(app).copied().unwrap_or_else(|| {
+            let r = next_rank;
+            next_rank += 1;
+            r
+        });
+        keyed.push((group, fresh, entry));
+    }
+    keyed.sort_by(|a, b| a.0.cmp(&b.0).then(a.1.cmp(&b.1)));
+    let result: Vec<WindowEntry> = keyed.into_iter().map(|(_, _, e)| e).collect();
+
+    // Rebuild: live ids in display order first, then retained tombstones.
+    let mut rebuilt: Vec<String> = Vec::with_capacity(result.len());
+    let mut live: HashSet<&str> = HashSet::with_capacity(result.len());
+    for entry in &result {
+        live.insert(entry.logical_identity.as_str());
+        rebuilt.push(entry.logical_identity.clone());
+    }
+    for old in &state.switcher_order {
+        if !live.contains(old.as_str()) {
+            rebuilt.push(old.clone());
+            if rebuilt.len() >= SWITCHER_TOMBSTONE_CAP {
+                break;
+            }
+        }
+    }
+
+    if rebuilt != state.switcher_order {
+        state.switcher_order = rebuilt;
+        save_persisted(&state);
+    }
+    result
 }
 
 // ============================ resolution ============================

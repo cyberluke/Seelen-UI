@@ -27,10 +27,19 @@ use crate::{
 };
 
 const CAPTURE_WINDOW_INTERVAL: Duration = Duration::from_millis(200);
+/// Capture reasons must be readable when the frame is consumed.
 /// Number of pixel samples taken evenly across the top and bottom edges of a window.
 const SAMPLING: usize = 7;
 
 static WINDOWS_PREVIEWS: LazyLock<WinPreviewManager> = LazyLock::new(WinPreviewManager::create);
+
+/// Direct (non-debounced) handoff used by lifecycle-bound reasons whose frame
+/// must be taken inside the minimize/restore transition itself.
+fn capture_now(addr: isize) {
+    if let Err(e) = CAPTURE_TX.send(addr) {
+        log::error!("Failed to enqueue capture: {e}");
+    }
+}
 
 /// Why a capture was requested; kept on the record so consumers can tell
 /// whether a bitmap is the authoritative frame for the current content.
@@ -184,11 +193,13 @@ impl WinPreviewManager {
                     WINDOWS_PREVIEWS.enqueue_capture(addr);
                 }
                 WinEvent::SystemMinimizeStart => {
-                    // Freeze the latest visible frame + its revision; attempt
-                    // one final capture while the window may still be drawn.
+                    // Freeze the latest visible frame + its revision and take
+                    // one final capture IMMEDIATELY: the 200 ms debounce would
+                    // let a tab switch slip in before the frame is taken and a
+                    // later pass could overwrite it with the wrong tab.
                     WINDOWS_PREVIEWS.freeze(addr);
                     WINDOWS_PREVIEWS.set_reason(addr, CaptureReason::BeforeMinimize);
-                    WINDOWS_PREVIEWS.enqueue_capture(addr);
+                    capture_now(addr);
                 }
                 WinEvent::SystemMinimizeEnd => {
                     WINDOWS_PREVIEWS.unfreeze(addr);

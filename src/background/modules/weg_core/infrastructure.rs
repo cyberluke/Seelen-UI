@@ -12,7 +12,7 @@ use super::application as core;
 
 #[tauri::command(async)]
 pub fn weg_get_window_entries() -> Result<Vec<WindowEntry>> {
-    Ok(core::window_entries())
+    Ok(core::task_switcher_entries())
 }
 
 #[tauri::command(async)]

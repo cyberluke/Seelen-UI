@@ -1,5 +1,6 @@
-import { invoke, SeelenCommand, Widget } from "@seelen-ui/lib";
+import { invoke, SeelenCommand, SeelenEvent, subscribe, Widget } from "@seelen-ui/lib";
 import type { Alignment, UserAppWindow, WidgetId } from "@seelen-ui/lib/types";
+import { selfWinId, widgetStatuses } from "./state/getters.svelte.ts";
 import { settingsState } from "./state/settings.svelte.ts";
 import { systemState } from "./state/system.svelte.ts";
 import { appKeyOf, previewSettings } from "./state/preview.svelte.ts";
@@ -18,6 +19,8 @@ interface PreviewSession {
   id: string;
   groupKey: string;
   signature: string;
+  /** owner windows of this preview; they keep the popup alive on focus */
+  hwnds: number[];
 }
 
 const session: {
@@ -92,6 +95,26 @@ function ensurePreviewListeners(): void {
       debug("preview-hidden");
     })
     .catch(() => {});
+
+  // Focus-driven dismissal: pointer lifecycle alone is insufficient, a click
+  // outside the webviews never produces `pointerleave` here, so the popup
+  // would stay forever. Any global focus change that belongs to neither the
+  // dock, the preview nor one of the owner windows dismisses the preview.
+  subscribe(SeelenEvent.GlobalFocusChanged, ({ payload }) => {
+    if (session.phase === "Closed" || !session.current) return;
+    const hwnd = payload?.hwnd;
+    if (hwnd === undefined) return;
+    const previewWindowId = widgetStatuses.value.find(
+      (status) => status.widgetId === "@seelen/weg-preview",
+    )?.webviewWindowId;
+    const ownedBySession = session.current.hwnds.includes(hwnd);
+    if (hwnd === selfWinId.value || hwnd === previewWindowId || ownedBySession) {
+      return;
+    }
+    cancelHide();
+    hidePreview();
+    debug("preview-dismissed-by-focus", { focused: hwnd });
+  });
 }
 
 // ── hide timer ───────────────────────────────────────────────────────────────
@@ -195,7 +218,7 @@ export function triggerPreviewWidget(
   }
 
   const previewSessionId = crypto.randomUUID();
-  session.current = { id: previewSessionId, groupKey, signature };
+  session.current = { id: previewSessionId, groupKey, signature, hwnds: windows.map((w) => w.hwnd) };
   session.lastAnchorKey = anchorKey;
   session.phase = "Opening";
   session.pointerInsidePreview = false;

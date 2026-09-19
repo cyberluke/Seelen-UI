@@ -1,5 +1,5 @@
 import { invoke, SeelenCommand } from "@seelen-ui/lib";
-import type { UserAppWindow } from "@seelen-ui/lib/types";
+import { SeelenWegSide, type UserAppWindow } from "@seelen-ui/lib/types";
 import { settingsState } from "./settings.svelte.ts";
 
 export interface PreviewLayout {
@@ -122,6 +122,7 @@ function clamp(value: number, min: number, max: number): number {
 export function computePreviewLayout(
   count: number,
   monitor: { rect: { left: number; top: number; right: number; bottom: number }; scaleFactor: number },
+  side?: SeelenWegSide,
 ): PreviewLayout {
   const s = previewSettings();
   const scale = monitor.scaleFactor || 1;
@@ -142,8 +143,15 @@ export function computePreviewLayout(
   const innerW = Math.max(maxPopupW - padding * 2, cardWidth);
   const innerH = Math.max(maxPopupH - padding * 2, cardHeight + titleStrip);
 
+  // Orientation-first: the dock side is the layout constraint of record.
+  // Left/Right docks have a vertical primary axis -> single column, grow rows,
+  // scroll vertically. Top/Bottom docks keep the adaptive width-driven grid.
+  const vertical = side === SeelenWegSide.Left || side === SeelenWegSide.Right;
+
   let columns: number;
-  if (!s.autoGrid || s.ordering !== "Manual") {
+  if (vertical) {
+    columns = 1;
+  } else if (!s.autoGrid || s.ordering !== "Manual") {
     columns = clamp(s.columns, s.minColumns, s.maxColumns);
   } else {
     columns = clamp(

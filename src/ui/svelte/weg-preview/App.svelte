@@ -25,7 +25,11 @@
   const s = $derived(previewSettings());
   const cards = $derived(previewState.currentCards);
   const layout = $derived(
-    computePreviewLayout(previewState.currentInteractables.length, systemState.currentMonitor),
+    computePreviewLayout(
+      previewState.currentInteractables.length,
+      systemState.currentMonitor,
+      previewState.position,
+    ),
   );
 
   const cacheHit = $derived(
