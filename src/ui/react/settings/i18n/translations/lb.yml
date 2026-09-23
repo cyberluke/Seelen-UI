@@ -81,7 +81,7 @@ devtools:
   data_folder: Etabond Dossier
   enable: Aktivéiert Entwéckler Tools
   enable_description: >-
-    Spär fortgeschratt Tools fir Inspektioun an Debugging Seelen UI Interns. Net
+    Spär fortgeschratt Tools fir Inspektioun an Debugging NAI OS Interns. Net
     fir regelméisseg Gebrauch geduecht.
   icons: Cache Ikonen
   install_folder: Installatioun Dossier
@@ -120,7 +120,7 @@ devtools:
     widget_id: Widget ID
 discord_banner:
   message: >-
-    Connectéiert mat anere Seelen UI Benotzer, kritt Hëllef, deelt Themen a
+    Connectéiert mat anere NAI OS Benotzer, kritt Hëllef, deelt Themen a
     bleift um neisten Neiegkeeten.
   title: Maacht mat bei eiser Gemeinschaft
 extras:
@@ -170,7 +170,7 @@ general:
     plugged: Ugeschloss oder opluede
   polling_interval: System Ëmfro Intervall
   polling_interval_description: >-
-    Wéi dacks (a Sekonnen) Seelen UI iwwerpréift Systemressourcen wéi CPU, RAM,
+    Wéi dacks (a Sekonnen) NAI OS iwwerpréift Systemressourcen wéi CPU, RAM,
     Netzwierk an Diskaktivitéit. Eng méi kleng Zuel bedeit méi heefeg Updates,
     awer e bësse méi héich Ressourceverbrauch.
   saturday: Samschdeg
@@ -225,7 +225,7 @@ reset_configurations: Reset Konfiguratiounen
 reset_to_default: Reset op Standardwäert
 resources:
   affected_widgets: Betraff Widgets
-  app_outdated: Dës Ressource brauch eng nei Versioun vu Seelen Ui fir richteg ze schaffen.
+  app_outdated: Dës Ressource brauch eng nei Versioun vu NAI OS fir richteg ze schaffen.
   coming_soon: Geschwënn
   corrupted_wallpaper: Ausgefall Miniatur Extrait - korrupt oder net ënnerstëtzt Video Format
   delete: Läschen Ressource
@@ -236,7 +236,7 @@ resources:
   included_plugins: abegraff Plugins
   open_folder: Oppen Ressource Dossier
   outdated: >-
-    Dës Ressource gouf fir eng méi al Versioun vu seelen UI entworf a sech net
+    Dës Ressource gouf fir eng méi al Versioun vu NAI OS entworf a sech net
     richteg schaffen.
   see_on_website: Gesinn op Websäit
   update_now: Update
@@ -245,7 +245,7 @@ resources:
 review_request:
   not_now: Net elo
   sure: Sécher!
-  title: Genéisst Seelen UI?
+  title: Genéisst NAI OS?
 save: Spuerwäit
 save_and_restart: Spuert & nei starten
 search: Sichen
@@ -479,15 +479,15 @@ weg:
 welcome:
   give_a_review: Gëff eng Iwwerpréiwung
   message: >-
-    Seelen UI ass e gratis an Open Source Desktop-Ëmfeld fir Windows. Hei hutt
+    NAI OS ass e gratis an Open Source Desktop-Ëmfeld fir Windows. Hei hutt
     Dir voll Kontroll iwwer wéi Ären Desktop ausgesäit a behuelen, wat Iech
     erlaabt all Detail ze personaliséieren fir Äre Workflow a Stil ze passen.
   ok: Loosst eis ufänken!
   review: >-
-    Wann Dir genéisst Seelen UI ze benotzen, betruecht eng Iwwerpréiwung am
+    Wann Dir genéisst NAI OS ze benotzen, betruecht eng Iwwerpréiwung am
     Geschäft ze loossen - Äre Feedback hëlleft de Projet ze wuessen a
     verbesseren.
-  title: Wëllkomm op Seelen UI!
+  title: Wëllkomm op NAI OS!
 widget:
   default_instance: Standard Instanz
   default_instance_hint: Ëmmer aktiv, benotzt d'Root Widget Configuratioun

@@ -31,7 +31,7 @@ pub fn on_system_resume() {
     SYSTEM_SUSPENDED.store(false, Ordering::SeqCst);
 }
 
-/// Starts monitoring the Seelen UI app for the current session and restarts it automatically
+/// Starts monitoring the NAI OS app for the current session and restarts it automatically
 /// when it crashes or fails to start.
 ///
 /// `app_just_launched` should be `true` when the caller already launched the app so that the
@@ -77,7 +77,7 @@ pub fn start_app_monitoring(app_just_launched: bool) {
 
             if AppIpc::can_stablish_connection() {
                 if !app_was_connected {
-                    log::info!("Seelen UI reconnected successfully, resetting crash counter.");
+                    log::info!("NAI OS reconnected successfully, resetting crash counter.");
                     crash_count = 0;
                     grace_until = None;
                 }
@@ -97,10 +97,10 @@ pub fn start_app_monitoring(app_just_launched: bool) {
             // or a grace window expired without the app establishing IPC.
             app_was_connected = false;
             crash_count += 1;
-            log::warn!("Seelen UI is not running (failure #{crash_count}/{MAX_CRASHES}).");
+            log::warn!("NAI OS is not running (failure #{crash_count}/{MAX_CRASHES}).");
 
             if crash_count > MAX_CRASHES {
-                log::error!("Seelen UI failed {crash_count} times in a row, stopping service.");
+                log::error!("NAI OS failed {crash_count} times in a row, stopping service.");
                 break;
             }
 
@@ -108,13 +108,13 @@ pub fn start_app_monitoring(app_just_launched: bool) {
 
             // Linear back-off: 500 ms, 1000 ms, 1500 ms, …
             let backoff = Duration::from_millis(500 * crash_count as u64);
-            log::info!("Restarting Seelen UI in {}ms…", backoff.as_millis());
+            log::info!("Restarting NAI OS in {}ms…", backoff.as_millis());
             std::thread::sleep(backoff);
             crate::log_error!(launch_seelen_ui());
             grace_until = Some(Instant::now() + STARTUP_TIMEOUT);
         }
 
-        log::error!("Seelen UI monitoring stopped after repeated failures.");
+        log::error!("NAI OS monitoring stopped after repeated failures.");
         exit(1);
     });
 }
@@ -139,7 +139,7 @@ pub fn launch_seelen_ui() -> Result<()> {
 }
 
 pub fn kill_all_seelen_ui_processes() -> Result<()> {
-    log::info!("Killing all Seelen UI processes in current session");
+    log::info!("Killing all NAI OS processes in current session");
     let current_session = crate::windows_api::WindowsApi::current_session_id();
 
     let mut sys = sysinfo::System::new();

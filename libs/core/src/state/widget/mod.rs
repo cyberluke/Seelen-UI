@@ -129,7 +129,7 @@ pub enum WidgetInstanceMode {
     /// The widget is allowed to have multiple instances.\
     /// This allow to the user manually create more instances of this same widget.
     Multiple,
-    /// Seelen UI will create an instance of this widget per each monitor connected.\
+    /// NAI OS will create an instance of this widget per each monitor connected.\
     /// This can be configured by the user using per monitor settings.\
     ReplicaByMonitor,
 }

@@ -2,7 +2,7 @@
 
 Guidance for AI agents working in this repository.
 
-Seelen UI is a customizable Windows desktop environment built with:
+NAI OS is a customizable Windows desktop environment built with:
 
 - Rust + Tauri (backend)
 - TypeScript + React/Preact (frontend)
@@ -268,7 +268,7 @@ Example:
 
 ```ts
 import { lazySignal } from "libs/widgets-shared/LazySignal";
-import { invoke, SeelenCommand, SeelenEvent, subscribe } from "@seelen-ui/lib";
+import { invoke, SeelenCommand, SeelenEvent, subscribe } from "\@seelen-ui/lib";
 
 const $data = lazySignal(async () => {
   return await invoke(SeelenCommand.GetYourData);
@@ -329,8 +329,7 @@ directly — never wrap it in a `use:action` helper.
 
 ## Creating Svelte Widgets (High-Level)
 
-Seelen UI supports standalone Svelte widgets. Prefer following existing widget patterns; do not invent new build
-plumbing.
+NAI OS supports standalone Svelte widgets. Prefer following existing widget patterns; do not invent new build plumbing.
 
 Typical pieces:
 
@@ -400,7 +399,7 @@ The three external resource types and their required files:
 
 All resource IDs follow `@username/resource-name`.
 
-Dev workflow with the `slu` CLI (Seelen UI must be running):
+Dev workflow with the `slu` CLI (NAI OS must be running):
 
 ```bash
 slu resource load theme ./my-theme     # live-load without bundling

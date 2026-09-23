@@ -37,7 +37,7 @@ apps_configurations:
   export: Exporteren
   export_full: Instellingen exporteren per toepassing
   extra_info: >-
-    Seelen UI gebruikt slechts één ID per app (eerste gevonden match), dus de
+    NAI OS gebruikt slechts één ID per app (eerste gevonden match), dus de
     volgorde waarin ze worden gespecificeerd is belangrijk. De laatst
     toegevoegde krijgt prioriteit, aangezien de tabel standaard wordt gesorteerd
     van nieuwste naar oude.
@@ -120,7 +120,7 @@ devtools:
     widget_id: Widget-ID
 discord_banner:
   message: >-
-    Maak contact met andere Seelen UI-gebruikers, krijg hulp, deel thema's en
+    Maak contact met andere NAI OS-gebruikers, krijg hulp, deel thema's en
     blijf op de hoogte van het laatste nieuws.
   title: Word lid van onze gemeenschap
 extras:
@@ -171,7 +171,7 @@ general:
     plugged: Aangesloten of opladen
   polling_interval: Systeem polling-interval
   polling_interval_description: >-
-    Hoe vaak (in seconden) Seelen UI systeembronnen zoals CPU, RAM, netwerk en
+    Hoe vaak (in seconden) NAI OS systeembronnen zoals CPU, RAM, netwerk en
     schijfactiviteit controleert. Een kleiner aantal betekent frequentere
     updates, maar een iets hoger bronnengebruik.
   saturday: Zaterdag
@@ -226,7 +226,7 @@ reset_configurations: Configuraties resetten
 reset_to_default: Terugzetten naar standaardwaarde
 resources:
   affected_widgets: Betrokken widgets
-  app_outdated: Deze bron vereist een nieuwere versie van Seelen UI om goed te werken.
+  app_outdated: Deze bron vereist een nieuwere versie van NAI OS om goed te werken.
   coming_soon: Binnenkort beschikbaar
   corrupted_wallpaper: Kan miniatuur niet extraheren - beschadigd of niet-ondersteund videoformaat
   delete: Verwijder resource
@@ -237,7 +237,7 @@ resources:
   included_plugins: Inclusief plug-ins
   open_folder: Map met bronnen openen
   outdated: >-
-    Deze bron is ontworpen voor een oudere versie van Seelen UI en werkt
+    Deze bron is ontworpen voor een oudere versie van NAI OS en werkt
     mogelijk niet goed.
   see_on_website: Zie op website
   update_now: Update
@@ -412,12 +412,12 @@ weg:
 welcome:
   give_a_review: Geef een recensie
   message: >-
-    Seelen UI is een gratis en open source desktopomgeving voor Windows. Hier
+    NAI OS is een gratis en open source desktopomgeving voor Windows. Hier
     heeft u volledige controle over hoe uw bureaublad eruitziet en zich
     gedraagt, zodat u elk detail kunt aanpassen aan uw workflow en stijl.
   ok: Laten we beginnen!
   review: >-
-    Als u de Seelen UI graag gebruikt, overweeg dan om een ​​recensie achter te
+    Als u de NAI OS graag gebruikt, overweeg dan om een ​​recensie achter te
     laten in de winkel. Uw feedback helpt het project te groeien en te
     verbeteren.
   title: Welkom bij de Seelen-gebruikersinterface!

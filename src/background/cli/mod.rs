@@ -28,11 +28,11 @@ use crate::{
     },
 };
 
-/// WARNING: seelen-ui.exe CLI commands are deprecated.
+/// WARNING: NAI-OS.exe CLI commands are deprecated.
 ///
 /// Use `slu` instead.
 #[derive(Debug, clap::Parser)]
-#[command(version, name = "NAI OS")]
+#[command(version, name = "NAI-OS")]
 struct MainCli {
     #[arg(long, default_value_t)]
     silent: bool,
@@ -66,7 +66,7 @@ pub async fn handle_console_client() -> Result<()> {
     if let Some(uri) = cli.uri {
         AppIpc::send(AppMessage::OpenUri(uri))
             .await
-            .map_err(|_| "Can't establish connection, ensure Seelen UI is running.")?;
+            .map_err(|_| "Can't establish connection, ensure NAI OS is running.")?;
         std::process::exit(0);
     }
 

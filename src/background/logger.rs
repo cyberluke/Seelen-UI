@@ -27,11 +27,11 @@ impl SeelenLogger {
             WindowsApi::known_folder(FOLDERID_LocalAppData)?.join("com.seelen.seelen-ui/logs");
         std::fs::create_dir_all(&logs_folder)?;
 
-        let log_path = logs_folder.join("Seelen UI.log");
+        let log_path = logs_folder.join("NAI OS.log");
         if log_path.exists() {
             let metadata = std::fs::metadata(&log_path)?;
             if metadata.len() > Self::MAX_LOG_SIZE {
-                let bak_path = logs_folder.join("Seelen UI.log.bak");
+                let bak_path = logs_folder.join("NAI OS.log.bak");
                 std::fs::rename(&log_path, &bak_path)?;
             }
         }

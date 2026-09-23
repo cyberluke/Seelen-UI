@@ -362,7 +362,7 @@ pub fn instance_info() -> Value {
     })
 }
 
-/// Count of live main GUI instances (`seelen-ui.exe` processes), answering
+/// Count of live main GUI instances (`NAI-OS.exe` processes), answering
 /// `--instances` for the queried session. Each primary holds one per-session
 /// mutex; secondaries are short-lived CLI relays that exit right after the IPC
 /// exchange, so a simple process-name count is exact here.
@@ -375,7 +375,7 @@ pub fn instance_count() -> Value {
     let pids: Vec<u32> = sys
         .processes()
         .iter()
-        .filter(|(_, p)| p.name().to_str() == Some("seelen-ui.exe"))
+        .filter(|(_, p)| p.name().to_str() == Some("NAI-OS.exe"))
         .map(|(pid, _)| (*pid).as_u32())
         .collect();
 

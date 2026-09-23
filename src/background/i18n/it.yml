@@ -41,7 +41,7 @@ runtime:
     Ciò può verificarsi se i file sono stati modificati, danneggiati o se
     l'installazione è incompleta.
 
-    Per motivi di sicurezza, Seelen UI non può continuare.
+    Per motivi di sicurezza, NAI OS non può continuare.
 
     Si prega di reinstallarlo dal sito Web ufficiale.
   files_integrity_title: 'Avviso di sicurezza: controllo dell''integrità dei file non riuscito'
@@ -56,7 +56,7 @@ runtime:
 service:
   not_running: Il servizio UI Seelen non è in esecuzione
   not_running_description: >-
-    Seelen UI Service (slu-service) è una dipendenza/un aiuto per il corretto
+    NAI OS Service (slu-service) è una dipendenza/un aiuto per il corretto
     funzionamento dell'app.
   not_running_ok: Avvia il servizio
 shortcut:

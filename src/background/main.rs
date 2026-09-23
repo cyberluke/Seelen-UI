@@ -66,7 +66,7 @@ async fn main() -> std::process::ExitCode {
     boot::record_global("process.started");
 
     if let Err(err) = SeelenLogger::init() {
-        let fallback = std::env::temp_dir().join("seelen-ui-logger-error.log");
+        let fallback = std::env::temp_dir().join("NAI OS-logger-error.log");
         let _ = std::fs::write(&fallback, format!("Failed to initialize logger: {err:?}"));
         return std::process::ExitCode::from(1);
     }
@@ -213,7 +213,7 @@ fn app_callback(_: &tauri::AppHandle<tauri::Wry>, event: tauri::RunEvent) {
             None => api.prevent_exit(),
         },
         tauri::RunEvent::Exit => {
-            log::info!("───────────────────── Exiting Seelen UI ─────────────────────");
+            log::info!("───────────────────── Exiting NAI OS ─────────────────────");
         }
         _ => {}
     }

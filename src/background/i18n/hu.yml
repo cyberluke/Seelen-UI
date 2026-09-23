@@ -8,7 +8,7 @@ cancel: Töröl
 done: Kész
 elevated:
   description: |-
-    A Seelen UI rendszergazdai jogosultságokkal fut.
+    A NAI OS rendszergazdai jogosultságokkal fut.
     Ez nem bővíti vagy javítja a funkciókat, és biztonsági kockázatot jelenthet.
     A nagyobb biztonság érdekében indítsa újra rendszergazdai engedélyek nélkül.
   title: Rendszergazdaként fut
@@ -36,7 +36,7 @@ runtime:
     Ez akkor fordulhat elő, ha a fájlok módosultak, sérültek, vagy a telepítés
     nem fejeződött be.
 
-    Biztonsági okokból a Seelen UI nem folytatható.
+    Biztonsági okokból a NAI OS nem folytatható.
 
     Kérjük, telepítse újra a hivatalos webhelyről.
   files_integrity_title: Biztonsági figyelmeztetés – A fájlok integritásának ellenőrzése sikertelen
@@ -49,9 +49,9 @@ runtime:
     A Seelen felhasználói felületéhez Webview2 Runtime %{min_version} vagy újabb
     szükséges. Kérjük, frissítse.
 service:
-  not_running: Seelen UI szolgáltatás nem fut
+  not_running: NAI OS szolgáltatás nem fut
   not_running_description: >-
-    A Seelen UI szolgáltatás (slu-szolgáltatás) egy függőség/segítő az
+    A NAI OS szolgáltatás (slu-szolgáltatás) egy függőség/segítő az
     alkalmazás megfelelő működéséhez.
   not_running_ok: Indítsa el a szolgáltatást
 shortcut:

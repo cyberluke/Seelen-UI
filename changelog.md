@@ -60,7 +60,7 @@
 
 ### fix
 
-- launched apps not seeing environment variable changes made after Seelen UI started.
+- launched apps not seeing environment variable changes made after NAI OS started.
 - context menu metadata not being send for submenus.
 - context menu not being close on submenu item interaction.
 - toolbar showing the muted volume icon when there is no default audio output device.
@@ -998,7 +998,7 @@
 ### enhancements
 
 - store service logs in a file to help debugging.
-- wait for native shell on startup before start seelen ui.
+- wait for native shell on startup before start NAI OS.
 
 ## [2.2.7]
 
@@ -1242,7 +1242,7 @@
 ### features
 
 - add new setting on dock and toolbar to maintain overlap state by monitor.
-- add service to restart the seelen-ui app on crash.
+- add service to restart the NAI OS app on crash.
 
 ### enhancements
 
@@ -1310,7 +1310,7 @@
 
 - some UI/UX improvements on seelen wallpaper manager.
 - UI/UX improvements on wi-fi toolbar module.
-- seelen-ui added to user PATH enviroment variable.
+- NAI OS added to user PATH enviroment variable.
 
 ### fix
 
@@ -1419,7 +1419,7 @@
 - app continuing running when the program fails to start (case: WebView2 Runtime not installed).
 - no stoping correctly secondary processes/threads on app close.
 - showing unmanageable windows on dock.
-- restart seelen-ui button not working properly.
+- restart NAI OS button not working properly.
 - tray icons not working on others language than english.
 - edge tabs open in file explorer.
 
@@ -1542,7 +1542,7 @@
 ### enhancements
 
 - add language selector to the nsis installer.
-- allow search on lang selector on Seelen UI Settings.
+- allow search on lang selector on NAI OS Settings.
 
 ### fix
 
@@ -1598,13 +1598,13 @@
 
 ### features
 
-- .slu and uri now are loaded correctly on seelen ui.
+- .slu and uri now are loaded correctly on NAI OS.
 - allow change wallpaper from seelen settings.
 
 ### enhancements
 
 - add file associations for .slu files
-- add uri associations for seelen-ui:uri
+- add uri associations for NAI OS:uri
 - improve settings editor experience by adding live reload feature.
 
 ### fix

@@ -37,9 +37,10 @@ apps_configurations:
   export: İxrac etmək
   export_full: Tətbiq tərəfindən parametrləri ixrac edin
   extra_info: >-
-    Seelen UI, bir tətbiq başına yalnız bir identifikatordan istifadə edir (ilk
-    matç tapıldı), buna görə əmiklər necə vacibdir, ən son əlavə olaraq,
-    cədvəlin ən sondan köhnəyə görə sıralandığı üçün prioritetləşdiriləcəkdir.
+    NAI ƏS hər bir proqram üçün yalnız bir identifikatordan istifadə edir (ilk
+    uyğunluq tapıldı) ona görə də necə dəqiqləşdirilmə sırası vacibdir, ən son
+    əlavə olunanlar prioritetləşdiriləcək, çünki cədvəlin defolt olaraq ən
+    sondan köhnəyə doğru çeşidləndiyini nəzərə alın.
   identifier:
     add_block: Blok əlavə edin
     and: Və
@@ -79,8 +80,8 @@ devtools:
   data_folder: Məlumat qovluğu
   enable: Developer alətlərini aktivləşdirin
   enable_description: >-
-    Seelen UI daxili hissələrini yoxlamaq və sazlamaq üçün qabaqcıl alətləri
-    açır. Daimi istifadə üçün nəzərdə tutulmayıb.
+    NAI OS daxili hissələrini yoxlamaq və sazlamaq üçün qabaqcıl alətləri açır.
+    Daimi istifadə üçün nəzərdə tutulmayıb.
   icons: Keşlənmiş Nişanlar
   install_folder: Quraşdırma qovluğu
   load: Yükləmək
@@ -118,7 +119,7 @@ devtools:
     widget_id: Widget ID
 discord_banner:
   message: >-
-    Digər Seelen UI istifadəçiləri ilə əlaqə saxlayın, kömək alın, mövzuları
+    Digər NAI ƏS istifadəçiləri ilə əlaqə saxlayın, kömək alın, mövzuları
     paylaşın və ən son xəbərlərdən xəbərdar olun.
   title: İcmamıza qoşulun
 extras:
@@ -168,8 +169,8 @@ general:
     plugged: Qoşuldu və ya şarj
   polling_interval: Sistem sorğu intervalı
   polling_interval_description: >-
-    Seelen UI CPU, RAM, şəbəkə və disk fəaliyyəti kimi sistem resurslarını nə
-    qədər tez-tez (saniyələrlə) yoxlayır. Daha kiçik rəqəm daha tez-tez
+    NAI ƏS nə qədər tez-tez (saniyələrlə) CPU, RAM, şəbəkə və disk fəaliyyəti
+    kimi sistem resurslarını yoxlayır. Daha kiçik rəqəm daha tez-tez
     yeniləmələr, lakin bir qədər yüksək resurs istifadəsi deməkdir.
   saturday: şənbə
   start_of_week: Həftənin başlanğıcı
@@ -223,9 +224,7 @@ reset_configurations: Konfiqurasiyaları sıfırlayın
 reset_to_default: Defolt dəyərinə yenidən qurun
 resources:
   affected_widgets: Təsirə məruz qalan vidjetlər
-  app_outdated: >-
-    Bu qaynaq, Seelen UI-nin düzgün işləməsi üçün daha yeni bir versiyasını
-    tələb edir.
+  app_outdated: Bu resurs düzgün işləməsi üçün NAI ƏS-nin daha yeni versiyasını tələb edir.
   coming_soon: Tezliklə
   corrupted_wallpaper: Miniatürü çıxarmaq alınmadı - zədələnmiş və ya dəstəklənməyən video formatı
   delete: Resurs silmək
@@ -236,7 +235,7 @@ resources:
   included_plugins: Daxil Pluginlər
   open_folder: Açıq Resurs qovluğu
   outdated: >-
-    Bu qaynaq Seelen UI-nin köhnə bir versiyası üçün hazırlanmış və düzgün
+    Bu resurs NAI ƏS-nin köhnə versiyası üçün nəzərdə tutulmuşdur və düzgün
     işləməyə bilər.
   see_on_website: Veb saytında baxın
   update_now: Yeniləyin
@@ -245,7 +244,7 @@ resources:
 review_request:
   not_now: İndi yox
   sure: Əlbəttə!
-  title: Seelen UI-dən zövq alırsınız?
+  title: NAI OS-dən zövq alırsınız?
 save: Yadda saxla
 save_and_restart: Saxla və yenidən başladın
 search: Axtar
@@ -265,8 +264,8 @@ shortcuts:
     təyin edin.
   enable: Quraşdırılmış qısa yol sistemini aktivləşdirin
   enable_tooltip: >-
-    Seelen UI müştərisindən istifadə edərək öz qısa yol sisteminizi həyata
-    keçirəcəksənsə deaktiv edin
+    NAI OS Client-dən istifadə edərək öz qısa yollar sisteminizi tətbiq
+    edəcəksinizsə, söndürün
   labels:
     create_new_workspace: Yeni iş sahəsi yaradın
     create_new_workspace_row: Yeni İş Sahəsi Sırası Yaradın
@@ -292,6 +291,19 @@ sides:
   left: Sol
   right: Haqlı
   top: Üst
+system_tray:
+  drag_reorder: Sürükle yenidən sıralamağa icazə verin
+  icon_size: Nişan ölçüsü
+  icon_spacing: Simge aralığı
+  label: Sistem Tablosu
+  offline_pinned: Oflayn bərkidilmiş nişanlar
+  offline_pinned.disabled: Göstər deaktivdir
+  offline_pinned.hide: Gizlət
+  overflow_arrow: Daşma oxu
+  pinned_position: Saplanmış nişanlar mövqeyi
+  pinned_position.after: Daşdıqdan sonra ox
+  pinned_position.before: Daşmaqdan əvvəl oxu
+  show_tooltips: Alət məsləhətlərini göstərin
 toolbar:
   auto_hide: Avtomatik gizlətmək
   auto_hide_touch_disabled: Avtomatik gizlətmə sensor ekranlı cihazlarda mövcud deyil
@@ -428,7 +440,7 @@ weg:
     app_aware_titles: Tətbiqdən xəbərdar başlıqlar
     aspect_fixed: Sabit
     aspect_mode: Aspekt nisbəti rejimi
-    aspect_ratio: Sabit nisbət (numerator)
+    aspect_ratio: Sabit nisbət (əmsal)
     aspect_source: Mənbə pəncərəsi
     auto_grid: Avtomatik şəbəkə
     cache_enabled: Önbelleğe baxın
@@ -469,7 +481,7 @@ weg:
     titles_one_line: Bir xətt
     titles_two_lines: İki xətt
     trigger: Tətiyi önizləmə
-    trigger_click: klikləyin
+    trigger_click: basın
     trigger_hover: Hover
     trigger_hover_and_click: Üzərinə gətirin + Klikləyin
   show_end_task: Tapşırıq çubuğunda son tapşırığı göstərin
@@ -477,14 +489,14 @@ weg:
 welcome:
   give_a_review: Rəy verin
   message: >-
-    Seelen UI Windows üçün pulsuz və açıq mənbəli iş masası mühitidir. Burada iş
+    NAI OS Windows üçün pulsuz və açıq mənbəli iş masası mühitidir. Burada iş
     masanızın necə göründüyünə və davranışına tam nəzarət edirsiniz, bu da sizə
     hər bir detalı iş axınınıza və üslubunuza uyğunlaşdırmağa imkan verir.
   ok: Başlayaq!
   review: >-
-    Seelen UI-dən istifadə etməkdən zövq alırsınızsa, mağazada rəy yazmağı
-    düşünün – rəyiniz layihənin böyüməsinə və təkmilləşdirilməsinə kömək edir.
-  title: Seelen UI-ə xoş gəlmisiniz!
+    Əgər NAI ƏS-dən istifadə etməyi sevirsinizsə, mağazada rəy yazmağı düşünün –
+    rəyiniz layihənin böyüməsinə və təkmilləşdirilməsinə kömək edir.
+  title: NAI ƏS-ə xoş gəlmisiniz!
 widget:
   default_instance: Defolt Nümunə
   default_instance_hint: Həmişə aktivdir, kök vidcet konfiqurasiyasından istifadə edir

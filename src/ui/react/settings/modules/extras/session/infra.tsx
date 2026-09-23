@@ -98,7 +98,7 @@ function LoginForm() {
 
   return (
     <div className={cs.loginCard}>
-      <img src="./company_logo.svg" className={cs.logo} alt="Seelen UI" />
+      <img src="./company_logo.svg" className={cs.logo} alt="NAI OS" />
       <h3 className={cs.loginTitle}>Seelen Corp.</h3>
 
       {error && <p className={cs.error}>{error}</p>}

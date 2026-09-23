@@ -37,10 +37,10 @@ apps_configurations:
   export: Exportar
   export_full: Exporta la configuració per sol·licitud
   extra_info: >-
-    La interfície d'usuari de Seelen només utilitza un identificador per
-    aplicació (primer partit que es troba), de manera que l'ordre de com
-    s'especifica és important, es prioritzarà l'últim afegit, ja que nota que la
-    taula s'ordena de manera predeterminada de l'antiga a la vella.
+    NAI OS només utilitza un identificador per aplicació (la primera
+    coincidència trobada), de manera que l'ordre en com s'especifiquen és
+    important, es prioritzarà l'últim afegit, ja que tingueu en compte que la
+    taula s'ordena de manera predeterminada de l'últim a l'antigu.
   identifier:
     add_block: Afegiu bloc
     and: I
@@ -81,7 +81,7 @@ devtools:
   enable: Activa les eines de desenvolupadors
   enable_description: >-
     Desbloqueja eines avançades per inspeccionar i depurar els elements interns
-    de la interfície d'usuari de Seelen. No està pensat per a un ús habitual.
+    del sistema operatiu NAI. No està pensat per a un ús habitual.
   icons: Icones en memòria cau
   install_folder: Carpeta d'instal·lació
   load: Carregar
@@ -119,8 +119,8 @@ devtools:
     widget_id: ID del widget
 discord_banner:
   message: >-
-    Connecteu-vos amb altres usuaris de la interfície d'usuari de Seelen,
-    obteniu ajuda, compartiu temes i estigueu al dia de les últimes notícies.
+    Connecteu-vos amb altres usuaris de NAI OS, obteniu ajuda, compartiu temes i
+    estigueu al dia de les últimes notícies.
   title: Uneix-te a la nostra comunitat
 extras:
   backup_group: Còpia de seguretat al núvol
@@ -173,10 +173,10 @@ general:
     plugged: Tassa o càrrega
   polling_interval: Interval de sondeig del sistema
   polling_interval_description: >-
-    Amb quina freqüència (en segons) la interfície d'usuari de Seelen comprova
-    els recursos del sistema com la CPU, la memòria RAM, la xarxa i l'activitat
-    del disc. Un nombre més petit significa actualitzacions més freqüents, però
-    un ús de recursos lleugerament superior.
+    Amb quina freqüència (en segons) NAI OS comprova els recursos del sistema
+    com la CPU, la memòria RAM, la xarxa i l'activitat del disc. Un nombre més
+    petit significa actualitzacions més freqüents, però un ús de recursos
+    lleugerament superior.
   saturday: dissabte
   start_of_week: Inici de setmana
   startup: Executeu la posada en marxa?
@@ -230,8 +230,8 @@ reset_to_default: Restableix al valor predeterminat
 resources:
   affected_widgets: Ginys afectats
   app_outdated: >-
-    Aquest recurs requereix una versió més recent de la interfície d'usuari de
-    Seelen per funcionar correctament.
+    Aquest recurs requereix una versió més nova de NAI OS per funcionar
+    correctament.
   coming_soon: Aviat
   corrupted_wallpaper: 'No s''ha pogut extreure la miniatura: format de vídeo danyat o no compatible'
   delete: Esborra el recurs
@@ -242,8 +242,8 @@ resources:
   included_plugins: Connectors inclosos
   open_folder: Obrir la carpeta de recursos
   outdated: >-
-    Aquest recurs va ser dissenyat per a una versió anterior de la interfície
-    d'usuari de Seelen i pot no funcionar correctament.
+    Aquest recurs s'ha dissenyat per a una versió anterior de NAI OS i és
+    possible que no funcioni correctament.
   see_on_website: Veure al lloc web
   update_now: Actualització
   updates_available: Actualitzacions disponibles
@@ -251,7 +251,7 @@ resources:
 review_request:
   not_now: Ara no
   sure: Segur!
-  title: Us agrada la interfície d'usuari de Seelen?
+  title: Us agrada NAI OS?
 save: Estalviar
 save_and_restart: Desar i reiniciar
 search: Cerca
@@ -273,7 +273,7 @@ shortcuts:
   enable: Activa el sistema integrat de dreceres
   enable_tooltip: >-
     Desactiveu si implementareu el vostre propi sistema de dreceres mitjançant
-    el client de la interfície d'usuari de Seelen
+    el client NAI OS
   labels:
     create_new_workspace: Creeu un espai de treball nou
     create_new_workspace_row: Crea una fila d'espai de treball nova
@@ -285,7 +285,7 @@ shortcuts:
     send_to_next_workspace: Envia la finestra a l'espai de treball següent
     send_to_previous_workspace: Envia la finestra a l'espai de treball anterior
     send_to_workspace: Enviar a l'espai de treball {{0}}
-    send_to_workspace_down: Envia la finestra a l'espai de treball següent
+    send_to_workspace_down: Envia la finestra a l'espai de treball a continuació
     send_to_workspace_up: Envia la finestra a l'espai de treball de dalt
     switch_to_next_workspace: Canvieu al següent espai de treball
     switch_to_previous_workspace: Canvieu a l'espai de treball anterior
@@ -299,6 +299,19 @@ sides:
   left: Esquerre
   right: Dret
   top: Superior
+system_tray:
+  drag_reorder: Activa la reordenació de l'arrossegament
+  icon_size: Mida de la icona
+  icon_spacing: Espaiat entre icones
+  label: Safata del sistema
+  offline_pinned: Icones fixades fora de línia
+  offline_pinned.disabled: Mostra desactivat
+  offline_pinned.hide: Amaga
+  overflow_arrow: fletxa de desbordament
+  pinned_position: Posició de les icones fixades
+  pinned_position.after: Després de la fletxa de desbordament
+  pinned_position.before: Fletxa abans del desbordament
+  show_tooltips: Mostra informació sobre eines
 toolbar:
   auto_hide: Auto amaga
   auto_hide_touch_disabled: L'ocultació automàtica no està disponible als dispositius de pantalla tàctil
@@ -401,7 +414,7 @@ weg:
   import_error: No s'han pogut importar els elements de la barra de tasques
   import_from_taskbar:
     button: Importa des de la barra de tasques de Windows
-    label: Importa els elements fixats
+    label: Importa elements fixats
   import_no_items: No s'han trobat elements fixats a la barra de tasques de Windows
   import_success: >-
     S'han importat correctament {{count}} elements de la barra de tasques de
@@ -486,15 +499,15 @@ weg:
 welcome:
   give_a_review: Fes una ressenya
   message: >-
-    Seelen UI és un entorn d'escriptori gratuït i de codi obert per a Windows.
-    Aquí teniu un control total sobre com es veu i es comporta el vostre
-    escriptori, cosa que us permet personalitzar tots els detalls perquè
-    coincideixin amb el vostre flux de treball i estil.
+    NAI OS és un entorn d'escriptori gratuït i de codi obert per a Windows. Aquí
+    teniu un control total sobre com es veu i es comporta el vostre escriptori,
+    cosa que us permet personalitzar cada detall perquè coincideixi amb el
+    vostre flux de treball i estil.
   ok: Comencem!
   review: >-
-    Si us agrada utilitzar Seelen UI, penseu a deixar una ressenya a la botiga:
-    els vostres comentaris ajuden el projecte a créixer i millorar.
-  title: Benvingut a Seelen UI!
+    Si us agrada utilitzar NAI OS, penseu a deixar una ressenya a la botiga: els
+    vostres comentaris ajuden el projecte a créixer i millorar.
+  title: Benvingut a NAI OS!
 widget:
   default_instance: Instància per defecte
   default_instance_hint: Sempre actiu, utilitza la configuració del widget arrel

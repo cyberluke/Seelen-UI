@@ -36,7 +36,7 @@ pub fn print_initial_information() {
     let sys_locale = seelen_core::state::Settings::get_system_locale();
 
     log::info!(
-        "───────────────────── Starting Seelen UI v{version}{local}{debug} ─────────────────────"
+        "───────────────────── Starting NAI OS v{version}{local}{debug} ─────────────────────"
     );
 
     log::info!("Arguments        : {:?}", std::env::args().collect_vec());
@@ -132,7 +132,7 @@ pub fn is_already_running() -> bool {
 pub fn acquire_instance_mutex() -> InstanceOutcome {
     let outcome = unsafe {
         let session_id = WindowsApi::current_session_id();
-        let mutex_name = format!("Local\\Seelen-UI-Instance-{}", session_id);
+        let mutex_name = format!("Local\\NAI-OS-Instance-{}", session_id);
         let mutex_name_wide = WindowsString::from_str(&mutex_name);
 
         // Try to create a named mutex specific to the current session
@@ -169,11 +169,11 @@ pub fn acquire_instance_mutex() -> InstanceOutcome {
         .map(|(_, s, _)| *s)
         .unwrap_or_else(WindowsApi::current_session_id);
     let _ = INSTANCE_STATE.set((outcome, session_id, {
-        format!("Local\\Seelen-UI-Instance-{}", session_id)
+        format!("Local\\NAI-OS-Instance-{}", session_id)
     }));
 
     log::info!(
-        "Instance mutex: session={session_id}, pid={}, outcome={outcome:?}, mutex=Local\\Seelen-UI-Instance-{session_id}",
+        "Instance mutex: session={session_id}, pid={}, outcome={outcome:?}, mutex=Local\\NAI-OS-Instance-{session_id}",
         std::process::id()
     );
     outcome

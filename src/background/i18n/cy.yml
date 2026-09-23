@@ -8,7 +8,7 @@ cancel: Chansliff
 done: Wedi gwneud
 elevated:
   description: >-
-    Mae Seelen UI yn rhedeg gyda breintiau gweinyddwr.
+    Mae NAI OS yn rhedeg gyda breintiau gweinyddwr.
 
     Nid yw hyn yn ychwanegu nac yn gwella unrhyw nodweddion, a gall achosi risg
     diogelwch.
@@ -39,20 +39,20 @@ runtime:
     Gall hyn ddigwydd os cafodd ffeiliau eu haddasu, eu llygru, neu os yw'r
     gosodiad yn anghyflawn.
 
-    Am resymau diogelwch, ni all Seelen UI barhau.
+    Am resymau diogelwch, ni all NAI OS barhau.
 
     Ailosodwch ef o'r wefan swyddogol.
   files_integrity_title: Rhybudd Diogelwch - Methwyd Gwirio Cywirdeb Ffeiliau
   not_found: WebView2 Runtime heb ei ganfod
-  not_found_description: Mae Seelen UI angen Amser Rhedeg Webview2. Os gwelwch yn dda gosod.
+  not_found_description: Mae NAI OS angen Amser Rhedeg Webview2. Os gwelwch yn dda gosod.
   outdated: WebView2 Runtime wedi dyddio
   outdated_description: >-
-    Mae Seelen UI angen amser rhedeg Webview2 %{ min_version} neu uwch.
+    Mae NAI OS angen amser rhedeg Webview2 %{ min_version} neu uwch.
     Diweddarwch ef.
 service:
   not_running: Gwasanaeth UI Seelen ddim yn rhedeg
   not_running_description: >-
-    Mae Seelen UI Service (slu-service) yn ddibyniaeth / cynorthwyydd i'r ap
+    Mae NAI OS Service (slu-service) yn ddibyniaeth / cynorthwyydd i'r ap
     weithio'n iawn.
   not_running_ok: Dechrau gwasanaeth
 shortcut:

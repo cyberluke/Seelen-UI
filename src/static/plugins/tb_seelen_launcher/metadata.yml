@@ -6,7 +6,7 @@ icon: TbApps
 target: "@seelen/fancy-toolbar"
 plugin:
   tooltip: |-
-    return "Seelen UI";
+    return "NAI OS";
   template: |-
     return Icon({ name: "TbApps" });
   onClickV2: |-

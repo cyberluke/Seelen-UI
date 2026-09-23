@@ -226,7 +226,7 @@ reset_to_default: Tetapkan semula ke nilai lalai
 resources:
   affected_widgets: Widget Terjejas
   app_outdated: >-
-    Sumber ini memerlukan versi Seelen UI yang lebih baru untuk berfungsi dengan
+    Sumber ini memerlukan versi NAI OS yang lebih baru untuk berfungsi dengan
     baik.
   coming_soon: Akan Datang
   corrupted_wallpaper: Gagal mengeluarkan lakaran kecil - format video rosak atau tidak disokong
@@ -238,7 +238,7 @@ resources:
   included_plugins: Pemalam Disertakan
   open_folder: Buka Folder Sumber
   outdated: >-
-    Sumber ini direka untuk versi lama Seelen UI dan mungkin tidak berfungsi
+    Sumber ini direka untuk versi lama NAI OS dan mungkin tidak berfungsi
     dengan baik.
   see_on_website: Lihat di laman web
   update_now: Kemas kini
@@ -268,7 +268,7 @@ shortcuts:
   enable: Dayakan sistem pintasan terbina dalam
   enable_tooltip: >-
     Lumpuhkan jika anda akan melaksanakan sistem pintasan anda sendiri
-    menggunakan pelanggan Seelen UI
+    menggunakan pelanggan NAI OS
   labels:
     create_new_workspace: Buat ruang kerja baru
     destroy_current_workspace: Memusnahkan ruang kerja semasa

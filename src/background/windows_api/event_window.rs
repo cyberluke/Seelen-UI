@@ -59,7 +59,7 @@ impl BgWindowProc {
     /// will lock until the window is closed
     unsafe fn _create_background_window(done: &crossbeam_channel::Sender<()>) -> Result<()> {
         unsafe {
-            let title = WindowsString::from("Seelen UI Background Window");
+            let title = WindowsString::from("NAI OS Background Window");
             let class = WindowsString::from("SeelenBackgroundWindow");
 
             let h_module = WindowsApi::module_handle_w()?;

@@ -270,6 +270,131 @@ async fn v1_trace(res: &mut Response) {
     write_json(res, &crate::modules::weg_core::application::get_trace());
 }
 
+// ============================ v1 NAI semantic plane ============================
+// Thin JSON adapters over the same native NAI kernel used by the webviews,
+// MCP and CLI; no duplicated logic.
+
+fn write_result(res: &mut Response, result: crate::error::Result<serde_json::Value>) {
+    match result {
+        Ok(value) => res.render(Json(value)),
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err.to_string()));
+        }
+    }
+}
+
+/// GET /v1/nai/graph
+#[handler]
+async fn v1_nai_graph(res: &mut Response) {
+    write_json(res, &crate::modules::nai::graph());
+}
+
+/// GET /v1/nai/capabilities
+#[handler]
+async fn v1_nai_capabilities(res: &mut Response) {
+    write_json(res, &crate::modules::nai::capabilities());
+}
+
+/// POST /v1/nai/activate/{id}
+#[handler]
+async fn v1_nai_activate(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::activate(&id));
+}
+
+/// POST /v1/nai/undo
+#[handler]
+async fn v1_nai_undo(res: &mut Response) {
+    write_json(res, &crate::modules::nai::undo_last());
+}
+
+/// GET /v1/nai/activities
+#[handler]
+async fn v1_nai_activities(res: &mut Response) {
+    write_json(res, &crate::modules::nai::activities());
+}
+
+/// GET /v1/nai/capsules
+#[handler]
+async fn v1_nai_capsules(res: &mut Response) {
+    write_json(res, &crate::modules::nai::capsules());
+}
+
+/// GET /v1/nai/gateway/models
+#[handler]
+async fn v1_nai_gateway_models(res: &mut Response) {
+    write_json(res, &crate::modules::nai::gateway_models());
+}
+
+/// GET /v1/nai/semantic/{query}  (optional ?limit=)
+#[handler]
+async fn v1_nai_semantic(req: &mut Request, res: &mut Response) {
+    let query = req.param::<String>("query").unwrap_or_default();
+    let limit = req.query::<usize>("limit").unwrap_or(5).max(1);
+    let vector: Vec<f32> = query.bytes().map(|b| b as f32 / 255.0).collect();
+    let value = crate::modules::nai::semantic::search(&vector, limit).await;
+    write_json(res, &value);
+}
+
+/// GET /v1/nai/apps
+#[handler]
+async fn v1_nai_apps(res: &mut Response) {
+    write_json(res, &crate::modules::nai::apps::apps());
+}
+
+/// POST /v1/nai/apps/{id}/launch
+#[handler]
+async fn v1_nai_app_launch(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::apps::launch(&id));
+}
+
+/// GET /v1/store/catalog
+#[handler]
+async fn v1_store_catalog(res: &mut Response) {
+    write_result(res, crate::modules::nai::store::catalog());
+}
+
+/// GET /v1/store/catalog/{id}
+#[handler]
+async fn v1_store_catalog_entry(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(
+        res,
+        crate::modules::nai::store::catalog_entry(&id)
+            .map(|entry| entry.unwrap_or(serde_json::Value::Null)),
+    );
+}
+
+/// POST /v1/store/{id}/install
+#[handler]
+async fn v1_store_install(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::store::install(&id));
+}
+
+/// POST /v1/store/{id}/update
+#[handler]
+async fn v1_store_update(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::store::update(&id));
+}
+
+/// POST /v1/store/{id}/uninstall
+#[handler]
+async fn v1_store_uninstall(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::store::uninstall(&id));
+}
+
+/// POST /v1/store/{id}/launch
+#[handler]
+async fn v1_store_launch(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::store::launch(&id));
+}
+
 // ============================ v1 system tray ============================
 // Same native `system_tray` command core used by the webviews, MCP and CLI.
 
@@ -453,7 +578,36 @@ async fn run_http_server() {
                 ),
         )
         .push(Router::with_path("metrics").get(v1_metrics))
-        .push(Router::with_path("trace").get(v1_trace));
+        .push(Router::with_path("trace").get(v1_trace))
+        .push(
+            Router::with_path("nai")
+                .push(Router::with_path("graph").get(v1_nai_graph))
+                .push(Router::with_path("capabilities").get(v1_nai_capabilities))
+                .push(Router::with_path("activate/{id}").post(v1_nai_activate))
+                .push(Router::with_path("undo").post(v1_nai_undo))
+                .push(Router::with_path("activities").get(v1_nai_activities))
+                .push(Router::with_path("capsules").get(v1_nai_capsules))
+                .push(Router::with_path("gateway/models").get(v1_nai_gateway_models))
+                .push(Router::with_path("semantic/{query}").get(v1_nai_semantic))
+                .push(
+                    Router::with_path("apps").get(v1_nai_apps).push(
+                        Router::with_path("{id}")
+                            .push(Router::with_path("launch").post(v1_nai_app_launch)),
+                    ),
+                ),
+        )
+        .push(
+            Router::with_path("store")
+                .push(Router::with_path("catalog").get(v1_store_catalog))
+                .push(Router::with_path("catalog/{id}").get(v1_store_catalog_entry))
+                .push(
+                    Router::with_path("{id}")
+                        .push(Router::with_path("install").post(v1_store_install))
+                        .push(Router::with_path("update").post(v1_store_update))
+                        .push(Router::with_path("uninstall").post(v1_store_uninstall))
+                        .push(Router::with_path("launch").post(v1_store_launch)),
+                ),
+        );
 
     let doc = OpenApi::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION")).merge_router(&api);
 

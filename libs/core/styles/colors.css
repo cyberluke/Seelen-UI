@@ -519,3 +519,18 @@
   --color-fixed-magenta-800: oklch(27% 0.098 360);
   --color-fixed-magenta-900: oklch(18% 0.065 360);
 }
+
+/* NAI OS brand palette — SAP North Star Vision, OLED-first (ADR/04 design tokens).
+   Never scatter these as literals in components; consume these tokens. */
+:root {
+  --nai-ink: #070710; /* OLED Ink */
+  --nai-evening-surface: #10101A; /* Evening Surface */
+  --nai-lavender-core: #8d7cff; /* active state */
+  --nai-electric-indigo: #6557ff;
+  --nai-iris: #a778ff;
+  --nai-aurora-violet: #c48cff;
+  --nai-plasma-cyan: #4debff; /* agent-working state */
+  --nai-signal-mint: #56f5c2;
+  --nai-hot-coral: #ff5d8f; /* error state */
+  --nai-warning-amber: #ffc857; /* attention state */
+}

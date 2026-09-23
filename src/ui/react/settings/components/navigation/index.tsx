@@ -58,7 +58,7 @@ export const Navigation = memo(() => {
     >
       <div className={cs.header} onClick={() => setCollapsed(!collapsed)}>
         <img src="./logo.svg" />
-        <h1>Seelen UI</h1>
+        <h1>NAI OS</h1>
         <Icon className={cs.chevron} iconName="FaChevronLeft" />
       </div>
 

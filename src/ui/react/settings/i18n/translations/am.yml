@@ -36,9 +36,9 @@ apps_configurations:
   export: ወደ ውጭ ይላኩ
   export_full: ቅንብሮችን በመላክ በትግበራ
   extra_info: >-
-    Seelen UI በአንድ መተግበሪያ አንድ መለያ ብቻ ነው የሚጠቀመው (የመጀመሪያው ግጥሚያ ተገኝቷል) ስለዚህ እንዴት
-    እንደሚገለጹ ቅደም ተከተላቸው አስፈላጊ ነው፣ የቅርብ ጊዜዎቹ የተጨመሩት ቅድሚያ ይሰጣቸዋል፣ ምክንያቱም ሰንጠረዡ ከቅርቡ
-    ወደ አሮጌው በነባሪ የተደረደረ ነው።
+    NAI OS በአንድ መተግበሪያ አንድ መለያ ብቻ ነው የሚጠቀመው (የመጀመሪያው ግጥሚያ ተገኝቷል) ስለዚህ እንዴት
+    እንደሚገለጹ ቅደም ተከተላቸው አስፈላጊ ነው፣ የቅርብ ጊዜዎቹ የተጨመሩት ቅድሚያ ይሰጣቸዋል፣ ማስታወሻ ሰንጠረዡ ከቅርቡ
+    ወደ አሮጌው በነባሪ ይደረደራል።
   identifier:
     add_block: ብሎክ ያክሉ
     and: እና
@@ -76,9 +76,7 @@ devtools:
   custom_config_file: ብጁ ውቅያ ፋይልን ይጫኑ
   data_folder: የውሂብ አቃፊ
   enable: የገንቢ መሳሪያዎችን ያንቁ
-  enable_description: >-
-    Seelen UI ውስጣዊ ነገሮችን ለመመርመር እና ለማረም የላቁ መሳሪያዎችን ይከፍታል። ለመደበኛ አገልግሎት የታሰበ
-    አይደለም።
+  enable_description: NAI OS የውስጥ አካላትን ለመመርመር እና ለማረም የላቁ መሳሪያዎችን ይከፍታል። ለመደበኛ አገልግሎት የታሰበ አይደለም።
   icons: የተሸጎጡ አዶዎች
   install_folder: የመጫን አቃፊ
   load: ጭነት
@@ -111,9 +109,7 @@ devtools:
     tab: መግብሮች
     widget_id: መግብር መታወቂያ
 discord_banner:
-  message: >-
-    ከሌሎች የSeelen UI ተጠቃሚዎች ጋር ይገናኙ፣ እገዛ ያግኙ፣ ገጽታዎችን ያጋሩ እና በቅርብ ዜናዎች እንደተዘመኑ
-    ይቆዩ።
+  message: ከሌሎች የ NAI OS ተጠቃሚዎች ጋር ይገናኙ፣ እገዛ ያግኙ፣ ገጽታዎችን ያጋሩ እና በቅርብ ዜናዎች እንደተዘመኑ ይቆዩ።
   title: ማህበረሰባችንን ይቀላቀሉ
 extras:
   backup_group: የደመና ምትኬ
@@ -160,9 +156,9 @@ general:
     plugged: ተሰኪ ወይም መሙላት
   polling_interval: የስርዓት ምርጫ ክፍተት
   polling_interval_description: >-
-    Seelen UI እንደ ሲፒዩ፣ RAM፣ አውታረ መረብ እና የዲስክ እንቅስቃሴ ያሉ የስርዓት ሀብቶችን ምን ያህል ጊዜ
-    (በሴኮንዶች ውስጥ) ይፈትሻል። አነስ ያለ ቁጥር ብዙ ተደጋጋሚ ዝመናዎች ማለት ነው፣ ነገር ግን ትንሽ ከፍ ያለ የሃብት
-    አጠቃቀም ማለት ነው።
+    NAI OS ምን ያህል ጊዜ (በሴኮንዶች ውስጥ) እንደ ሲፒዩ፣ ራም፣ ኔትወርክ እና የዲስክ እንቅስቃሴ ያሉ የስርዓት
+    ሃብቶችን ይፈትሻል። አነስ ያለ ቁጥር ብዙ ተደጋጋሚ ዝመናዎች ማለት ነው፣ ነገር ግን ትንሽ ከፍ ያለ የሃብት አጠቃቀም
+    ማለት ነው።
   saturday: ቅዳሜ
   start_of_week: የሳምንቱ መጀመሪያ
   startup: ጅምር ላይ ይሮጡ?
@@ -214,7 +210,7 @@ reset_configurations: ውቅሮችን ዳግም አስጀምር
 reset_to_default: ወደ ነባሪ እሴት ዳግም ያስጀምሩ
 resources:
   affected_widgets: የተጎዱ መግብሮች
-  app_outdated: ይህ ሀብት በአግባቡ እንዲሠራ አዲስ የአዲስ ስሪት ይፈልጋል.
+  app_outdated: ይህ ሃብት በአግባቡ ለመስራት አዲሱን የ NAI OS ስሪት ይፈልጋል።
   coming_soon: በቅርብ ቀን
   corrupted_wallpaper: ድንክዬ ማውጣት አልተሳካም - የተበላሸ ወይም የማይደገፍ የቪዲዮ ቅርጸት
   delete: ምንጭን ሰርዝ
@@ -224,7 +220,7 @@ resources:
   import_wallpapers: የአካባቢያዊ የግድግዳ ወረቀቶች ያስመጡ
   included_plugins: የተካተቱ ፕለጊኖች
   open_folder: ክፍት የመረጃ ምንጭ አቃፊ
-  outdated: ይህ የመረጃ ሀብት ለተረጋጋሪ ዌይ ስሪት ለተጨማሪ ስሪት የተሰራ ሲሆን በትክክል ላይሰራ ይችላል.
+  outdated: ይህ ሃብት የተነደፈው ለቀድሞው የ NAI OS ስሪት ነው እና በትክክል ላይሰራ ይችላል።
   see_on_website: በድር ጣቢያው ላይ ይመልከቱ
   update_now: አዘምን
   updates_available: ዝማኔዎች ይገኛሉ
@@ -232,7 +228,7 @@ resources:
 review_request:
   not_now: አሁን አይደለም
   sure: በእርግጠኝነት!
-  title: በ Seelen UI እየተዝናኑ ነው?
+  title: በNAI OS እየተዝናኑ ነው?
 save: አስቀምጥ
 save_and_restart: አስቀምጥ & እንደገና ያስጀምሩ
 search: ፈልግ
@@ -250,7 +246,7 @@ shortcuts:
     አንዳንድ አቋራጮች ለብዙ ድርጊቶች ተመድበዋል። ከተጋጩ መግብሮች ውስጥ አንዱን ያሰናክሉ ወይም ለመፍታት የተባዛውን ቁልፍ
     ማሰሪያ ይመድቡ።
   enable: አብሮገነብ አቋራጭ አቋራጭ ስርዓት
-  enable_tooltip: የእራስዎን አቋራጮችን ስርዓት የሚተገበሩበትን የእራስዎን አቋራጮዎች ስርዓት የሚተገበሩ ከሆነ ያሰናክሉ
+  enable_tooltip: የ NAI OS ደንበኛን በመጠቀም የራስዎን የአቋራጮች ስርዓት ተግባራዊ ካደረጉ ያሰናክሉ።
   labels:
     create_new_workspace: አዲስ የስራ ቦታ ይፍጠሩ
     create_new_workspace_row: አዲስ የስራ ቦታ ረድፍ ፍጠር
@@ -276,6 +272,19 @@ sides:
   left: ግራ
   right: ቀኝ
   top: ከላይ
+system_tray:
+  drag_reorder: እንደገና መጎተትን አንቃ
+  icon_size: የአዶ መጠን
+  icon_spacing: የአዶ ክፍተት
+  label: የስርዓት ትሪ
+  offline_pinned: ከመስመር ውጭ የተሰኩ አዶዎች
+  offline_pinned.disabled: አሳይ ተሰናክሏል
+  offline_pinned.hide: ደብቅ
+  overflow_arrow: የተትረፈረፈ ቀስት
+  pinned_position: የተሰኩ አዶዎች አቀማመጥ
+  pinned_position.after: ከተትረፈረፈ ቀስት በኋላ
+  pinned_position.before: ከመጠን በላይ ከመፍሰሱ በፊት
+  show_tooltips: የመሳሪያ ምክሮችን አሳይ
 toolbar:
   auto_hide: ራስ-ሰር መደበቅ
   auto_hide_touch_disabled: ራስ-ደብቅ በንክኪ ስክሪን መሳሪያዎች ላይ አይገኝም
@@ -429,9 +438,9 @@ weg:
     keep_open: በጉዞ ላይ ክፍት ይሁኑ
     label: የመስኮት ቅድመ እይታ
     max_columns: ከፍተኛው አምዶች
-    max_height: ከፍተኛ ብቅ ባይ ቁመት (ፒክሰል)
+    max_height: ከፍተኛው ብቅ ባይ ቁመት (ፒክሰል)
     max_rows: ከማሸብለል በፊት ከፍተኛው ረድፎች
-    max_width: ከፍተኛው ብቅ ባይ ስፋት (ፒክሰል)
+    max_width: ከፍተኛ ብቅ ባይ ስፋት (ፒክሰል)
     min_columns: አነስተኛ ዓምዶች
     nearest_first: የቅርብ-የመጀመሪያ ትንበያ
     ordering: በማዘዝ ላይ
@@ -459,14 +468,13 @@ weg:
 welcome:
   give_a_review: ግምገማ ስጥ
   message: >-
-    Seelen UI ለዊንዶውስ ነፃ እና ክፍት ምንጭ ዴስክቶፕ አካባቢ ነው። እዚህ ዴስክቶፕዎ እንዴት እንደሚመስል እና
-    ባህሪው ላይ ሙሉ ቁጥጥር አለዎት፣ ይህም እያንዳንዱን ዝርዝር ከስራ ሂደትዎ እና ዘይቤዎ ጋር ለማዛመድ እንዲያበጁ
-    ያስችልዎታል።
+    NAI OS ለዊንዶውስ ነፃ እና ክፍት ምንጭ ዴስክቶፕ አካባቢ ነው። እዚህ ዴስክቶፕዎ እንዴት እንደሚመስል እና ባህሪው
+    ላይ ሙሉ ቁጥጥር አለዎት፣ ይህም እያንዳንዱን ዝርዝር ከስራ ሂደትዎ እና ዘይቤዎ ጋር ለማዛመድ እንዲያበጁ ያስችልዎታል።
   ok: እንጀምር!
   review: >-
-    Seelen UIን መጠቀም ከወደዱ፣ በመደብሩ ላይ ግምገማ ለመተው ያስቡበት — የእርስዎ አስተያየት ፕሮጀክቱ እንዲያድግ
-    እና እንዲሻሻል ይረዳል።
-  title: ወደ Seelen UI እንኳን በደህና መጡ!
+    NAI OSን መጠቀም ከወደዱ፣ በመደብሩ ላይ ግምገማ ለመተው ያስቡበት — የእርስዎ አስተያየት ፕሮጀክቱ እንዲያድግ እና
+    እንዲሻሻል ይረዳል።
+  title: ወደ NAI OS እንኳን በደህና መጡ!
 widget:
   default_instance: ነባሪ ምሳሌ
   default_instance_hint: ሁልጊዜ ንቁ፣ የስር መግብር አወቃቀሩን ይጠቀማል

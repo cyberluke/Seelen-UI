@@ -68,7 +68,7 @@ impl AppMessage {
 
 // ==============================================
 
-/// Seelen UI Service Actions
+/// NAI OS Service Actions
 #[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SvcAction {

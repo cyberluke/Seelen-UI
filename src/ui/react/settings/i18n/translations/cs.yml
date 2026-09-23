@@ -37,10 +37,10 @@ apps_configurations:
   export: Exportovat
   export_full: Export nastavení podle aplikace
   extra_info: >-
-    SEELEN UI používá pouze jeden identifikátor na aplikaci (první nalezený),
-    takže pořadí v tom, jak jsou specifikovány, je důležité, nejnovější přidaná
-    bude upřednostňována, protože tabulka je ve výchozím nastavení tříděna od
-    nejnovější po nejstarší.
+    NAI OS používá pouze jeden identifikátor na aplikaci (první nalezená shoda),
+    takže pořadí, v jakém jsou specifikovány, je důležité, prioritu budou mít
+    nejnovější přidané, protože tabulka je standardně seřazena od nejnovější po
+    starou.
   identifier:
     add_block: Přidat blok
     and: A
@@ -80,8 +80,8 @@ devtools:
   data_folder: Datová složka
   enable: Povolit vývojové nástroje
   enable_description: >-
-    Odemyká pokročilé nástroje pro kontrolu a ladění vnitřků uživatelského
-    rozhraní Seelen. Není určeno pro pravidelné používání.
+    Odemyká pokročilé nástroje pro kontrolu a ladění vnitřních částí NAI OS.
+    Není určeno pro pravidelné používání.
   icons: Ikony uložené v mezipaměti
   install_folder: Instalační složka
   load: Načíst
@@ -120,8 +120,8 @@ devtools:
     widget_id: ID widgetu
 discord_banner:
   message: >-
-    Spojte se s ostatními uživateli uživatelského rozhraní Seelen, získejte
-    nápovědu, sdílejte témata a buďte informováni o nejnovějších zprávách.
+    Spojte se s ostatními uživateli NAI OS, získejte nápovědu, sdílejte témata a
+    buďte informováni o nejnovějších zprávách.
   title: Připojte se k naší komunitě
 extras:
   backup_group: Cloudové zálohování
@@ -169,9 +169,9 @@ general:
     plugged: Připojené nebo nabíjení
   polling_interval: Interval dotazování systému
   polling_interval_description: >-
-    Jak často (v sekundách) uživatelské rozhraní Seelen kontroluje systémové
-    prostředky, jako je CPU, RAM, síť a aktivita disku. Menší číslo znamená
-    častější aktualizace, ale o něco vyšší využití zdrojů.
+    Jak často (v sekundách) NAI OS kontroluje systémové prostředky, jako je CPU,
+    RAM, síť a aktivita disku. Menší číslo znamená častější aktualizace, ale o
+    něco vyšší využití zdrojů.
   saturday: sobota
   start_of_week: Začátek týdne
   startup: Spoustit při každém startu?
@@ -224,9 +224,7 @@ reset_configurations: Resetovat konfigurace
 reset_to_default: Obnovení výchozí hodnoty
 resources:
   affected_widgets: Dotčené widgety
-  app_outdated: >-
-    Tento zdroj vyžaduje pro správnou funkci novější verzi uživatelského
-    rozhraní Seelen.
+  app_outdated: Tento zdroj vyžaduje ke správnému fungování novější verzi NAI OS.
   coming_soon: Již brzy
   corrupted_wallpaper: >-
     Nepodařilo se extrahovat miniaturu – poškozený nebo nepodporovaný formát
@@ -239,8 +237,8 @@ resources:
   included_plugins: Zahrnuté pluginy
   open_folder: Otevření složky se zdroji
   outdated: >-
-    Tento zdroj byl navržen pro starší verzi uživatelského rozhraní Seelen a
-    nemusí fungovat správně.
+    Tento prostředek byl navržen pro starší verzi NAI OS a nemusí fungovat
+    správně.
   see_on_website: Viz na webu
   update_now: Aktualizovat
   updates_available: Dostupné aktualizace
@@ -248,7 +246,7 @@ resources:
 review_request:
   not_now: Teď ne
   sure: Jasně!
-  title: Líbí se vám uživatelské rozhraní Seelen?
+  title: Baví vás NAI OS?
 save: Uložit
 save_and_restart: Uložit a restartovat
 search: Vyhledávání
@@ -267,8 +265,8 @@ shortcuts:
     widgetů nebo znovu přiřaďte duplicitní klíčovou vazbu k vyřešení.
   enable: Povolení vestavěného systému zkratek
   enable_tooltip: >-
-    Zakázat, pokud budete implementovat vlastní systém zkratek pomocí klienta
-    Seelen UI.
+    Deaktivujte, pokud budete implementovat svůj vlastní systém zkratek pomocí
+    klienta NAI OS
   labels:
     create_new_workspace: Vytvoření nového pracovního prostoru
     create_new_workspace_row: Vytvořit nový řádek pracovního prostoru
@@ -294,6 +292,19 @@ sides:
   left: Vlevo
   right: Vpravo
   top: Svršek
+system_tray:
+  drag_reorder: Povolit změnu pořadí přetažení
+  icon_size: Velikost ikony
+  icon_spacing: Mezery ikon
+  label: Systémová lišta
+  offline_pinned: Offline připnuté ikony
+  offline_pinned.disabled: Zobrazit zakázáno
+  offline_pinned.hide: Skrýt
+  overflow_arrow: Šipka přetečení
+  pinned_position: Pozice připnutých ikon
+  pinned_position.after: Po přetečení šipka
+  pinned_position.before: Před přetečením šipka
+  show_tooltips: Zobrazit popisky
 toolbar:
   auto_hide: Automaticky skrýt
   auto_hide_touch_disabled: Automatické skrytí není k dispozici na zařízeních s dotykovou obrazovkou
@@ -479,15 +490,15 @@ weg:
 welcome:
   give_a_review: Dejte recenzi
   message: >-
-    Seelen UI je bezplatné a open source desktopové prostředí pro Windows. Zde
-    máte plnou kontrolu nad tím, jak váš desktop vypadá a chová se, což vám
-    umožňuje přizpůsobit každý detail tak, aby odpovídal vašemu pracovnímu
-    postupu a stylu.
+    NAI OS je bezplatné a open source desktopové prostředí pro Windows. Zde máte
+    plnou kontrolu nad tím, jak váš desktop vypadá a chová se, což vám umožňuje
+    přizpůsobit každý detail tak, aby odpovídal vašemu pracovnímu postupu a
+    stylu.
   ok: Začněme!
   review: >-
-    Pokud rádi používáte Seelen UI, zvažte zanechání recenze v obchodě – vaše
+    Pokud rádi používáte NAI OS, zvažte zanechání recenze v obchodě – vaše
     zpětná vazba pomáhá projektu růst a zlepšovat se.
-  title: Vítejte v uživatelském rozhraní Seelen!
+  title: Vítejte v NAI OS!
 widget:
   default_instance: Výchozí instance
   default_instance_hint: Vždy aktivní, používá kořenovou konfiguraci widgetu

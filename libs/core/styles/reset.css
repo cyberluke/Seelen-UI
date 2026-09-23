@@ -125,4 +125,20 @@
     border-top: 1px solid currentColor;
     opacity: 0.3;
   }
+
+  /* Reduced motion is first class (ADR/04 motion budgets). */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *:after,
+    *:before {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }

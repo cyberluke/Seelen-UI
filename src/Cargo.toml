@@ -1,16 +1,16 @@
 [package]
-name = "seelen-ui"
+name = "NAI-OS"
 version = "2.8.6"
-description = "Seelen UI Background"
+description = "NAI OS Background"
 authors = ["eythaann"]
 license = "AGPL-3.0-or-later"
-repository = "https://github.com/eythaann/seelen-ui.git"
-default-run = "seelen-ui"
+repository = "https://github.com/eythaann/Seelen-UI.git"
+default-run = "NAI-OS"
 edition = "2024"
 rust-version = "1.89"
 
 [[bin]]
-name = "seelen-ui"
+name = "NAI-OS"
 path = "background/main.rs"
 
 [[bin]]

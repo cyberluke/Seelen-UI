@@ -37,9 +37,10 @@ apps_configurations:
   export: Export
   export_full: Beállítások exportálása alkalmazásonként
   extra_info: >-
-    A Seelen UI alkalmazásonként csak egy azonosítót használ (az első egyezés
-    található), ezért fontos a sorrend, a legutolsó hozzáadott lesz prioritás,
-    mivel a táblázat alapértelmezés szerint a legújabbtól a régiig van rendezve.
+    A NAI OS alkalmazásonként csak egy azonosítót használ (az első egyezés
+    található), ezért fontos a specifikáció sorrendje, a legutóbb hozzáadott
+    lesz prioritás, mivel a táblázat alapértelmezés szerint a legújabbtól a
+    régiig van rendezve.
   identifier:
     add_block: Blokk hozzáadása
     and: ÉS
@@ -80,7 +81,7 @@ devtools:
   data_folder: Adatmappa
   enable: Engedélyezze a fejlesztői eszközöket
   enable_description: >-
-    Feloldja a fejlett eszközöket a Seelen UI belső részeinek vizsgálatához és
+    Feloldja a fejlett eszközöket a NAI OS belső elemeinek vizsgálatához és
     hibakereséséhez. Nem rendszeres használatra készült.
   icons: Gyorsítótárazott ikonok
   install_folder: Telepítési mappa
@@ -120,8 +121,8 @@ devtools:
     widget_id: Widget azonosító
 discord_banner:
   message: >-
-    Lépjen kapcsolatba más Seelen UI-felhasználókkal, kérjen segítséget, osszon
-    meg témákat, és maradjon naprakész a legfrissebb hírekről.
+    Lépjen kapcsolatba más NAI OS-felhasználókkal, kérjen segítséget, osszon meg
+    témákat, és maradjon naprakész a legfrissebb hírekről.
   title: Csatlakozz közösségünkhöz
 extras:
   backup_group: Biztonsági mentés a felhőből
@@ -174,10 +175,10 @@ general:
     plugged: Bedugva vagy töltés
   polling_interval: Rendszerlekérdezési intervallum
   polling_interval_description: >-
-    Milyen gyakran (másodpercben) ellenőrzi a Seelen UI a rendszererőforrásokat,
-    például a CPU-t, a RAM-ot, a hálózatot és a lemeztevékenységet. A kisebb
-    szám gyakoribb frissítéseket jelent, de valamivel nagyobb
-    erőforrás-felhasználást.
+    Milyen gyakran (másodpercek alatt) ellenőrzi a NAI OS a
+    rendszererőforrásokat, például a CPU-t, a RAM-ot, a hálózatot és a
+    lemeztevékenységet. A kisebb szám gyakoribb frissítéseket jelent, de
+    valamivel nagyobb erőforrás-felhasználást.
   saturday: szombat
   start_of_week: Hét kezdete
   startup: Futtatni indításkor?
@@ -230,7 +231,9 @@ reset_configurations: Állítsa vissza a konfigurációkat
 reset_to_default: Alapértelmezett értékre visszaállítása
 resources:
   affected_widgets: Érintett widgetek
-  app_outdated: Ez az erőforrás a Seelen UI újabb verzióját igényli a megfelelő működéshez.
+  app_outdated: >-
+    Ennek az erőforrásnak a megfelelő működéséhez a NAI OS újabb verziója
+    szükséges.
   coming_soon: Hamarosan
   corrupted_wallpaper: Nem sikerült a miniatűr kibontása – sérült vagy nem támogatott videóformátum
   delete: Az erőforrás törlése
@@ -241,7 +244,7 @@ resources:
   included_plugins: Tartalmazott bővítmények
   open_folder: Nyissa meg az erőforrás mappát
   outdated: >-
-    Ez az erőforrás a Seelen UI régebbi verziójához készült, és előfordulhat,
+    Ezt az erőforrást a NAI OS régebbi verziójához tervezték, és előfordulhat,
     hogy nem működik megfelelően.
   see_on_website: Lásd a weboldalon
   update_now: Frissítés
@@ -250,7 +253,7 @@ resources:
 review_request:
   not_now: Most nem
   sure: Persze!
-  title: Élvezed a Seelen felhasználói felületet?
+  title: Élvezed a NAI OS-t?
 save: Megment
 save_and_restart: Mentés és újraindítás
 search: Keresés
@@ -270,8 +273,8 @@ shortcuts:
     kulcs-összerendelést a megoldáshoz.
   enable: Engedélyezze a beépített parancsikonok rendszerét
   enable_tooltip: >-
-    Tiltsa le, ha a Seelen UI kliens segítségével megvalósítja saját
-    parancsikonjait
+    Tiltsa le, ha saját parancsikonrendszerét fogja megvalósítani a NAI OS
+    Client segítségével
   labels:
     create_new_workspace: Hozzon létre új munkaterületet
     create_new_workspace_row: Új munkaterület-sor létrehozása
@@ -297,6 +300,19 @@ sides:
   left: Bal
   right: Jobb
   top: Felső
+system_tray:
+  drag_reorder: Húzás átrendezés engedélyezése
+  icon_size: Ikon mérete
+  icon_spacing: Ikon távolság
+  label: Rendszertálca
+  offline_pinned: Offline rögzített ikonok
+  offline_pinned.disabled: Megjelenítés letiltva
+  offline_pinned.hide: Elrejt
+  overflow_arrow: Túlcsordulás nyíl
+  pinned_position: Rögzített ikonok helyzete
+  pinned_position.after: Túlfolyó nyíl után
+  pinned_position.before: Túlcsordulás előtti nyíl
+  show_tooltips: Eszköztippek megjelenítése
 toolbar:
   auto_hide: Autóbizalom
   auto_hide_touch_disabled: Az automatikus elrejtés nem érhető el érintőképernyős eszközökön
@@ -445,7 +461,7 @@ weg:
     compact_titles: Kompakt címek
     gap: Hézag a kártyák között (px)
     grace_region: A mutató türelmi régiója (px)
-    grouped_click_label: Csoportosított ikon kattintás
+    grouped_click_label: Csoportosított ikonkattintás
     grouped_click_last_used: Aktiválja az utolsó használatot
     grouped_click_minimize_restore: Csoport kicsinyítése/visszaállítása
     grouped_click_preview: Előnézet megnyitása
@@ -484,15 +500,15 @@ weg:
 welcome:
   give_a_review: Adj véleményt
   message: >-
-    A Seelen UI egy ingyenes és nyílt forráskódú asztali környezet Windowshoz.
-    Itt teljes mértékben irányíthatja az asztali számítógép megjelenését és
-    viselkedését, így minden részletet személyre szabhat a munkafolyamatának és
-    stílusának megfelelően.
+    A NAI OS egy ingyenes és nyílt forráskódú asztali környezet a Windows
+    számára. Itt teljes mértékben irányíthatja az asztali számítógép
+    megjelenését és viselkedését, így minden részletet személyre szabhat a
+    munkafolyamatnak és a stílusnak megfelelően.
   ok: Kezdjük!
   review: >-
-    Ha szívesen használja a Seelen UI-t, fontolja meg, hogy véleményt írjon az
+    Ha szívesen használja a NAI OS-t, fontolja meg, hogy véleményt írjon az
     áruházban – visszajelzése segíti a projekt növekedését és fejlődését.
-  title: Üdvözöljük a Seelen UI-n!
+  title: Üdvözöljük a NAI OS-ben!
 widget:
   default_instance: Alapértelmezett példány
   default_instance_hint: Mindig aktív, a root widget konfigurációját használja

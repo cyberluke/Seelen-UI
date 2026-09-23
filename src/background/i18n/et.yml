@@ -8,7 +8,7 @@ cancel: Tühistama
 done: Tehtud
 elevated:
   description: >-
-    Seelen UI töötab administraatoriõigustega.
+    NAI OS töötab administraatoriõigustega.
 
     See ei lisa ega täiusta ühtegi funktsiooni ning võib kujutada endast
     turvariski.
@@ -37,7 +37,7 @@ runtime:
   files_integrity: |-
     Meil ei õnnestunud rakendusfailide terviklikkust kontrollida.
     See võib juhtuda, kui faile on muudetud, rikutud või installimine on poolik.
-    Turvakaalutlustel ei saa Seelen UI jätkata.
+    Turvakaalutlustel ei saa NAI OS jätkata.
     Installige see uuesti ametlikult veebisaidilt.
   files_integrity_title: Turvahoiatus – failide terviklikkuse kontroll ebaõnnestus
   not_found: WebView2 käitusaega ei leitud
@@ -47,7 +47,7 @@ runtime:
     Seeleni kasutajaliides nõuab Webview2 Runtime %{min_version} või uuemat.
     Palun värskendage seda.
 service:
-  not_running: Seelen UI teenus ei tööta
+  not_running: NAI OS teenus ei tööta
   not_running_description: >-
     Seeleni kasutajaliidese teenus (slu-teenus) on rakenduse nõuetekohaseks
     tööks sõltuvus/abimees.

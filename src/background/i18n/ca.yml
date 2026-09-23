@@ -54,7 +54,7 @@ runtime:
 service:
   not_running: El servei d'IU de Seelen no s'executa
   not_running_description: >-
-    Seelen UI Service (servei slu) és una dependència/ajuda perquè l'aplicació
+    NAI OS Service (servei slu) és una dependència/ajuda perquè l'aplicació
     funcioni correctament.
   not_running_ok: Iniciar servei
 shortcut:

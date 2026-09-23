@@ -37,9 +37,9 @@ apps_configurations:
   export: Ekspordi-
   export_full: Ekspordi seaded rakenduste kaupa
   extra_info: >-
-    Seeleni kasutajaliides kasutab rakenduse kohta ainult ühte identifikaatorit
-    (leiti esimene vaste), seega on määramise järjekord oluline, viimati lisatud
-    on prioriteediks, kuna tabel sorteeritakse vaikimisi uusimast vanani.
+    NAI OS kasutab rakenduse kohta ainult ühte identifikaatorit (leiti esimene
+    vaste), seega on määramise järjekord oluline, viimati lisatud on
+    prioriteediks, kuna tabel sorteeritakse vaikimisi uusimast vanani.
   identifier:
     add_block: Lisa plokk
     and: Ja
@@ -79,8 +79,8 @@ devtools:
   data_folder: Andmekaust
   enable: Luba arendaja tööriistad
   enable_description: >-
-    Avab täiustatud tööriistad Seeleni kasutajaliidese sisemiste kontrollimiseks
-    ja silumiseks. Ei ole ette nähtud regulaarseks kasutamiseks.
+    Avab täiustatud tööriistad NAI OS-i sisemiste kontrollimiseks ja silumiseks.
+    Ei ole ette nähtud regulaarseks kasutamiseks.
   icons: Vahemällu salvestatud ikoonid
   install_folder: Installi kaust
   load: Laadima
@@ -118,8 +118,8 @@ devtools:
     widget_id: Vidina ID
 discord_banner:
   message: >-
-    Võtke ühendust teiste Seeleni kasutajaliidese kasutajatega, hankige abi,
-    jagage teemasid ja olge kursis viimaste uudistega.
+    Võtke ühendust teiste NAI OS-i kasutajatega, hankige abi, jagage teemasid ja
+    olge kursis viimaste uudistega.
   title: Liituge meie kogukonnaga
 extras:
   backup_group: Pilvevarundamine
@@ -167,8 +167,8 @@ general:
     plugged: Ühendatud või laadimine
   polling_interval: Süsteemi küsitlusintervall
   polling_interval_description: >-
-    Kui sageli (sekundites) Seelen UI kontrollib süsteemiressursse, nagu
-    protsessor, RAM, võrk ja ketta aktiivsus. Väiksem arv tähendab sagedasemaid
+    Kui sageli (sekundites) NAI OS kontrollib süsteemiressursse, nagu
+    protsessor, RAM, võrk ja kettategevus. Väiksem arv tähendab sagedasemaid
     uuendusi, kuid veidi suuremat ressursikasutust.
   saturday: laupäeval
   start_of_week: Nädala algus
@@ -222,7 +222,7 @@ reset_configurations: Lähtestage konfiguratsioonid
 reset_to_default: Nullida vaikimisi väärtus
 resources:
   affected_widgets: Mõjutatud vidinad
-  app_outdated: Selle ressursi korralikuks kasutamiseks on vaja Seelen UI uuemat versiooni.
+  app_outdated: Selle ressursi õigeks tööks on vaja NAI OS-i uuemat versiooni.
   coming_soon: Varsti
   corrupted_wallpaper: >-
     Pisipildi ekstraktimine ebaõnnestus – videovorming on rikutud või seda ei
@@ -235,7 +235,7 @@ resources:
   included_plugins: Kaasasolevad pistikprogrammid
   open_folder: Avage ressursside kaust
   outdated: >-
-    See ressurss on loodud Seelen UI vanema versiooni jaoks ja see ei pruugi
+    See ressurss oli mõeldud NAI OS-i vanema versiooni jaoks ja ei pruugi
     korralikult töötada.
   see_on_website: Vaata kodulehelt
   update_now: Värskenda
@@ -244,7 +244,7 @@ resources:
 review_request:
   not_now: Mitte praegu
   sure: Muidugi!
-  title: Kas teile meeldib Seeleni kasutajaliides?
+  title: Kas teile meeldib NAI OS?
 save: Kokkuhoid
 save_and_restart: Salvesta ja taaskäivitage
 search: Otsi
@@ -262,9 +262,7 @@ shortcuts:
     Mõned otseteed on määratud mitmele toimingule. Keelake üks konfliktsetest
     vidinatest või määrake lahendamiseks uuesti duplikaatvõtme sidumine.
   enable: Luba sisseehitatud otseteede süsteem
-  enable_tooltip: >-
-    Keelake, kui rakendate oma otseteede süsteemi, kasutades seeneni
-    kasutajaliidese klienti
+  enable_tooltip: Keelake, kui rakendate oma otseteede süsteemi NAI OS Clienti abil
   labels:
     create_new_workspace: Looge uus tööruum
     create_new_workspace_row: Looge uus tööruumi rida
@@ -290,6 +288,19 @@ sides:
   left: Vasakul
   right: Paremale
   top: Tipus
+system_tray:
+  drag_reorder: Luba lohistamise ümberjärjestamine
+  icon_size: Ikooni suurus
+  icon_spacing: Ikoonide vahe
+  label: Süsteemi salv
+  offline_pinned: Võrguühenduseta kinnitatud ikoonid
+  offline_pinned.disabled: Näita keelatud
+  offline_pinned.hide: Peida
+  overflow_arrow: Ülevoolunool
+  pinned_position: Kinnitatud ikoonide asukoht
+  pinned_position.after: Pärast ülevoolu nool
+  pinned_position.before: Enne ülevoolu nool
+  show_tooltips: Näita vihjeid
 toolbar:
   auto_hide: Automaatne peida
   auto_hide_touch_disabled: Automaatne peitmine pole puuteekraaniga seadmetes saadaval
@@ -393,7 +404,7 @@ weg:
   import_from_taskbar:
     button: Importige Windowsi tegumiribalt
     label: Kinnitatud üksuste importimine
-  import_no_items: Windowsi tegumiribal ei leitud kinnitatud üksusi
+  import_no_items: Windowsi tegumiribal kinnitatud üksusi ei leitud
   import_success: Windowsi tegumiribalt imporditi edukalt {{count}} üksust
   items:
     gap: Esemete vaheline ruum
@@ -448,7 +459,7 @@ weg:
     max_height: Hüpikakna maksimaalne kõrgus (px)
     max_rows: Max ridu enne kerimist
     max_width: Hüpikakna maksimaalne laius (px)
-    min_columns: Minimaalsed veerud
+    min_columns: Min veerud
     nearest_first: Lähim-esimene projektsioon
     ordering: Tellimine
     ordering_alphabetical: Tähestikuline
@@ -461,7 +472,7 @@ weg:
     prepared_entries: Mälu eelarve (KiB)
     prewarm: Eelsoe vaade
     radius: Äärise raadius (px)
-    stale_while_refresh: Aeg-kui-värskenda
+    stale_while_refresh: Vananenud-värskenda
     titles: Pealkirjad
     titles_hidden: Peidetud
     titles_one_line: Üks rida
@@ -475,15 +486,15 @@ weg:
 welcome:
   give_a_review: Andke ülevaade
   message: >-
-    Seelen UI on tasuta ja avatud lähtekoodiga töölauakeskkond Windowsi jaoks.
-    Siin on teil täielik kontroll selle üle, kuidas teie töölaud välja näeb ja
+    NAI OS on tasuta ja avatud lähtekoodiga töölauakeskkond Windowsi jaoks. Siin
+    on teil täielik kontroll selle üle, kuidas teie töölaud välja näeb ja
     käitub, võimaldades teil kohandada iga detaili oma töövoo ja stiiliga
     sobivaks.
   ok: Alustame!
   review: >-
-    Kui teile meeldib Seeleni kasutajaliidese kasutamine, kaaluge poes arvustuse
-    jätmist – teie tagasiside aitab projektil kasvada ja täiustada.
-  title: Tere tulemast Seeleni kasutajaliidese!
+    Kui teile meeldib NAI OS-i kasutamine, kaaluge poes arvustuse jätmist – teie
+    tagasiside aitab projektil kasvada ja täiustada.
+  title: Tere tulemast NAI OS-i!
 widget:
   default_instance: Vaikimisi eksemplar
   default_instance_hint: Alati aktiivne, kasutab juurvidina konfiguratsiooni

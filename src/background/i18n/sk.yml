@@ -56,7 +56,7 @@ runtime:
 service:
   not_running: Služba používateľského rozhrania Seelen nie je spustená
   not_running_description: >-
-    Seelen UI Service (slu-service) je závislosť/pomocník pre správne fungovanie
+    NAI OS Service (slu-service) je závislosť/pomocník pre správne fungovanie
     aplikácie.
   not_running_ok: Spustite službu
 shortcut:

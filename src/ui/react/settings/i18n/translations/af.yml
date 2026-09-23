@@ -37,10 +37,10 @@ apps_configurations:
   export: Uitvoer
   export_full: Uitvoerinstellings volgens aansoek
   extra_info: >-
-    Seelen UI gebruik slegs een identifiseerder per app (eerste wedstryd
-    gevind), dus die volgorde in hoe dit gespesifiseer is, is belangrik, die
-    nuutste bygevoeg sal geprioritiseer word, aangesien die tabel standaard van
-    die nuutste na oud gesorteer is.
+    NAI OS gebruik slegs een identifiseerder per toepassing (eerste passing
+    gevind) so die volgorde in hoe gespesifiseer is belangrik, die nuutste
+    bygevoeg sal geprioritiseer word, aangesien die tabel by verstek gesorteer
+    word van nuutste na oud.
   identifier:
     add_block: Voeg blok by
     and: En
@@ -81,8 +81,8 @@ devtools:
   data_folder: Datapap
   enable: Aktiveer ontwikkelaarsgereedskap
   enable_description: >-
-    Ontsluit gevorderde nutsgoed vir die inspeksie en ontfouting van Seelen
-    UI-interne. Nie bedoel vir gereelde gebruik nie.
+    Ontsluit gevorderde gereedskap vir die inspeksie en ontfouting van NAI
+    OS-interne. Nie bedoel vir gereelde gebruik nie.
   icons: Gekas ikone
   install_folder: Installasie -lêergids
   load: Vrag
@@ -120,7 +120,7 @@ devtools:
     widget_id: Widget ID
 discord_banner:
   message: >-
-    Maak kontak met ander Seelen UI-gebruikers, kry hulp, deel temas en bly op
+    Maak kontak met ander NAI OS-gebruikers, kry hulp, deel temas en bly op
     hoogte van die jongste nuus.
   title: Sluit aan by ons gemeenskap
 extras:
@@ -169,9 +169,9 @@ general:
     plugged: Ingeprop of laai
   polling_interval: Stelselpeilingsinterval
   polling_interval_description: >-
-    Hoe gereeld (in sekondes) Seelen UI stelselhulpbronne soos SVE, RAM, netwerk
-    en skyfaktiwiteit nagaan. 'n Kleiner getal beteken meer gereelde
-    opdaterings, maar effens hoër hulpbrongebruik.
+    Hoe gereeld (in sekondes) NAI OS stelselhulpbronne soos SVE, RAM, netwerk en
+    skyfaktiwiteit nagaan. 'n Kleiner getal beteken meer gereelde opdaterings,
+    maar effens hoër hulpbrongebruik.
   saturday: Saterdag
   start_of_week: Begin van week
   startup: Hardloop met opstart?
@@ -224,9 +224,7 @@ reset_configurations: Stel konfigurasies terug
 reset_to_default: Stel weer in standaardwaarde
 resources:
   affected_widgets: Geaffekteerde widgets
-  app_outdated: >-
-    Hierdie hulpbron vereis dat 'n nuwer weergawe van Seelen UI behoorlik moet
-    werk.
+  app_outdated: Hierdie hulpbron vereis 'n nuwer weergawe van NAI OS om behoorlik te werk.
   coming_soon: Binnekort
   corrupted_wallpaper: Kon nie kleinkiekie onttrek nie - korrupte of ongesteunde videoformaat
   delete: Vee hulpbron uit
@@ -237,8 +235,8 @@ resources:
   included_plugins: Ingesluit plugins
   open_folder: Open Resource Folder
   outdated: >-
-    Hierdie hulpbron is ontwerp vir 'n ouer weergawe van Seelen UI en werk
-    moontlik nie behoorlik nie.
+    Hierdie hulpbron is ontwerp vir 'n ouer weergawe van NAI OS en sal dalk nie
+    behoorlik werk nie.
   see_on_website: Sien op webwerf
   update_now: Dateer op
   updates_available: Opdaterings beskikbaar
@@ -246,7 +244,7 @@ resources:
 review_request:
   not_now: Nie nou nie
   sure: Sekerlik!
-  title: Geniet jy van Seelen UI?
+  title: Geniet jy NAI OS?
 save: Red
 save_and_restart: Stoor en herbegin
 search: Soek
@@ -266,8 +264,8 @@ shortcuts:
     los.
   enable: Aktiveer ingeboude kortpadstelsel
   enable_tooltip: >-
-    Deaktiveer as u u eie kortpadstelsel met behulp van die Seelen UI -kliënt
-    implementeer
+    Deaktiveer as jy jou eie kortpaaie-stelsel sal implementeer deur die NAI
+    OS-kliënt te gebruik
   labels:
     create_new_workspace: Skep nuwe werkruimte
     create_new_workspace_row: Skep nuwe werkruimtery
@@ -293,6 +291,19 @@ sides:
   left: Links
   right: Regs
   top: Top
+system_tray:
+  drag_reorder: Aktiveer sleepherrangskikking
+  icon_size: Ikoon grootte
+  icon_spacing: Ikoonspasiëring
+  label: System Tray
+  offline_pinned: Vanlyn vasgespelde ikone
+  offline_pinned.disabled: Wys gedeaktiveer
+  offline_pinned.hide: Versteek
+  overflow_arrow: Oorlooppyltjie
+  pinned_position: Vasgespelde ikone posisie
+  pinned_position.after: Na oorloop pyl
+  pinned_position.before: Voor oorloop pyl
+  show_tooltips: Wys nutswenke
 toolbar:
   auto_hide: Outomatiese vel
   auto_hide_touch_disabled: Outo-versteek is nie op raakskermtoestelle beskikbaar nie
@@ -478,14 +489,14 @@ weg:
 welcome:
   give_a_review: Gee 'n resensie
   message: >-
-    Seelen UI is 'n gratis en oopbron lessenaaromgewing vir Windows. Hier het jy
+    NAI OS is 'n gratis en oopbron lessenaaromgewing vir Windows. Hier het jy
     volle beheer oor hoe jou lessenaar lyk en optree, sodat jy elke detail kan
     aanpas om by jou werkvloei en styl te pas.
   ok: Kom ons begin!
   review: >-
-    As jy daarvan hou om Seelen UI te gebruik, oorweeg dit om 'n resensie in die
+    As jy daarvan hou om NAI OS te gebruik, oorweeg dit om 'n resensie in die
     winkel te gee - jou terugvoer help die projek om te groei en te verbeter.
-  title: Welkom by Seelen UI!
+  title: Welkom by NAI OS!
 widget:
   default_instance: Verstek instansie
   default_instance_hint: Altyd aktief, gebruik die wortellegstukopstelling

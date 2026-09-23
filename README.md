@@ -1,6 +1,6 @@
 <h1 align="center">
-  <img src="documentation/images/logo.svg" width="44" align="top" alt="Seelen UI Logo" />
-  Seelen UI
+  <img src="documentation/images/logo.svg" width="44" align="top" alt="NAI OS Logo" />
+  NAI OS
 </h1>
 
 <h2 align="center">
@@ -11,14 +11,14 @@
 
 <div align="center">
 
-[![Contributors](https://img.shields.io/github/contributors/eythaann/seelen-ui.svg)](https://github.com/eythaann/seelen-ui/graphs/contributors)
-[![Last Commit](https://img.shields.io/github/last-commit/eythaann/seelen-ui.svg)](https://github.com/eythaann/seelen-ui/commits/main)
-[![Version](https://img.shields.io/github/v/release/eythaann/seelen-ui.svg)](https://github.com/eythaann/seelen-ui/releases)
-[![Downloads](https://img.shields.io/github/downloads/eythaann/seelen-ui/total.svg)](https://github.com/eythaann/seelen-ui/releases)
+[![Contributors](https://img.shields.io/github/contributors/eythaann/Seelen-UI.svg)](https://github.com/eythaann/Seelen-UI/graphs/contributors)
+[![Last Commit](https://img.shields.io/github/last-commit/eythaann/Seelen-UI.svg)](https://github.com/eythaann/Seelen-UI/commits/main)
+[![Version](https://img.shields.io/github/v/release/eythaann/Seelen-UI.svg)](https://github.com/eythaann/Seelen-UI/releases)
+[![Downloads](https://img.shields.io/github/downloads/eythaann/Seelen-UI/total.svg)](https://github.com/eythaann/Seelen-UI/releases)
 
 </div>
 
-<img src="./documentation/images/preview.png" width="100%" alt="Screenshot of Seelen UI desktop showing a customized desktop environment">
+<img src="./documentation/images/preview.png" width="100%" alt="Screenshot of NAI OS desktop showing a customized desktop environment">
 
 <table align="center">
   <tr>
@@ -27,8 +27,8 @@
         href="https://apps.microsoft.com/detail/Seelen%20UI/9p67c2d4t9fb?mode=full"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Download Seelen UI from Microsoft Store">
-        <img src="https://get.microsoft.com/images/en-us%20dark.svg" width="100%" alt="Download Seelen UI from Microsoft Store">
+        aria-label="Download NAI OS from Microsoft Store">
+        <img src="https://get.microsoft.com/images/en-us%20dark.svg" width="100%" alt="Download NAI OS from Microsoft Store">
       </a>
     </td>
     <td align="center" width="33%">
@@ -36,8 +36,8 @@
         href="https://discord.seelen.io"
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Join the Seelen UI Discord community">
-        <img src="./documentation/images/discord-alt.png" width="100%" alt="Join the Seelen UI Discord community">
+        aria-label="Join the NAI OS Discord community">
+        <img src="./documentation/images/discord-alt.png" width="100%" alt="Join the NAI OS Discord community">
       </a>
     </td>
     <td align="center" width="33%">
@@ -55,14 +55,14 @@
 
 ---
 
-## What is Seelen UI?
+## What is NAI OS?
 
-[Seelen UI](https://seelen.io/apps/seelen-ui) is a full desktop environment replacement for Windows — not a theme pack,
-not a skin, but a complete rethink of how your desktop looks and works. Every element you interact with daily — the
-taskbar, the dock, the app launcher, the window manager, the notification flyouts, the virtual desktops — can be
-replaced, restyled, and extended to exactly match your vision and workflow.
+[NAI OS](https://seelen.io/apps/NAI OS) is a full desktop environment replacement for Windows — not a theme pack, not a
+skin, but a complete rethink of how your desktop looks and works. Every element you interact with daily — the taskbar,
+the dock, the app launcher, the window manager, the notification flyouts, the virtual desktops — can be replaced,
+restyled, and extended to exactly match your vision and workflow.
 
-Whether you want a minimal, distraction-free setup or a feature-rich power-user environment, Seelen UI gives you the
+Whether you want a minimal, distraction-free setup or a feature-rich power-user environment, NAI OS gives you the
 primitives to build it. With a CSS/JSON-based theming engine, a plugin widget system, and deep Windows integration, the
 only limit is your imagination.
 
@@ -72,16 +72,16 @@ only limit is your imagination.
 
 ### Themes & Visual Identity
 
-Make Windows look the way you always wanted. Seelen UI ships with a powerful theming engine that lets you craft or
-install community themes covering every surface of the shell — colors, fonts, borders, animations, and more.
+Make Windows look the way you always wanted. NAI OS ships with a powerful theming engine that lets you craft or install
+community themes covering every surface of the shell — colors, fonts, borders, animations, and more.
 
-![Seelen UI Custom Theme](./documentation/images/theme_preview.png)
+![NAI OS Custom Theme](./documentation/images/theme_preview.png)
 
 <br/>
 
 ### Dynamic Accent Color
 
-Set your accent color once and forget it. Seelen UI analyzes your wallpaper in real time and automatically derives a
+Set your accent color once and forget it. NAI OS analyzes your wallpaper in real time and automatically derives a
 harmonious accent color, keeping every shell element visually in sync with your background — no manual tweaking needed.
 
 <table>
@@ -99,10 +99,10 @@ harmonious accent color, keeping every shell element visually in sync with your 
 
 ### Tiling Window Manager
 
-Stop dragging windows. Seelen UI's tiling window manager automatically arranges your open applications into efficient,
+Stop dragging windows. NAI OS's tiling window manager automatically arranges your open applications into efficient,
 gap-controlled layouts. Resize, swap, and navigate entirely from the keyboard — your hands never leave the keys.
 
-![Seelen UI Tiling Window Manager](./documentation/images/twm_preview.png)
+![NAI OS Tiling Window Manager](./documentation/images/twm_preview.png)
 
 <br/>
 
@@ -111,7 +111,7 @@ gap-controlled layouts. Resize, swap, and navigate entirely from the keyboard �
 Bring information to your desktop without opening apps. Place clocks, system monitors, media controls, weather panels,
 and any custom widget directly on your wallpaper layer — fully theme-aware and always within sight.
 
-![Seelen UI Desktop Widgets](./documentation/images/desktop_widgets.png)
+![NAI OS Desktop Widgets](./documentation/images/desktop_widgets.png)
 
 <br/>
 
@@ -120,7 +120,7 @@ and any custom widget directly on your wallpaper layer — fully theme-aware and
 Launch anything instantly with a keyboard-driven launcher inspired by [Rofi](https://github.com/davatorium/rofi). Apps,
 files, shell commands, custom scripts — surfaced with fuzzy search in milliseconds.
 
-![Seelen UI App Launcher](./documentation/images/app_launcher_preview.png)
+![NAI OS App Launcher](./documentation/images/app_launcher_preview.png)
 
 <br/>
 
@@ -129,7 +129,7 @@ files, shell commands, custom scripts — surfaced with fuzzy search in millisec
 Control your music without switching windows. The integrated media module works with virtually every player and lets you
 play, pause, skip, and scrub from any context, always accessible in the toolbar or as a dedicated widget.
 
-![Seelen UI Media Module](./documentation/images/media_module_preview.png)
+![NAI OS Media Module](./documentation/images/media_module_preview.png)
 
 <br/>
 
@@ -138,7 +138,7 @@ play, pause, skip, and scrub from any context, always accessible in the toolbar 
 One unified place to configure everything. Themes, layouts, keybindings, widget positions, workspace rules, per-app
 overrides — all accessible through a clean, searchable settings interface with live preview.
 
-![Seelen UI Settings](./documentation/images/settings_preview.png)
+![NAI OS Settings](./documentation/images/settings_preview.png)
 
 ---
 
@@ -206,9 +206,9 @@ overrides — all accessible through a clean, searchable settings interface with
 ## Installation
 
 > [!CAUTION]
-> Seelen UI requires the WebView runtime to be installed. On Windows 11, it comes pre-installed with the system.
-> However, on Windows 10, the WebView runtime is included with the `setup.exe` installer. Additionally, Microsoft Edge
-> is necessary to function correctly. Some users may have modified their system and removed Edge, so please ensure both
+> NAI OS requires the WebView runtime to be installed. On Windows 11, it comes pre-installed with the system. However,
+> on Windows 10, the WebView runtime is included with the `setup.exe` installer. Additionally, Microsoft Edge is
+> necessary to function correctly. Some users may have modified their system and removed Edge, so please ensure both
 > Edge and the WebView runtime are installed on your system.
 
 > [!NOTE]
@@ -234,7 +234,7 @@ via the `winget-pkgs` project.
 
 ### GitHub Releases (.msix / .exe)
 
-Download the latest installer directly from the [Releases](https://github.com/eythaann/seelen-ui/releases) page. Both
+Download the latest installer directly from the [Releases](https://github.com/eythaann/Seelen-UI/releases) page. Both
 the `.msix` and `.exe` packages are signed. GitHub releases land immediately after a new version ships, ahead of Store
 and Winget. The `.exe` installer also delivers in-app update notifications.
 
@@ -242,10 +242,10 @@ and Winget. The `.exe` installer also delivers in-app update notifications.
 
 ## Getting Started
 
-Once installed, open Seelen UI and the settings interface will guide you through the initial setup. Enable the
-components you want — toolbar, dock, tiling manager, widgets — and start customizing from there. The
-[official documentation](https://seelen.io/apps/seelen-ui) and the [Discord community](https://discord.seelen.io) are
-the best places to go deeper.
+Once installed, open NAI OS and the settings interface will guide you through the initial setup. Enable the components
+you want — toolbar, dock, tiling manager, widgets — and start customizing from there. The [official
+documentation](https://seelen.io/apps/NAI OS) and the [Discord community](https://discord.seelen.io) are the best places
+to go deeper.
 
 ---
 
@@ -265,7 +265,7 @@ For inquiries and support, join us on [Discord](https://discord.seelen.io).
 
 ## Sponsors
 
-We're grateful for the support of our sponsors who help make Seelen UI possible.
+We're grateful for the support of our sponsors who help make NAI OS possible.
 
 |                                                                                                         Sponsor                                                                                                          | Description                                                                                                  |
 | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------------- |

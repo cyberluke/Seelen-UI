@@ -33,7 +33,7 @@ apps_configurations:
   delete: 删除
   export: 导出
   export_full: 按应用程序导出设置
-  extra_info: Seelen UI 对每个应用仅使用一个标识符（找到的第一个匹配项），因此指定的顺序很重要，最新添加的将优先处理，请注意表格默认按从新到旧排序。
+  extra_info: NAI OS 对每个应用仅使用一个标识符（找到的第一个匹配项），因此指定的顺序很重要，最新添加的将优先处理，请注意表格默认按从新到旧排序。
   identifier:
     add_block: 添加块
     and: 与
@@ -69,7 +69,7 @@ devtools:
   custom_config_file: 加载自定义配置文件
   data_folder: 数据文件夹
   enable: 启用开发者工具
-  enable_description: 解锁用于检查和调试 Seelen UI 内部结构的高级工具。 不适合常规使用。
+  enable_description: 解锁用于检查和调试 NAI OS 内部结构的高级工具。 不适合常规使用。
   icons: 缓存图标
   install_folder: 安装文件夹
   load: 加载
@@ -102,7 +102,7 @@ devtools:
     tab: 小部件
     widget_id: 小部件 ID
 discord_banner:
-  message: 与其他 Seelen UI 用户联系、获取帮助、分享主题并了解最新消息。
+  message: 与其他 NAI OS 用户联系、获取帮助、分享主题并了解最新消息。
   title: 加入我们的社区
 extras:
   backup_group: 云备份
@@ -141,7 +141,7 @@ general:
       minimal: 最小
     plugged: 插电或充电时
   polling_interval: 系统轮询间隔
-  polling_interval_description: Seelen UI 检查 CPU、RAM、网络和磁盘活动等系统资源的频率（以秒为单位）。 数字越小意味着更新越频繁，但资源使用率会稍高。
+  polling_interval_description: NAI OS 检查 CPU、RAM、网络和磁盘活动等系统资源的频率（以秒为单位）。 数字越小意味着更新越频繁，但资源使用率会稍高。
   saturday: 周六
   start_of_week: 一周的开始
   startup: 开机自启
@@ -191,7 +191,7 @@ reset_configurations: 重置配置
 reset_to_default: 重置为默认值
 resources:
   affected_widgets: 受影响的小部件
-  app_outdated: 该资源需要较新版本的 Seelen UI 才能正常使用。
+  app_outdated: 该资源需要较新版本的 NAI OS 才能正常使用。
   coming_soon: 即将推出
   corrupted_wallpaper: 无法提取缩略图 - 视频格式已损坏或不受支持
   delete: 删除资源
@@ -201,7 +201,7 @@ resources:
   import_wallpapers: 导入本地壁纸
   included_plugins: 包含的插件
   open_folder: 打开资源文件夹
-  outdated: 此资源是为旧版本的 Seelen UI 设计的，可能无法正常使用。
+  outdated: 此资源是为旧版本的 NAI OS 设计的，可能无法正常使用。
   see_on_website: 在网站中查看
   update_now: 更新
   updates_available: 可用更新
@@ -209,7 +209,7 @@ resources:
 review_request:
   not_now: 暂时不是
   sure: 当然！
-  title: 喜欢 Seelen UI 吗？
+  title: 喜欢 NAI OS 吗？
 save: 保存
 save_and_restart: 保存并重启
 search: 搜索
@@ -225,7 +225,7 @@ shortcuts:
   duplicate_error: 检测到冲突的快捷方式
   duplicate_error_hint: 有些快捷键被分配给多个操作。禁用冲突的小部件之一或重新分配重复的键绑定来解决。
   enable: 启用内置快捷键系统
-  enable_tooltip: 如果您使用 Seelen UI 客户端实现自己的快捷键系统，那么请禁用此项。
+  enable_tooltip: 如果您使用 NAI OS 客户端实现自己的快捷键系统，那么请禁用此项。
   labels:
     create_new_workspace: 创建工作区
     destroy_current_workspace: 销毁当前工作区
@@ -364,11 +364,11 @@ weg:
 welcome:
   give_a_review: 发表评论
   message: >-
-    Seelen UI 是一个适用于 Windows 的免费开源桌面环境。
+    NAI OS 是一个适用于 Windows 的免费开源桌面环境。
     在这里，您可以完全控制桌面的外观和行为，允许您自定义每个细节以匹配您的工作流程和风格。
   ok: 让我们开始吧！
-  review: 如果您喜欢使用 Seelen UI，请考虑在商店中留下评论 - 您的反馈有助于项目的成长和改进。
-  title: 欢迎来到Seelen UI！
+  review: 如果您喜欢使用 NAI OS，请考虑在商店中留下评论 - 您的反馈有助于项目的成长和改进。
+  title: 欢迎来到NAI OS！
 widget:
   default_instance: 默认实例
   default_instance_hint: 始终处于活动状态，使用根小部件配置

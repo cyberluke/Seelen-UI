@@ -16,7 +16,7 @@
   role="button"
   tabindex="0"
   data-plugin-id="@seelen/tb-seelen-launcher"
-  data-tooltip="Seelen UI"
+  data-tooltip="NAI OS"
   data-tooltip-align-x="Center"
   data-tooltip-align-y={settingsState.tooltipAlignY}
   data-tooltip-origin-y={settingsState.tooltipOriginY}

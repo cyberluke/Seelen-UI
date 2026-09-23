@@ -37,7 +37,7 @@ apps_configurations:
   export: Esporta
   export_full: Esportazione delle impostazioni per applicazione
   extra_info: >-
-    Seelen UI utilizza solo un identificatore per app (primo corrispondente
+    NAI OS utilizza solo un identificatore per app (primo corrispondente
     trovato), quindi l'ordine in cui sono specificate è importante; l'ultima
     aggiunta avrà la priorità. Nota che la tabella è ordinata per impostazione
     predefinita dalla più recente alla più vecchia.
@@ -173,7 +173,7 @@ general:
     plugged: Collegato o ricarica
   polling_interval: Intervallo di polling del sistema
   polling_interval_description: >-
-    La frequenza con cui (in secondi) Seelen UI controlla le risorse di sistema
+    La frequenza con cui (in secondi) NAI OS controlla le risorse di sistema
     come CPU, RAM, rete e attività del disco. Un numero inferiore indica
     aggiornamenti più frequenti, ma un utilizzo delle risorse leggermente
     superiore.
@@ -231,7 +231,7 @@ reset_to_default: Ripristino del valore predefinito
 resources:
   affected_widgets: Widget interessati
   app_outdated: >-
-    Questa risorsa richiede una versione più recente di Seelen UI per funzionare
+    Questa risorsa richiede una versione più recente di NAI OS per funzionare
     correttamente.
   coming_soon: Prossimamente
   corrupted_wallpaper: >-
@@ -245,7 +245,7 @@ resources:
   included_plugins: Plugin inclusi
   open_folder: Aprire la cartella delle risorse
   outdated: >-
-    Questa risorsa è stata progettata per una versione precedente di Seelen UI e
+    Questa risorsa è stata progettata per una versione precedente di NAI OS e
     potrebbe non funzionare correttamente.
   see_on_website: Vedi sul sito web
   update_now: Aggiornamento
@@ -489,7 +489,7 @@ weg:
 welcome:
   give_a_review: Dai una recensione
   message: >-
-    Seelen UI è un ambiente desktop gratuito e open source per Windows. Qui hai
+    NAI OS è un ambiente desktop gratuito e open source per Windows. Qui hai
     il pieno controllo sull'aspetto e sul comportamento del tuo desktop,
     permettendoti di personalizzare ogni dettaglio per adattarlo al tuo flusso
     di lavoro e al tuo stile.

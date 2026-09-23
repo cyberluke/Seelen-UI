@@ -9,7 +9,7 @@ cancel: Stornieren
 done: Erledigt
 elevated:
   description: >-
-    Seelen UI läuft mit Administratorrechten.
+    NAI OS läuft mit Administratorrechten.
 
     Dadurch werden keine Funktionen hinzugefügt oder verbessert und es kann ein
     Sicherheitsrisiko darstellen.
@@ -42,7 +42,7 @@ runtime:
     Dies kann passieren, wenn Dateien geändert oder beschädigt wurden oder die
     Installation unvollständig ist.
 
-    Aus Sicherheitsgründen kann Seelen UI nicht fortgesetzt werden.
+    Aus Sicherheitsgründen kann NAI OS nicht fortgesetzt werden.
 
     Bitte installieren Sie es erneut von der offiziellen Website.
   files_integrity_title: Sicherheitswarnung – Dateiintegritätsprüfung fehlgeschlagen
@@ -55,9 +55,9 @@ runtime:
     Für die Seelen-Benutzeroberfläche ist Webview2 Runtime %{min_version} oder
     höher erforderlich. Bitte aktualisieren Sie es.
 service:
-  not_running: Der Seelen-UI-Dienst läuft nicht
+  not_running: Der NAI OS-Dienst läuft nicht
   not_running_description: >-
-    Der Seelen UI Service (slu-service) ist eine Abhängigkeit/Helfer für die
+    Der NAI OS Service (slu-service) ist eine Abhängigkeit/Helfer für die
     ordnungsgemäße Funktion der App.
   not_running_ok: Dienst starten
 shortcut:

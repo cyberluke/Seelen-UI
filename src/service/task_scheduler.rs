@@ -17,8 +17,10 @@ use crate::{
 pub struct TaskSchedulerHelper {}
 
 static GROUP_FOLDER: &str = "\\Seelen";
-static OLD_APP_TASK_NAME: &str = "Seelen-UI";
-static SERVICE_TASK_NAME: &str = "Seelen UI Service";
+static OLD_APP_TASK_NAME: &str = "NAI OS";
+static SERVICE_TASK_NAME: &str = "NAI OS Service";
+/// names registered by older builds; cleaned up on every (re)registration
+static LEGACY_TASK_NAMES: [&str; 3] = ["Seelen UI", "Seelen-UI", "Seelen UI Service"];
 
 impl TaskSchedulerHelper {
     unsafe fn get_task_service() -> Result<ITaskService> {
@@ -64,8 +66,12 @@ impl TaskSchedulerHelper {
             // remove old task as backwards compatibility
             let mut old_task = None;
             if let Ok(seelen_folder) = task_service.GetFolder(&GROUP_FOLDER.into()) {
-                let _ = seelen_folder.DeleteTask(&OLD_APP_TASK_NAME.into(), 0);
                 old_task = seelen_folder.GetTask(&OLD_APP_TASK_NAME.into()).ok();
+                let _ = seelen_folder.DeleteTask(&OLD_APP_TASK_NAME.into(), 0);
+                for legacy in LEGACY_TASK_NAMES {
+                    old_task = old_task.or_else(|| seelen_folder.GetTask(&legacy.into()).ok());
+                    let _ = seelen_folder.DeleteTask(&legacy.into(), 0);
+                }
             };
             let root_folder = task_service.GetFolder(&"\\".into())?;
 

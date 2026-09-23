@@ -1,6 +1,6 @@
-Seelen UI - Individual Contributor License Agreement (CLA)
+NAI OS - Individual Contributor License Agreement (CLA)
 
-Thank you for your interest in contributing to the Seelen UI project. By submitting a contribution to the Project, you
+Thank you for your interest in contributing to the NAI OS project. By submitting a contribution to the Project, you
 agree to the following terms and conditions:
 
 1. Grant of License: By submitting a contribution to the Project, you grant the Project Owner a non-exclusive,

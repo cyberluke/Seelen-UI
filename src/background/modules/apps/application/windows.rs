@@ -236,7 +236,7 @@ pub fn is_interactable_window(window: &Window) -> bool {
         return false;
     }
 
-    // Internal behaviour for seelen ui widgets:
+    // Internal behaviour for NAI OS widgets:
     // Discard unminimizable windows (they have no caption/title bar)
     if !style.contains(WS_MINIMIZEBOX) && process.is_seelen() {
         return false;

@@ -1,5 +1,5 @@
 // Main build orchestrator
-// This file coordinates the build process for Seelen UI applications
+// This file coordinates the build process for NAI OS applications
 
 import { parseArgs } from "./build/config.ts";
 import { extractIcons } from "./build/steps/icons.ts";

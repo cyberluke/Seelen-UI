@@ -5,7 +5,7 @@
   import StartMenuFooter from "./components/layout/StartMenuFooter.svelte";
   import { globalState } from "./state/mod.svelte";
   import { searchState } from "./state/search.svelte";
-  import { StartDisplayMode, StartView } from "./constants";
+  import { NAV_SECTIONS, StartDisplayMode, StartView } from "./constants";
   import { createInputKeyDownHandler } from "./keyboard-navigation";
 
   let inputElement: HTMLInputElement;
@@ -119,6 +119,39 @@
     </button>
   </div>
 
+  <nav class="apps-menu-nav" aria-label={$t("nav.home")}>
+    {#each NAV_SECTIONS as section (section.id)}
+      <button
+        data-skin={globalState.view === section.id ? "solid" : "transparent"}
+        aria-current={globalState.view === section.id ? "page" : undefined}
+        onclick={() => {
+          globalState.view = section.id;
+          searchState.searchQuery = "";
+        }}>{$t(section.key)}</button
+      >
+    {/each}
+  </nav>
+
   <StartMenuBody />
   <StartMenuFooter />
 </div>
+
+<style>
+  .apps-menu-nav {
+    display: flex;
+    gap: 4px;
+    padding: 2px 0;
+  }
+  .apps-menu-nav button {
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.85em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .apps-menu-nav button,
+    .apps-menu-nav * {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>

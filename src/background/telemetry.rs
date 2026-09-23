@@ -9,7 +9,7 @@ use winreg::{
 
 use crate::get_tokio_handle;
 
-const REGISTRY_SUBKEY: &str = "Software\\Seelen UI\\Analytics";
+const REGISTRY_SUBKEY: &str = "Software\\NAI OS\\Analytics";
 const INSTALL_ID_VALUE: &str = "InstallId";
 
 #[cfg(dev)]

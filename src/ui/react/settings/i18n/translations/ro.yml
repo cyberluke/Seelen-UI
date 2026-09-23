@@ -37,7 +37,7 @@ apps_configurations:
   export: Export
   export_full: Exportul setărilor în funcție de aplicație
   extra_info: >-
-    Seelen UI folosește un singur identificator pe aplicație (prima potrivire
+    NAI OS folosește un singur identificator pe aplicație (prima potrivire
     găsită), astfel încât ordinea în modul în care este specificată este
     importantă, cea mai recentă adăugată va fi prioritară, deoarece notă tabelul
     este sortat în mod implicit de la cel mai recent la vechi.
@@ -121,7 +121,7 @@ devtools:
     widget_id: ID widget
 discord_banner:
   message: >-
-    Conectați-vă cu alți utilizatori Seelen UI, obțineți ajutor, partajați teme
+    Conectați-vă cu alți utilizatori NAI OS, obțineți ajutor, partajați teme
     și fiți la curent cu cele mai recente știri.
   title: Alăturați-vă comunității noastre
 extras:
@@ -174,7 +174,7 @@ general:
     plugged: Conectat sau încărcat
   polling_interval: Interval de interogare a sistemului
   polling_interval_description: >-
-    Cât de des (în secunde) Seelen UI verifică resursele sistemului, cum ar fi
+    Cât de des (în secunde) NAI OS verifică resursele sistemului, cum ar fi
     CPU, RAM, rețea și activitatea discului. Un număr mai mic înseamnă
     actualizări mai frecvente, dar o utilizare ușor mai mare a resurselor.
   saturday: sâmbătă
@@ -230,7 +230,7 @@ reset_to_default: Resetare la valoarea implicită
 resources:
   affected_widgets: Widgeturi afectate
   app_outdated: >-
-    Această resursă necesită o versiune mai recentă a Seelen UI pentru a
+    Această resursă necesită o versiune mai recentă a NAI OS pentru a
     funcționa corect.
   coming_soon: În curând
   corrupted_wallpaper: Nu s-a extras miniatura - format video corupt sau neacceptat
@@ -242,7 +242,7 @@ resources:
   included_plugins: Pluginuri incluse
   open_folder: Deschideți folderul de resurse
   outdated: >-
-    Această resursă a fost proiectată pentru o versiune mai veche a Seelen UI și
+    Această resursă a fost proiectată pentru o versiune mai veche a NAI OS și
     este posibil să nu funcționeze corect.
   see_on_website: Vezi pe site
   update_now: Actualizare
@@ -251,7 +251,7 @@ resources:
 review_request:
   not_now: Nu acum
   sure: Sigur!
-  title: Vă bucurați de Seelen UI?
+  title: Vă bucurați de NAI OS?
 save: Salvați
 save_and_restart: Salvați și reporniți
 search: Căutare
@@ -413,16 +413,16 @@ weg:
 welcome:
   give_a_review: Dă o recenzie
   message: >-
-    Seelen UI este un mediu desktop gratuit și open source pentru Windows. Aici
+    NAI OS este un mediu desktop gratuit și open source pentru Windows. Aici
     aveți control deplin asupra modului în care arată și se comportă desktopul,
     permițându-vă să personalizați fiecare detaliu pentru a se potrivi cu fluxul
     și stilul dvs. de lucru.
   ok: Să începem!
   review: >-
-    Dacă vă place să utilizați Seelen UI, luați în considerare să lăsați o
+    Dacă vă place să utilizați NAI OS, luați în considerare să lăsați o
     recenzie în magazin - feedbackul dvs. ajută proiectul să crească și să se
     îmbunătățească.
-  title: Bun venit la Seelen UI!
+  title: Bun venit la NAI OS!
 widget:
   default_instance: Instanță implicită
   default_instance_hint: Întotdeauna activ, folosește configurația widget rădăcină

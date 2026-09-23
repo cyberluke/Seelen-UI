@@ -36,7 +36,7 @@ use crate::{app_management::launch_seelen_ui, hotkeys::stop_app_shortcuts};
 pub static SERVICE_NAME: LazyLock<WindowsString> =
     LazyLock::new(|| WindowsString::from_str("slu-service"));
 pub static SERVICE_DISPLAY_NAME: LazyLock<WindowsString> =
-    LazyLock::new(|| WindowsString::from_str("Seelen UI Service"));
+    LazyLock::new(|| WindowsString::from_str("NAI OS Service"));
 
 static ASYNC_RUNTIME_HANDLE: OnceLock<tokio::runtime::Handle> = OnceLock::new();
 
@@ -97,7 +97,7 @@ pub fn setup() -> Result<()> {
 fn is_svc_already_running() -> bool {
     unsafe {
         let session_id = WindowsApi::current_session_id();
-        let mutex_name = format!("Local\\Seelen-UI-Service-Instance-{}", session_id);
+        let mutex_name = format!("Local\\NAI-OS-Service-Instance-{}", session_id);
         let mutex_name_wide = WindowsString::from_str(&mutex_name);
 
         // Try to create a named mutex specific to the current session
@@ -139,7 +139,7 @@ async fn main() {
     }
 
     if is_svc_already_running() {
-        println!("Seelen UI Service is already running");
+        println!("NAI OS Service is already running");
         return;
     }
 
@@ -159,7 +159,7 @@ async fn main() {
     let debug = if is_development() { " (debug)" } else { "" };
     let local = if is_local_dev() { " (local)" } else { "" };
     log::info!("──────────────────────────────────────────────────-");
-    log::info!("Starting Seelen UI Service v{version}{local}{debug}");
+    log::info!("Starting NAI OS Service v{version}{local}{debug}");
     log::info!("Arguments: {:?}", std::env::args().collect_vec());
 
     if let Err(err) = setup() {
@@ -176,6 +176,6 @@ async fn main() {
     // shutdown tasks:
     log_error!(restore_native_taskbar());
     stop_app_shortcuts();
-    log::info!("Seelen UI Service exited with code {exit_code}");
+    log::info!("NAI OS Service exited with code {exit_code}");
     std::process::exit(exit_code as i32);
 }

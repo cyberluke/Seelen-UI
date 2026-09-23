@@ -73,7 +73,7 @@ devtools:
   custom_config_file: カスタム構成ファイルをロードする
   data_folder: データのフォルダー
   enable: 開発者ツールを有効にする
-  enable_description: Seelen UI の内部を検査およびデバッグするための高度なツールのロックを解除します。 通常の使用を目的としていません。
+  enable_description: NAI OS の内部を検査およびデバッグするための高度なツールのロックを解除します。 通常の使用を目的としていません。
   icons: キャッシュされたアイコン
   install_folder: アプリのフォルダー
   load: ロード
@@ -106,7 +106,7 @@ devtools:
     tab: ウィジェット
     widget_id: ウィジェットID
 discord_banner:
-  message: 他の Seelen UI ユーザーとつながり、ヘルプを得たり、テーマを共有したり、最新ニュースを入手したりできます。
+  message: 他の NAI OS ユーザーとつながり、ヘルプを得たり、テーマを共有したり、最新ニュースを入手したりできます。
   title: コミュニティに参加してください
 extras:
   backup_group: クラウドバックアップ
@@ -151,7 +151,7 @@ general:
     plugged: 電源接続時
   polling_interval: システムのポーリング間隔
   polling_interval_description: >-
-    Seelen UI が CPU、RAM、ネットワーク、ディスク アクティビティなどのシステム リソースをチェックする頻度 (秒単位)。
+    NAI OS が CPU、RAM、ネットワーク、ディスク アクティビティなどのシステム リソースをチェックする頻度 (秒単位)。
     数値が小さいほど、更新頻度は高くなりますが、リソース使用量がわずかに高くなります。
   saturday: 土曜日
   start_of_week: 週の始まり
@@ -204,7 +204,7 @@ reset_configurations: 設定のリセット
 reset_to_default: デフォルトに戻す
 resources:
   affected_widgets: 影響を受けるウィジェット
-  app_outdated: このリソースが正しく動作するためには、新しいバージョンのSeelen UIが必要です。
+  app_outdated: このリソースが正しく動作するためには、新しいバージョンのNAI OSが必要です。
   coming_soon: 近日公開
   corrupted_wallpaper: サムネイルの抽出に失敗しました - 破損したビデオ形式またはサポートされていないビデオ形式です
   delete: リソースを削除します
@@ -214,7 +214,7 @@ resources:
   import_wallpapers: ローカル壁紙のインポート
   included_plugins: 付属のプラグイン
   open_folder: リソースフォルダを開く
-  outdated: このリソースは古いバージョンのSeelen UI用に設計されており、正しく動作しない可能性があります。
+  outdated: このリソースは古いバージョンのNAI OS用に設計されており、正しく動作しない可能性があります。
   see_on_website: ウェブサイトで見る
   update_now: アップデート
   updates_available: 利用可能なアップデート
@@ -222,7 +222,7 @@ resources:
 review_request:
   not_now: また今度
   sure: もちろん！
-  title: Seelen UI をお楽しみですか？
+  title: NAI OS をお楽しみですか？
 save: 保存
 save_and_restart: 保存して再起動
 search: 検索
@@ -240,7 +240,7 @@ shortcuts:
     一部のショートカットは複数のアクションに割り当てられています。競合するウィジェットの 1 つを無効にするか、重複したキー
     バインドを再割り当てして解決します。
   enable: ビルトインショートカットシステムを有効にします
-  enable_tooltip: Seelen UIクライアントを使用して独自のショートカットシステムを実装する場合は無効にします
+  enable_tooltip: NAI OSクライアントを使用して独自のショートカットシステムを実装する場合は無効にします
   labels:
     create_new_workspace: 新しいワークスペースを作成
     create_new_workspace_row: 新しいワークスペース行の作成
@@ -449,13 +449,13 @@ weg:
 welcome:
   give_a_review: レビューを投稿する
   message: >-
-    Seelen UI は、Windows 用の無料のオープンソース
+    NAI OS は、Windows 用の無料のオープンソース
     デスクトップ環境です。ここでは、デスクトップの外観や動作を完全に制御でき、ワークフローやスタイルに合わせてあらゆる詳細をカスタマイズできます。
   ok: 始めましょう！
   review: >-
-    Seelen UI
+    NAI OS
     の使用を楽しんでいる場合は、ストアにレビューを残すことを検討してください。あなたのフィードバックはプロジェクトの成長と改善に役立ちます。
-  title: Seelen UI へようこそ!
+  title: NAI OS へようこそ!
 widget:
   default_instance: デフォルトのインスタンス
   default_instance_hint: 常にアクティブで、ルート ウィジェット構成を使用します

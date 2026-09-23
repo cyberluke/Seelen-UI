@@ -46,10 +46,10 @@ runtime:
     அதிகாரப்பூர்வ இணையதளத்தில் இருந்து அதை மீண்டும் நிறுவவும்.
   files_integrity_title: பாதுகாப்பு எச்சரிக்கை - கோப்புகளின் ஒருமைப்பாடு சோதனை தோல்வியடைந்தது
   not_found: WebView2 இயக்க நேரம் கிடைக்கவில்லை
-  not_found_description: Seelen UIக்கு Webview2 இயக்க நேரம் தேவை. தயவுசெய்து அதை நிறுவவும்.
+  not_found_description: NAI OSக்கு Webview2 இயக்க நேரம் தேவை. தயவுசெய்து அதை நிறுவவும்.
   outdated: WebView2 இயக்க நேரம் காலாவதியானது
   outdated_description: >-
-    Seelen UI க்கு Webview2 இயக்க நேரம் %{min_version} அல்லது அதற்கு மேல் தேவை.
+    NAI OS க்கு Webview2 இயக்க நேரம் %{min_version} அல்லது அதற்கு மேல் தேவை.
     தயவுசெய்து அதைப் புதுப்பிக்கவும்.
 service:
   not_running: சீலன் UI சேவை இயங்கவில்லை

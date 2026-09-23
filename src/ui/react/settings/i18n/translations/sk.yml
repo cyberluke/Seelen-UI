@@ -270,7 +270,7 @@ shortcuts:
   enable: Povoliť vstavaný systém skratiek
   enable_tooltip: >-
     Zakážte, ak budete implementovať svoj vlastný systém skratiek pomocou
-    klienta Seelen UI klienta
+    klienta NAI OS klienta
   labels:
     create_new_workspace: Vytvorte nový pracovný priestor
     destroy_current_workspace: Zničiť súčasný pracovný priestor
@@ -413,7 +413,7 @@ weg:
 welcome:
   give_a_review: Dajte recenziu
   message: >-
-    Seelen UI je bezplatné a open source desktopové prostredie pre Windows. Tu
+    NAI OS je bezplatné a open source desktopové prostredie pre Windows. Tu
     máte plnú kontrolu nad tým, ako vaša pracovná plocha vyzerá a ako sa správa,
     čo vám umožňuje prispôsobiť každý detail tak, aby zodpovedal vášmu
     pracovnému postupu a štýlu.

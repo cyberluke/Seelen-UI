@@ -8,7 +8,7 @@ cancel: Anulować
 done: Zrobione
 elevated:
   description: >-
-    Seelen UI działa z uprawnieniami administratora.
+    NAI OS działa z uprawnieniami administratora.
 
     Nie dodaje to ani nie ulepsza żadnych funkcji i może stanowić zagrożenie
     bezpieczeństwa.
@@ -56,9 +56,9 @@ runtime:
     Interfejs użytkownika Seelen wymaga środowiska uruchomieniowego Webview2
     %{min_version} lub nowszego. Zaktualizuj je i spróbuj ponownie.
 service:
-  not_running: Usługa Seelen UI nie działa prawidłowo
+  not_running: Usługa NAI OS nie działa prawidłowo
   not_running_description: >-
-    Usługa Seelen UI Service (slu-service) jest zależnością umożliwiającą
+    Usługa NAI OS Service (slu-service) jest zależnością umożliwiającą
     prawidłowe działanie aplikacji.
   not_running_ok: Uruchom usługę
 shortcut:

@@ -8,7 +8,7 @@ cancel: Annuler
 done: Fait
 elevated:
   description: >-
-    Seelen UI fonctionne avec des privilèges d'administrateur.
+    NAI OS fonctionne avec des privilèges d'administrateur.
 
     Cela n’ajoute ni n’améliore aucune fonctionnalité et peut présenter un
     risque de sécurité.
@@ -40,7 +40,7 @@ runtime:
     Cela peut se produire si les fichiers ont été modifiés, corrompus ou si
     l'installation est incomplète.
 
-    Pour des raisons de sécurité, Seelen UI ne peut pas continuer.
+    Pour des raisons de sécurité, NAI OS ne peut pas continuer.
 
     Veuillez le réinstaller depuis le site officiel.
   files_integrity_title: Alerte de sécurité - Échec de la vérification de l'intégrité des fichiers
@@ -55,7 +55,7 @@ runtime:
 service:
   not_running: Le service d'interface utilisateur Seelen ne fonctionne pas
   not_running_description: >-
-    Seelen UI Service (slu-service) est une dépendance/une aide permettant à
+    NAI OS Service (slu-service) est une dépendance/une aide permettant à
     l'application de fonctionner correctement.
   not_running_ok: Démarrer le service
 shortcut:

@@ -37,10 +37,10 @@ apps_configurations:
   export: Ekspor
   export_full: Pengaturan ekspor menurut aplikasi
   extra_info: >-
-    Seelen UI Gunakan hanya satu pengidentifikasi per aplikasi (Pertandingan
-    Pertama Ditemukan) sehingga pesanan dalam bagaimana spesifisasi itu penting,
-    yang ditambahkan terbaru akan diprioritaskan, seperti yang dicatat tabel
-    diurutkan secara default dari yang terbaru ke yang lama.
+    NAI OS hanya menggunakan satu pengidentifikasi per aplikasi (kecocokan
+    pertama ditemukan) sehingga urutan bagaimana spesifikasinya penting, yang
+    terakhir ditambahkan akan diprioritaskan, sebagai catatan tabel diurutkan
+    secara default dari yang terbaru ke yang lama.
   identifier:
     add_block: Tambahkan blok
     and: DAN
@@ -81,8 +81,8 @@ devtools:
   data_folder: Folder Data
   enable: Aktifkan alat pengembang
   enable_description: >-
-    Membuka alat canggih untuk memeriksa dan men-debug internal Seelen UI. Tidak
-    dimaksudkan untuk penggunaan biasa.
+    Membuka kunci alat canggih untuk memeriksa dan men-debug internal OS NAI.
+    Tidak dimaksudkan untuk penggunaan biasa.
   icons: Ikon yang di-cache
   install_folder: Folder Instalasi
   load: Memuat
@@ -120,7 +120,7 @@ devtools:
     widget_id: ID Widget
 discord_banner:
   message: >-
-    Terhubung dengan pengguna Seelen UI lainnya, dapatkan bantuan, berbagi tema,
+    Terhubung dengan pengguna NAI OS lainnya, dapatkan bantuan, berbagi tema,
     dan ikuti terus berita terkini.
   title: Bergabunglah dengan Komunitas kami
 extras:
@@ -172,10 +172,10 @@ general:
     plugged: Terhubung atau pengisian daya
   polling_interval: Interval pemungutan suara sistem
   polling_interval_description: >-
-    Seberapa sering (dalam hitungan detik) Seelen UI memeriksa sumber daya
-    sistem seperti CPU, RAM, jaringan, dan aktivitas disk. Angka yang lebih
-    kecil berarti pembaruan yang lebih sering, namun penggunaan sumber daya
-    sedikit lebih tinggi.
+    Seberapa sering (dalam hitungan detik) NAI OS memeriksa sumber daya sistem
+    seperti CPU, RAM, jaringan, dan aktivitas disk. Angka yang lebih kecil
+    berarti pembaruan yang lebih sering, namun penggunaan sumber daya sedikit
+    lebih tinggi.
   saturday: Sabtu
   start_of_week: Awal Minggu
   startup: Jalankan saat startup?
@@ -229,8 +229,8 @@ reset_to_default: Atur ulang ke nilai default
 resources:
   affected_widgets: Widget yang Terkena Dampak
   app_outdated: >-
-    Sumber daya ini membutuhkan versi terbaru dari Seelen UI agar dapat
-    berfungsi dengan baik.
+    Sumber daya ini memerlukan versi NAI OS yang lebih baru agar dapat berfungsi
+    dengan baik.
   coming_soon: Segera hadir
   corrupted_wallpaper: Gagal mengekstrak thumbnail - format video rusak atau tidak didukung
   delete: Hapus sumber daya
@@ -241,8 +241,8 @@ resources:
   included_plugins: Termasuk Plugin
   open_folder: Buka folder sumber daya
   outdated: >-
-    Sumber daya ini dirancang untuk versi lama Seelen UI dan mungkin tidak
-    berfungsi dengan baik.
+    Sumber daya ini dirancang untuk versi NAI OS yang lebih lama dan mungkin
+    tidak berfungsi dengan baik.
   see_on_website: Lihat di situs web
   update_now: Memperbarui
   updates_available: Pembaruan Tersedia
@@ -250,7 +250,7 @@ resources:
 review_request:
   not_now: Tidak sekarang
   sure: Tentu!
-  title: Menikmati Seelen UI?
+  title: Menikmati NAI OS?
 save: Menyimpan
 save_and_restart: Simpan & restart
 search: Mencari
@@ -271,7 +271,7 @@ shortcuts:
   enable: Aktifkan sistem pintasan bawaan
   enable_tooltip: >-
     Nonaktifkan jika Anda akan mengimplementasikan sistem pintasan Anda sendiri
-    menggunakan klien Seelen UI
+    menggunakan NAI OS Client
   labels:
     create_new_workspace: Buat ruang kerja baru
     create_new_workspace_row: Buat Baris Ruang Kerja Baru
@@ -297,6 +297,19 @@ sides:
   left: Kiri
   right: Benar
   top: Atas
+system_tray:
+  drag_reorder: Aktifkan penyusunan ulang seret
+  icon_size: Ukuran ikon
+  icon_spacing: Spasi ikon
+  label: Baki Sistem
+  offline_pinned: Ikon yang disematkan secara offline
+  offline_pinned.disabled: Tampilkan dinonaktifkan
+  offline_pinned.hide: Bersembunyi
+  overflow_arrow: Panah meluap
+  pinned_position: Posisi ikon yang disematkan
+  pinned_position.after: Setelah panah meluap
+  pinned_position.before: Sebelum panah meluap
+  show_tooltips: Tampilkan keterangan alat
 toolbar:
   auto_hide: Persembunyian otomatis
   auto_hide_touch_disabled: Sembunyikan otomatis tidak tersedia pada perangkat layar sentuh
@@ -381,7 +394,7 @@ weg:
   auto_hide: Sembunyi otomatis
   auto_hide_touch_disabled: Sembunyikan otomatis tidak tersedia pada perangkat layar sentuh
   automation:
-    enabled: Aktifkan bidang kendali
+    enabled: Aktifkan bidang kontrol
     flight_recorder: Perekam penerbangan
     label: Otomatisasi (MCP / REST / CLI)
     mcp_enabled: server MCP
@@ -476,21 +489,21 @@ weg:
     trigger: Pemicu pratinjau
     trigger_click: Klik
     trigger_hover: Arahkan kursor
-    trigger_hover_and_click: Arahkan kursor + Klik
+    trigger_hover_and_click: Arahkan + Klik
   show_end_task: Menampilkan tugas akhir di bilah tugas
   width: Lebar
 welcome:
   give_a_review: Berikan Ulasan
   message: >-
-    Seelen UI adalah lingkungan desktop sumber terbuka dan gratis untuk Windows.
-    Di sini Anda memiliki kendali penuh atas tampilan dan perilaku desktop Anda,
+    NAI OS adalah lingkungan desktop sumber terbuka dan gratis untuk Windows. Di
+    sini Anda memiliki kendali penuh atas tampilan dan perilaku desktop Anda,
     memungkinkan Anda menyesuaikan setiap detail agar sesuai dengan alur kerja
     dan gaya Anda.
   ok: Mari kita mulai!
   review: >-
-    Jika Anda senang menggunakan Seelen UI, pertimbangkan untuk meninggalkan
-    ulasan di toko — masukan Anda membantu proyek tumbuh dan meningkat.
-  title: Selamat datang di Seelen UI!
+    Jika Anda senang menggunakan NAI OS, pertimbangkan untuk meninggalkan ulasan
+    di toko — masukan Anda membantu proyek tumbuh dan berkembang.
+  title: Selamat datang di NAIOS!
 widget:
   default_instance: Mesin Virtual Bawaan
   default_instance_hint: Selalu aktif, menggunakan konfigurasi widget root

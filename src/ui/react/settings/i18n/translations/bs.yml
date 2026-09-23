@@ -37,10 +37,10 @@ apps_configurations:
   export: Izvoz
   export_full: Izvoz postavki po nanosu
   extra_info: >-
-    Seelen UI Koristite samo jedan identifikator po aplikaciji (prvo pronađeno),
-    tako da je narudžba u tome kako je specifično, najnoviji dodani bit će
-    prioritet, jer je u priopćenju tablica po zadanim postavkama sortirana iz
-    posljednjeg.
+    NAI OS koristi samo jedan identifikator po aplikaciji (pronađeno prvo
+    podudaranje) tako da je redoslijed na koji su specificirani važan,
+    posljednji dodani će imati prioritet, imajte na umu da je tabela sortirana
+    prema zadanim postavkama od najnovije do stare.
   identifier:
     add_block: Dodajte blok
     and: I
@@ -82,7 +82,7 @@ devtools:
   enable: Omogućite alate za programere
   enable_description: >-
     Otključava napredne alate za inspekciju i otklanjanje grešaka u
-    unutrašnjosti Seelen UI. Nije predviđeno za redovnu upotrebu.
+    unutrašnjosti NAI OS-a. Nije predviđeno za redovnu upotrebu.
   icons: Keširane ikone
   install_folder: Instalacijska mapa
   load: Opteretiti
@@ -120,7 +120,7 @@ devtools:
     widget_id: ID vidžeta
 discord_banner:
   message: >-
-    Povežite se s drugim Seelen UI korisnicima, dobijte pomoć, dijelite teme i
+    Povežite se s drugim korisnicima NAI OS-a, potražite pomoć, dijelite teme i
     budite u toku s najnovijim vijestima.
   title: Pridružite se našoj zajednici
 extras:
@@ -169,7 +169,7 @@ general:
     plugged: Uključen ili punjenje
   polling_interval: Sistemski interval anketiranja
   polling_interval_description: >-
-    Koliko često (u sekundama) Seelen UI provjerava sistemske resurse kao što su
+    Koliko često (u sekundama) NAI OS provjerava sistemske resurse kao što su
     CPU, RAM, mreža i aktivnost diska. Manji broj znači češće ažuriranje, ali
     nešto veću upotrebu resursa.
   saturday: Subota
@@ -224,7 +224,7 @@ reset_configurations: Resetujte konfiguracije
 reset_to_default: Resetiranje na zadanu vrijednost
 resources:
   affected_widgets: Pogođeni vidžeti
-  app_outdated: Ovaj resurs zahtijeva noviju verziju Seelen Ui da radi pravilno.
+  app_outdated: Ovaj resurs zahtijeva noviju verziju NAI OS-a da bi ispravno radio.
   coming_soon: Uskoro
   corrupted_wallpaper: Ekstrahiranje sličice nije uspjelo - oštećen ili nepodržan video format
   delete: Izbriši resurs
@@ -235,8 +235,8 @@ resources:
   included_plugins: Uključeni dodaci
   open_folder: Otvorite mapu resursa
   outdated: >-
-    Ovaj je resurs dizajniran za stariju verziju Seelena UI-a i možda neće
-    raditi ispravno.
+    Ovaj resurs je dizajniran za stariju verziju NAI OS-a i možda neće raditi
+    ispravno.
   see_on_website: Vidi na web stranici
   update_now: Ažuriraj
   updates_available: Dostupna ažuriranja
@@ -244,7 +244,7 @@ resources:
 review_request:
   not_now: Ne sada
   sure: Naravno!
-  title: Uživate u korisničkom sučelju Seelen?
+  title: Uživate u NAI OS-u?
 save: Sačuvati
 save_and_restart: Spremi i ponovno pokretanje
 search: Traži
@@ -264,8 +264,8 @@ shortcuts:
     rješavanje.
   enable: Omogući ugrađene sistem prečaca
   enable_tooltip: >-
-    Onemogućite ako ćete implementirati vlastite sustav prečaca pomoću klijenta
-    SEELEN UI
+    Onemogućite ako ćete implementirati svoj vlastiti sistem prečica koristeći
+    NAI OS Client
   labels:
     create_new_workspace: Kreirajte novi radni prostor
     create_new_workspace_row: Kreirajte novi red radnog prostora
@@ -291,6 +291,19 @@ sides:
   left: Lijevo
   right: Pravo
   top: Vrh
+system_tray:
+  drag_reorder: Omogući promjenu redoslijeda povlačenja
+  icon_size: Veličina ikone
+  icon_spacing: Razmak ikona
+  label: Sistemska traka
+  offline_pinned: Ikone zakačene van mreže
+  offline_pinned.disabled: Prikaži onemogućeno
+  offline_pinned.hide: Sakrij se
+  overflow_arrow: Strelica za prelivanje
+  pinned_position: Položaj zakačenih ikona
+  pinned_position.after: Strelica nakon prelivanja
+  pinned_position.before: Strelica pre prelivanja
+  show_tooltips: Prikaži opise alata
 toolbar:
   auto_hide: Auto se sakrio
   auto_hide_touch_disabled: >-
@@ -480,16 +493,16 @@ weg:
 welcome:
   give_a_review: Dajte recenziju
   message: >-
-    Seelen UI je besplatno desktop okruženje otvorenog koda za Windows. Ovdje
-    imate potpunu kontrolu nad načinom na koji vaš desktop izgleda i kako se
-    ponaša, što vam omogućava da prilagodite svaki detalj kako bi odgovarao
-    vašem toku rada i stilu.
+    NAI OS je besplatno desktop okruženje otvorenog koda za Windows. Ovdje imate
+    potpunu kontrolu nad načinom na koji vaš desktop izgleda i kako se ponaša,
+    što vam omogućava da prilagodite svaki detalj kako bi odgovarao vašem toku
+    rada i stilu.
   ok: Počnimo!
   review: >-
-    Ako uživate u korišćenju Seelen korisničkog sučelja, razmislite o tome da
-    ostavite recenziju o trgovini - vaše povratne informacije pomažu da se
-    projekt razvija i poboljšava.
-  title: Dobrodošli u Seelen UI!
+    Ako uživate u korištenju NAI OS-a, razmislite o tome da ostavite recenziju
+    na prodavnici - vaše povratne informacije pomažu projektu da raste i
+    unapređuje se.
+  title: Dobrodošli u NAI OS!
 widget:
   default_instance: Zadana instanca
   default_instance_hint: Uvijek aktivan, koristi konfiguraciju root widgeta

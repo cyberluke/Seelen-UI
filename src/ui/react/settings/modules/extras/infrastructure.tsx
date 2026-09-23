@@ -66,7 +66,7 @@ export function Information() {
       </div>
 
       <SettingsGroup>
-        <SettingsSubGroup label="Seelen UI">
+        <SettingsSubGroup label="NAI OS">
           <SettingsOption
             label={t("extras.version")}
             description={isFixed ? t("extras.version_fixed") : false}

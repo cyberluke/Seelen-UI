@@ -37,10 +37,10 @@ apps_configurations:
   export: Viedä
   export_full: Vie asetukset sovelluksittain
   extra_info: >-
-    Seelen -käyttöliittymä käyttää vain yhtä tunnistetta sovellusta kohden
-    (ensimmäinen ottelu löydetty), joten tilaus kuinka spesifikaatio on tärkeä,
-    viimeisin lisätty lisätään etusijalle, kuten huomaa, että taulukko
-    lajitellaan oletuksena viimeisimmästä vanhaan.
+    NAI-käyttöjärjestelmä käyttää vain yhtä tunnistetta sovellusta kohden
+    (ensimmäinen vastaavuus löydetty), joten määrittelyjärjestys on tärkeä.
+    Viimeksi lisätyt asetetaan etusijalle. Huomaa, että taulukko lajitellaan
+    oletuksena uusimmasta vanhaan.
   identifier:
     add_block: Lisätä
     and: JA
@@ -80,7 +80,7 @@ devtools:
   data_folder: Tietokansio
   enable: Ota kehittäjätyökalut käyttöön
   enable_description: >-
-    Avaa edistyneet työkalut Seelen-käyttöliittymän sisäosien tarkastamiseen ja
+    Avaa edistyneitä työkaluja NAI OS:n sisäisten osien tarkastamiseen ja
     virheenkorjaukseen. Ei tarkoitettu säännölliseen käyttöön.
   icons: Välimuistissa olevat kuvakkeet
   install_folder: Asennuskansio
@@ -120,7 +120,7 @@ devtools:
     widget_id: Widgetin tunnus
 discord_banner:
   message: >-
-    Ota yhteyttä muihin Seelen-käyttöliittymän käyttäjiin, hanki apua, jaa
+    Ota yhteyttä muihin NAI-käyttöjärjestelmän käyttäjiin, hanki apua, jaa
     teemoja ja pysy ajan tasalla viimeisimmistä uutisista.
   title: Liity yhteisöömme
 extras:
@@ -172,9 +172,10 @@ general:
     plugged: Kytketty tai lataus
   polling_interval: Järjestelmän äänestysväli
   polling_interval_description: >-
-    Kuinka usein (sekunneissa) Seelen UI tarkistaa järjestelmäresurssit, kuten
-    suorittimen, RAM-muistin, verkon ja levytoiminnan. Pienempi luku tarkoittaa
-    useammin päivityksiä, mutta hieman suurempaa resurssien käyttöä.
+    Kuinka usein (sekunneissa) NAI-käyttöjärjestelmä tarkistaa
+    järjestelmäresurssit, kuten suorittimen, RAM-muistin, verkon ja
+    levytoiminnan. Pienempi luku tarkoittaa useammin päivityksiä, mutta hieman
+    suurempaa resurssien käyttöä.
   saturday: lauantai
   start_of_week: Viikon alku
   startup: Suorittaa käynnistyksen yhteydessä?
@@ -227,7 +228,9 @@ reset_configurations: Palauta asetukset
 reset_to_default: Nollaa oletusarvoon
 resources:
   affected_widgets: Asianomaiset widgetit
-  app_outdated: Tämä resurssi vaatii uudemman version Seelen UI:sta toimiakseen oikein.
+  app_outdated: >-
+    Tämä resurssi vaatii uudemman version NAI-käyttöjärjestelmästä toimiakseen
+    kunnolla.
   coming_soon: Tulossa pian
   corrupted_wallpaper: >-
     Pikkukuvan purkaminen epäonnistui – videomuoto on vioittunut tai sitä ei
@@ -240,8 +243,8 @@ resources:
   included_plugins: Mukana lisäosat
   open_folder: Avaa resurssikansio
   outdated: >-
-    Tämä resurssi on suunniteltu Seelen UI:n vanhemmalle versiolle, eikä se
-    välttämättä toimi oikein.
+    Tämä resurssi on suunniteltu NAI-käyttöjärjestelmän vanhemmalle versiolle,
+    eikä se välttämättä toimi kunnolla.
   see_on_website: Katso nettisivuilta
   update_now: Päivittää
   updates_available: Päivityksiä saatavilla
@@ -249,7 +252,7 @@ resources:
 review_request:
   not_now: Ei nyt
   sure: Varma!
-  title: Pidätkö Seelen-käyttöliittymästä?
+  title: Pidätkö NAI-käyttöjärjestelmästä?
 save: Tallentaa
 save_and_restart: Tallenna ja käynnistä uudelleen
 search: Haku
@@ -269,8 +272,8 @@ shortcuts:
     uudelleen ratkaistaksesi.
   enable: Ota sisäänrakennettu pikakuvausjärjestelmä
   enable_tooltip: >-
-    Poista käytöstä, jos otat käyttöön omat pikakuvausjärjestelmäsi Seelen UI
-    -asiakkaan avulla
+    Poista käytöstä, jos otat käyttöön oman pikakuvakejärjestelmän NAI OS Client
+    -sovelluksella
   labels:
     create_new_workspace: Luo uusi työtila
     create_new_workspace_row: Luo uusi työtilarivi
@@ -296,6 +299,19 @@ sides:
   left: Vasen
   right: Oikea
   top: Ylhäältä
+system_tray:
+  drag_reorder: Ota vetämällä uudelleenjärjestys käyttöön
+  icon_size: Ikonin koko
+  icon_spacing: Kuvakkeiden väli
+  label: Järjestelmälokero
+  offline_pinned: Offline-tilassa kiinnitetyt kuvakkeet
+  offline_pinned.disabled: Näytä poissa käytöstä
+  offline_pinned.hide: Piilottaa
+  overflow_arrow: Ylivuotonuoli
+  pinned_position: Kiinnitettyjen kuvakkeiden sijainti
+  pinned_position.after: Ylivuodon jälkeen nuoli
+  pinned_position.before: Ennen ylivuotoa -nuoli
+  show_tooltips: Näytä työkaluvihjeet
 toolbar:
   auto_hide: Automaattinen piilo
   auto_hide_touch_disabled: Automaattinen piilotus ei ole käytettävissä kosketusnäytöllisissä laitteissa
@@ -449,7 +465,7 @@ weg:
     keep_open: Pysy avoimena matkan aikana
     label: Ikkunan esikatselu
     max_columns: Enintään sarakkeita
-    max_height: Suurin ponnahdusikkunan korkeus (px)
+    max_height: Ponnahdusikkunoiden enimmäiskorkeus (px)
     max_rows: Rivien enimmäismäärä ennen vierittämistä
     max_width: Suurin ponnahdusikkunan leveys (px)
     min_columns: Min sarakkeet
@@ -479,15 +495,14 @@ weg:
 welcome:
   give_a_review: Anna arvostelu
   message: >-
-    Seelen UI on ilmainen ja avoimen lähdekoodin työpöytäympäristö Windowsille.
-    Täällä voit hallita täysin sitä, miten työpöytäsi näyttää ja käyttäytyy,
-    joten voit mukauttaa jokaisen yksityiskohdan työnkulkusi ja tyylisi
-    mukaiseksi.
+    NAI OS on ilmainen ja avoimen lähdekoodin työpöytäympäristö Windowsille.
+    Täällä voit hallita täysin työpöytäsi ulkoasua ja toimintaa, joten voit
+    mukauttaa jokaisen yksityiskohdan työnkulkusi ja tyylisi mukaiseksi.
   ok: Aloitetaan!
   review: >-
-    Jos pidät Seelen-käyttöliittymän käytöstä, harkitse arvostelun jättämistä
-    kauppaan – palautteesi auttaa projektia kasvamaan ja kehittymään.
-  title: Tervetuloa Seelen-käyttöliittymään!
+    Jos pidät NAI OS:n käytöstä, harkitse arvostelun jättämistä kauppaan –
+    palautteesi auttaa projektia kasvamaan ja parantamaan.
+  title: Tervetuloa NAI OS:ään!
 widget:
   default_instance: Oletusinstanssi
   default_instance_hint: Aina aktiivinen, käyttää juuriwidgetin konfiguraatiota

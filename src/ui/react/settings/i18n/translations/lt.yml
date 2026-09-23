@@ -120,7 +120,7 @@ devtools:
     widget_id: Valdiklio ID
 discord_banner:
   message: >-
-    Susisiekite su kitais Seelen UI naudotojais, gaukite pagalbos, bendrinkite
+    Susisiekite su kitais NAI OS naudotojais, gaukite pagalbos, bendrinkite
     temas ir gaukite naujausias naujienas.
   title: Prisijunkite prie mūsų bendruomenės
 extras:
@@ -226,7 +226,7 @@ reset_configurations: Iš naujo nustatyti konfigūracijas
 reset_to_default: Iš naujo nustatyti numatytąją vertę
 resources:
   affected_widgets: Paveikti valdikliai
-  app_outdated: Kad šis išteklius veiktų tinkamai, reikia naujesnės "Seelen UI" versijos.
+  app_outdated: Kad šis išteklius veiktų tinkamai, reikia naujesnės "NAI OS" versijos.
   coming_soon: Netrukus
   corrupted_wallpaper: >-
     Nepavyko išskleisti miniatiūros – sugadintas arba nepalaikomas vaizdo įrašo
@@ -239,7 +239,7 @@ resources:
   included_plugins: Įtraukti papildiniai
   open_folder: Atidarykite išteklių aplanką
   outdated: >-
-    Šis išteklius buvo sukurtas senesnei "Seelen UI" versijai ir gali neveikti
+    Šis išteklius buvo sukurtas senesnei "NAI OS" versijai ir gali neveikti
     tinkamai.
   see_on_website: Žiūrėti svetainėje
   update_now: Atnaujinti
@@ -267,7 +267,7 @@ shortcuts:
     iš nesuderinamų valdiklių arba iš naujo priskirkite pasikartojantį rakto
     susiejimą, kad išspręstumėte.
   enable: Įgalinti įmontuotą nuorodų sistemą
-  enable_tooltip: Išjunkite, jei įdiegsite savo nuorodų sistemą naudodami „Seelen UI“ klientą
+  enable_tooltip: Išjunkite, jei įdiegsite savo nuorodų sistemą naudodami „NAI OS“ klientą
   labels:
     create_new_workspace: Sukurkite naują darbo vietą
     create_new_workspace_row: Sukurti naują darbo srities eilutę
@@ -478,7 +478,7 @@ weg:
 welcome:
   give_a_review: Pateikite apžvalgą
   message: >-
-    Seelen UI yra nemokama atvirojo kodo darbalaukio aplinka, skirta Windows.
+    NAI OS yra nemokama atvirojo kodo darbalaukio aplinka, skirta Windows.
     Čia galite visiškai valdyti, kaip atrodo ir veikia jūsų darbalaukis, todėl
     galite tinkinti kiekvieną detalę, kad ji atitiktų jūsų darbo eigą ir stilių.
   ok: Pradėkime!

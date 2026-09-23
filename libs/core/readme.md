@@ -1,12 +1,12 @@
 <h1 align="center">
-  <img src="https://raw.githubusercontent.com/eythaann/Seelen-UI/812f64d29162fe49da6f621d5e2a3e4852b8b8b1/documentation/images/logo.svg" width="44" align="top" alt="Seelen UI Logo" />
-  Seelen UI Library
+  <img src="https://raw.githubusercontent.com/eythaann/Seelen-UI/812f64d29162fe49da6f621d5e2a3e4852b8b8b1/documentation/images/logo.svg" width="44" align="top" alt="NAI OS Logo" />
+  NAI OS Library
 </h1>
 
-The **Seelen UI Library** is the core library for [Seelen UI](https://github.com/eythaann/seelen-ui), a highly
-customizable desktop UI. This library provides the necessary tools and types to create and manage widgets, plugins, and
-themes for the Seelen UI application. It's a hybrid library with a Rust core and TypeScript/Deno bindings, designed for
-performance and type safety.
+The **NAI OS Library** is the core library for [NAI OS](https://github.com/eythaann/Seelen-UI), a highly customizable
+desktop UI. This library provides the necessary tools and types to create and manage widgets, plugins, and themes for
+the NAI OS application. It's a hybrid library with a Rust core and TypeScript/Deno bindings, designed for performance
+and type safety.
 
 ## Installation
 
@@ -17,13 +17,13 @@ You can use the library from JSR or npm.
 **JSR:**
 
 ```sh
-deno add @seelen-ui/lib
+deno add \@seelen-ui/lib
 ```
 
 **NPM:**
 
 ```sh
-npm install @seelen-ui/lib
+npm install \@seelen-ui/lib
 ```
 
 ## Contributing

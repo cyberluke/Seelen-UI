@@ -37,7 +37,7 @@ apps_configurations:
   export: Exportar
   export_full: Exportar configurações por aplicativo
   extra_info: >-
-    A Seelen UI usa apenas um identificador por aplicativo (primeira
+    A NAI OS usa apenas um identificador por aplicativo (primeira
     correspondência encontrada); portanto, a ordem é importante. O último
     adicionado tem prioridade. A tabela é ordenada do mais recente ao mais
     antigo por padrão.
@@ -119,7 +119,7 @@ devtools:
     widget_id: ID do widget
 discord_banner:
   message: >-
-    Conecte-se com outros usuários da Seelen UI, obtenha ajuda, compartilhe
+    Conecte-se com outros usuários da NAI OS, obtenha ajuda, compartilhe
     temas e mantenha-se atualizado com as últimas notícias.
   title: Junte-se à nossa comunidade
 extras:
@@ -170,7 +170,7 @@ general:
     plugged: Conectado ou carregamento
   polling_interval: Intervalo de pesquisa do sistema
   polling_interval_description: >-
-    Com que frequência (em segundos) o Seelen UI verifica os recursos do
+    Com que frequência (em segundos) o NAI OS verifica os recursos do
     sistema, como CPU, RAM, rede e atividade de disco. Um número menor significa
     atualizações mais frequentes, mas um uso de recursos um pouco maior.
   saturday: Sábado
@@ -412,7 +412,7 @@ weg:
 welcome:
   give_a_review: Dê uma avaliação
   message: >-
-    Seelen UI é um ambiente de desktop gratuito e de código aberto para Windows.
+    NAI OS é um ambiente de desktop gratuito e de código aberto para Windows.
     Aqui você tem controle total sobre a aparência e o comportamento de sua área
     de trabalho, permitindo personalizar cada detalhe para combinar com seu
     fluxo de trabalho e estilo.

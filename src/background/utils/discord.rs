@@ -158,14 +158,14 @@ pub fn get_activity() -> Activity<'static> {
         .assets(
             Assets::new()
                 .large_image("app_logo")
-                .large_text("Seelen UI")
+                .large_text("NAI OS")
                 .small_image("seelen_corp_logo2")
                 .small_text("Made by Seelen Corp."),
         )
         .timestamps(Timestamps::new().start(*START_TIME))
-        .party(Party::new().id("seelen-ui-party").size([10, 10]))
+        .party(Party::new().id("NAI OS-party").size([10, 10]))
         .buttons(vec![
-            Button::new("🚀 Download Now!", "https://seelen.io/apps/seelen-ui"),
+            Button::new("🚀 Download Now!", "https://seelen.io/apps/NAI OS"),
             Button::new("🐦‍⬛ Seelen Network", "https://discord.seelen.io"),
         ])
 }

@@ -1,4 +1,4 @@
-# Seelen UI — Resource Guidelines
+# NAI OS — Resource Guidelines
 
 Reference guide for creating and sharing resources — themes, widgets, plugins, icon packs, or wallpapers — for Seelen
 UI.
@@ -23,13 +23,13 @@ UI.
 
 ## 1. What is a Resource?
 
-A **resource** is a folder (or a single file) that you create and that Seelen UI can load to add new visuals or
+A **resource** is a folder (or a single file) that you create and that NAI OS can load to add new visuals or
 functionality. You write a `metadata.yml` file that describes your resource, and optionally other files (stylesheets,
 scripts, translations) that it references.
 
 Once your resource is ready you can:
 
-- **Use it locally** by placing the folder in the Seelen UI resources directory.
+- **Use it locally** by placing the folder in the NAI OS resources directory.
 - **Share it** by publishing it to the Seelen marketplace.
 
 ---
@@ -80,7 +80,7 @@ Examples:
 
 ## 4. Metadata — Describing Your Resource
 
-Every resource has a `metadata` block. This is the information shown in the marketplace and in the Seelen UI settings
+Every resource has a `metadata` block. This is the information shown in the marketplace and in the NAI OS settings
 panel.
 
 ```yaml
@@ -106,7 +106,7 @@ metadata:
   # Screenshots — 16:9 aspect ratio, as many as you want (optional)
   # screenshots: uploaded via the Seelen website (see note below)
 
-  # Oldest Seelen UI version your resource is compatible with (optional)
+  # Oldest NAI OS version your resource is compatible with (optional)
   appTargetVersion: [1, 11, 0]
 ```
 
@@ -115,7 +115,7 @@ them in makes your resource look much better in the marketplace.
 
 > **Images (portrait, banner, screenshots):** these are uploaded directly through the Seelen website when you publish or
 > edit your resource — you do not write URLs in `metadata.yml` yourself. Only images hosted on `seelen.io` are accepted;
-> any other URL will be ignored and Seelen UI will display the default resource icon as the portrait instead.
+> any other URL will be ignored and NAI OS will display the default resource icon as the portrait instead.
 
 ---
 
@@ -140,12 +140,12 @@ displayName:
   pt-BR: Meu Tema Escuro
 ```
 
-When a user's language is not in your list, Seelen UI automatically falls back to English. **If you provide a language
-map, you must always include `en`.**
+When a user's language is not in your list, NAI OS automatically falls back to English. **If you provide a language map,
+you must always include `en`.**
 
 Use whatever languages you are comfortable with. The more the better, but English alone is perfectly fine.
 
-> **Automatic translation:** Seelen UI ships a `slu` CLI command that fills in all the supported languages in a single
+> **Automatic translation:** NAI OS ships a `slu` CLI command that fills in all the supported languages in a single
 > translation file. Write your source language entry first, then run:
 >
 > ```bash
@@ -158,7 +158,7 @@ Use whatever languages you are comfortable with. The more the better, but Englis
 > en: My Dark Theme
 > ```
 >
-> Running the command on that file will complete it with every other language Seelen UI supports. If your source text is
+> Running the command on that file will complete it with every other language NAI OS supports. If your source text is
 > not in English, pass the language code explicitly:
 >
 > ```bash
@@ -176,8 +176,8 @@ Use whatever languages you are comfortable with. The more the better, but Englis
 
 ## 6. Extended YAML — Splitting Your Files
 
-Resource files are written in YAML. Seelen UI extends standard YAML with two special tags that let you pull in content
-from other files. This keeps your main `metadata.yml` clean and each piece of content in its own focused file.
+Resource files are written in YAML. NAI OS extends standard YAML with two special tags that let you pull in content from
+other files. This keeps your main `metadata.yml` clean and each piece of content in its own focused file.
 
 ### `!include` — embed a file as text
 
@@ -243,7 +243,7 @@ themselves parsed with the same rules, so you can use `!include` and `!extend` i
 
 ## 7. Folder Structure
 
-A resource can be a single `metadata.yml` file, but for anything real you will want a folder. Seelen UI looks for an
+A resource can be a single `metadata.yml` file, but for anything real you will want a folder. NAI OS looks for an
 entrypoint file inside the folder by checking these names in order: `metadata.yml`, `metadata.yaml`, `index.yml`,
 `mod.yml`, `main.yml` (and their `.json` variants).
 
@@ -269,7 +269,7 @@ though following a consistent layout (like the one above) makes maintenance easi
 
 ## 8. Loading and Unloading Resources
 
-While developing a resource you can load it into a running Seelen UI instance directly from any folder on your machine
+While developing a resource you can load it into a running NAI OS instance directly from any folder on your machine
 using the `slu` CLI — no need to copy files anywhere.
 
 ### Load
@@ -289,8 +289,8 @@ slu resource load widget C:\Users\me\projects\my-clock
 slu resource load plugin ./my-plugin/mod.yml
 ```
 
-The resource is registered immediately and available in Seelen UI settings without restarting the app. **Seelen UI must
-be running** for this command to work.
+The resource is registered immediately and available in NAI OS settings without restarting the app. **NAI OS must be
+running** for this command to work.
 
 ### Unload
 
@@ -304,8 +304,8 @@ Removes the resource from the registry using the same path you used to load it.
 slu resource unload theme ./my-dark-theme
 ```
 
-> Loaded resources are registered for the current session. After restarting Seelen UI you will need to load them again,
-> or install them permanently through the settings panel.
+> Loaded resources are registered for the current session. After restarting NAI OS you will need to load them again, or
+> install them permanently through the settings panel.
 
 ---
 

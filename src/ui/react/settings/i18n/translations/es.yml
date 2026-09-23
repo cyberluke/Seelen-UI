@@ -37,10 +37,11 @@ apps_configurations:
   export: Exportar
   export_full: Exportar ajustes por aplicación
   extra_info: >-
-    Seelen UI utiliza sólo un identificador por aplicación (primera coincidencia
-    encontrada) por lo que el orden en que se especifican es importante, el
-    último añadido tendrá prioridad, como nota la tabla se ordena por defecto de
-    más reciente a más antiguo.
+    El sistema operativo NAI usa solo un identificador por aplicación (la
+    primera coincidencia encontrada), por lo que el orden en cómo se especifican
+    es importante; se dará prioridad a los últimos agregados, ya que tenga en
+    cuenta que la tabla está ordenada de forma predeterminada del más reciente
+    al más antiguo.
   identifier:
     add_block: Añadir bloque
     and: 'Y'
@@ -82,8 +83,8 @@ devtools:
   enable: Activar las herramientas para desarrolladores
   enable_description: >-
     Desbloquea herramientas avanzadas para inspeccionar y depurar los
-    componentes internos de la interfaz de usuario de Seelen. No está destinado
-    a un uso regular.
+    componentes internos del sistema operativo NAI. No está destinado a un uso
+    regular.
   icons: Iconos en caché
   install_folder: Carpeta de instalación
   load: Carga
@@ -121,7 +122,7 @@ devtools:
     widget_id: ID del widget
 discord_banner:
   message: >-
-    Conéctese con otros usuarios de Seelen UI, obtenga ayuda, comparta temas y
+    Conéctese con otros usuarios de NAI OS, obtenga ayuda, comparta temas y
     manténgase actualizado con las últimas noticias.
   title: Únase a nuestra comunidad
 extras:
@@ -176,10 +177,9 @@ general:
     plugged: Enchufado o carga
   polling_interval: Intervalo de sondeo del sistema
   polling_interval_description: >-
-    Con qué frecuencia (en segundos) Seelen UI verifica los recursos del sistema
-    como la CPU, la RAM, la red y la actividad del disco. Un número menor
-    significa actualizaciones más frecuentes, pero un uso de recursos
-    ligeramente mayor.
+    Con qué frecuencia (en segundos) NAI OS verifica los recursos del sistema
+    como CPU, RAM, red y actividad del disco. Un número menor significa
+    actualizaciones más frecuentes, pero un uso de recursos ligeramente mayor.
   saturday: Sábado
   start_of_week: Inicio de semana
   startup: ¿Se ejecuta al iniciar con Windows?
@@ -233,7 +233,7 @@ reset_to_default: Restablecer valor por defecto
 resources:
   affected_widgets: Widgets afectados
   app_outdated: >-
-    Este recurso requiere una versión más reciente de Seelen UI para funcionar
+    Este recurso requiere una versión más reciente de NAI OS para funcionar
     correctamente.
   coming_soon: Muy pronto
   corrupted_wallpaper: 'No se pudo extraer la miniatura: formato de video dañado o no compatible'
@@ -245,8 +245,8 @@ resources:
   included_plugins: Complementos incluidos
   open_folder: Abrir carpeta de recursos
   outdated: >-
-    Este recurso fue diseñado para una versión anterior de Seelen UI y podría no
-    funcionar correctamente.
+    Este recurso fue diseñado para una versión anterior de NAI OS y es posible
+    que no funcione correctamente.
   see_on_website: Ver en el sitio web
   update_now: Actualizar
   updates_available: Actualizaciones disponibles
@@ -254,7 +254,7 @@ resources:
 review_request:
   not_now: Ahora no
   sure: ¡Seguro!
-  title: ¿Disfrutas de la interfaz de usuario de Seelen?
+  title: ¿Disfrutas del sistema operativo NAI?
 save: Guardar
 save_and_restart: Guardar y reiniciar
 search: Buscar
@@ -274,8 +274,8 @@ shortcuts:
     resolverlo.
   enable: Habilitar el sistema de accesos directos integrados
   enable_tooltip: >-
-    Deshabilite si implementa su propio sistema de atajos utilizando el cliente
-    Seelen UI
+    Desactívelo si implementará su propio sistema de accesos directos utilizando
+    el cliente NAI OS
   labels:
     create_new_workspace: Crea un nuevo espacio de trabajo
     create_new_workspace_row: Crear nueva fila de espacio de trabajo
@@ -301,6 +301,19 @@ sides:
   left: Izquierda
   right: Derecha
   top: Top
+system_tray:
+  drag_reorder: Habilitar reordenamiento de arrastre
+  icon_size: Tamaño del icono
+  icon_spacing: Espaciado de iconos
+  label: Bandeja del sistema
+  offline_pinned: Iconos fijados sin conexión
+  offline_pinned.disabled: Mostrar deshabilitado
+  offline_pinned.hide: Esconder
+  overflow_arrow: Flecha de desbordamiento
+  pinned_position: Posición de los iconos fijados
+  pinned_position.after: Después de la flecha de desbordamiento
+  pinned_position.before: Antes de la flecha de desbordamiento
+  show_tooltips: Mostrar información sobre herramientas
 toolbar:
   auto_hide: Auto Ocultar
   auto_hide_touch_disabled: >-
@@ -492,15 +505,15 @@ weg:
 welcome:
   give_a_review: Dar una reseña
   message: >-
-    Seelen UI es un entorno de escritorio gratuito y de código abierto para
+    NAI OS es un entorno de escritorio gratuito y de código abierto para
     Windows. Aquí tienes control total sobre el aspecto y el comportamiento de
     tu escritorio, lo que te permite personalizar cada detalle para que coincida
     con tu flujo de trabajo y estilo.
   ok: ¡Empecemos!
   review: >-
-    Si le gusta usar Seelen UI, considere dejar una reseña en la tienda; sus
+    Si le gusta usar NAI OS, considere dejar una reseña en la tienda; sus
     comentarios ayudan a que el proyecto crezca y mejore.
-  title: ¡Bienvenido a la interfaz de usuario de Seelen!
+  title: ¡Bienvenido a NAI OS!
 widget:
   default_instance: Instancia predeterminada
   default_instance_hint: Siempre activo, utiliza la configuración del widget raíz

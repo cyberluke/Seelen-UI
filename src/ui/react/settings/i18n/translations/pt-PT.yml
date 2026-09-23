@@ -121,7 +121,7 @@ devtools:
     widget_id: ID do widget
 discord_banner:
   message: >-
-    Estabeleça ligação com outros utilizadores da Seelen UI, obtenha ajuda,
+    Estabeleça ligação com outros utilizadores da NAI OS, obtenha ajuda,
     partilhe temas e mantenha-se atualizado com as últimas notícias.
   title: Junte-se à nossa comunidade
 extras:
@@ -174,7 +174,7 @@ general:
     plugged: Conectado ou carregamento
   polling_interval: Intervalo de pesquisa do sistema
   polling_interval_description: >-
-    Com que frequência (em segundos) o Seelen UI verifica os recursos do
+    Com que frequência (em segundos) o NAI OS verifica os recursos do
     sistema, como CPU, RAM, rede e atividade de disco. Um número mais reduzido
     significa atualizações mais frequentes, mas uma utilização de recursos
     ligeiramente maior.
@@ -413,7 +413,7 @@ weg:
 welcome:
   give_a_review: Dê uma avaliação
   message: >-
-    Seelen UI é um ambiente de desktop gratuito e de código aberto para Windows.
+    NAI OS é um ambiente de desktop gratuito e de código aberto para Windows.
     Aqui você tem controle total sobre a aparência e o comportamento de sua área
     de trabalho, permitindo personalizar cada detalhe para combinar com seu
     fluxo de trabalho e estilo.

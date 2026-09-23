@@ -78,7 +78,7 @@ static USER_RESOURCES_WATCHER: OnceLock<Debouncer<ReadDirectoryChangesWatcher, F
     OnceLock::new();
 
 pub fn initialize_user_resources_watcher() -> Result<()> {
-    log::trace!("Starting Seelen UI Files Watcher");
+    log::trace!("Starting NAI OS Files Watcher");
     let mut debouncer = new_debouncer(
         Duration::from_millis(100),
         None,

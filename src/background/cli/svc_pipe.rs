@@ -70,7 +70,7 @@ impl ServicePipe {
                 &Default::default(),
             )?;
             let folder = task_service.GetFolder(&"\\Seelen".into())?;
-            let task = folder.GetTask(&"Seelen UI Service".into())?;
+            let task = folder.GetTask(&"NAI OS Service".into())?;
 
             let actions = task.Definition()?.Actions()?;
             // ask to microsoft what that hell this start counting from 1 instead 0

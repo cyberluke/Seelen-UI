@@ -231,7 +231,7 @@ reset_configurations: Zresetuj konfiguracje
 reset_to_default: Przywróć wartość domyślną
 resources:
   affected_widgets: Dotknięte widżety
-  app_outdated: Ten zasób wymaga nowszej wersji Seelen UI do poprawnego działania.
+  app_outdated: Ten zasób wymaga nowszej wersji NAI OS do poprawnego działania.
   coming_soon: Już wkrótce
   corrupted_wallpaper: >-
     Nie udało się wyodrębnić miniatury — uszkodzony lub nieobsługiwany format
@@ -244,7 +244,7 @@ resources:
   included_plugins: Dołączone wtyczki
   open_folder: Otwórz folder zasobów
   outdated: >-
-    Ten zasób został zaprojektowany dla starszej wersji Seelen UI i może nie
+    Ten zasób został zaprojektowany dla starszej wersji NAI OS i może nie
     działać poprawnie.
   see_on_website: Zobacz na stronie internetowej
   update_now: Aktualizacja
@@ -274,7 +274,7 @@ shortcuts:
   enable: Włącz wbudowany system skrótów
   enable_tooltip: >-
     Wyłącz, jeśli zaimplementujesz własny system skrótów za pomocą klienta
-    Seelen UI
+    NAI OS
   labels:
     create_new_workspace: Utwórz nowy obszar roboczy
     destroy_current_workspace: Zniszcz obecny obszar roboczy
@@ -419,7 +419,7 @@ weg:
 welcome:
   give_a_review: Wystaw recenzję
   message: >-
-    Seelen UI to bezpłatne środowisko graficzne typu open source dla systemu
+    NAI OS to bezpłatne środowisko graficzne typu open source dla systemu
     Windows. Tutaj masz pełną kontrolę nad wyglądem i zachowaniem pulpitu, co
     pozwala dostosować każdy szczegół do Twojego przepływu pracy i stylu.
   ok: Zacznijmy!

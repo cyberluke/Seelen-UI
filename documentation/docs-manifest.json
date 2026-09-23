@@ -1,6 +1,6 @@
 {
   "$schemaVersion": 1,
-  "description": "Navigation/metadata manifest for the Seelen UI documentation viewer. Markdown files remain the source of truth for content; this file only describes structure, ordering and status. TOC/headings should be extracted from each file at build time, not duplicated here.",
+  "description": "Navigation/metadata manifest for the NAI OS documentation viewer. Markdown files remain the source of truth for content; this file only describes structure, ordering and status. TOC/headings should be extracted from each file at build time, not duplicated here.",
   "categories": [
     { "id": "resources", "title": "Resources — Shared Concepts", "order": 1 },
     { "id": "resource-kinds", "title": "Resource Kinds", "order": 2 },

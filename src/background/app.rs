@@ -161,7 +161,7 @@ impl SeelenUI {
             )?;
             let is_task_enabled = task_service
                 .GetFolder(&"\\Seelen".into())
-                .and_then(|folder| folder.GetTask(&"Seelen UI Service".into()))
+                .and_then(|folder| folder.GetTask(&"NAI OS Service".into()))
                 .and_then(|task| task.Definition())
                 .and_then(|definition| definition.Triggers())
                 .and_then(|triggers| triggers.get_Item(1))

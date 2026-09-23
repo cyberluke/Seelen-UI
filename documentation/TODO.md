@@ -1,7 +1,7 @@
 # Documentation TODO
 
 Gaps between what `documentation/` currently covers and what a developer or client actually needs to build a widget,
-theme, plugin, icon pack, or wallpaper — or to integrate with Seelen UI's data/IPC layer. Grouped by priority. Each item
+theme, plugin, icon pack, or wallpaper — or to integrate with NAI OS's data/IPC layer. Grouped by priority. Each item
 lists a suggested filename and category so it can be dropped straight into `docs-manifest.json` once written.
 
 When a doc below is written: add its entry to `docs-manifest.json` under the listed category and flip planning here to
@@ -48,7 +48,7 @@ referenced thing doesn't exist yet.
 - [ ] **`widget_shortcuts.md`** or a section added to `widget-guidelines` — widgets can declare their own shortcuts, but
       `widget-guidelines`'s `metadata.yml` reference never shows the field for declaring a widget-owned shortcut, its
       default keys, or how the widget receives the trigger at runtime.
-- [ ] **`popup_widget_api.md`** (category: `reference`) — Seelen UI ships a built-in Popup Widget (typed content blocks:
+- [ ] **`popup_widget_api.md`** (category: `reference`) — NAI OS ships a built-in Popup Widget (typed content blocks:
       `text`/`icon`/`image`/`button`/`group`; title/content/footer zones) usable by third-party widgets and plugins, but
       there's no doc for how to actually invoke it (which command, what payload shape, positioning options relative to a
       trigger element).

@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-At Seelen UI, we always recommend using the latest available version, as all versions are kept secure and up to date.
+At NAI OS, we always recommend using the latest available version, as all versions are kept secure and up to date.
 
 | Version | Support            |
 | ------- | ------------------ |
@@ -10,7 +10,7 @@ At Seelen UI, we always recommend using the latest available version, as all ver
 
 ## Reporting a Vulnerability
 
-If you discover a vulnerability in Seelen UI, we appreciate you reporting it promptly.
+If you discover a vulnerability in NAI OS, we appreciate you reporting it promptly.
 
 ### How to Report
 
@@ -23,4 +23,4 @@ If you discover a vulnerability in Seelen UI, we appreciate you reporting it pro
 - **Updates:** We will keep you informed about the status of the investigation and any actions taken.
 - **Resolution:** If the report is accepted, we will work on a solution and implement it in the next update.
 
-Thank you for helping us keep Seelen UI secure for all users.
+Thank you for helping us keep NAI OS secure for all users.

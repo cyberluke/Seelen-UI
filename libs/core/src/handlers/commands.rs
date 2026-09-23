@@ -279,6 +279,35 @@ slu_commands_declaration! {
     NaiApps = nai_apps() -> Vec<serde_json::Value>,
     NaiLaunch = nai_launch(id: String) -> serde_json::Value,
 
+    // NAI JSON store (catalog + install broker)
+    NaiCatalog = nai_catalog() -> serde_json::Value,
+    NaiCatalogEntry = nai_catalog_entry(id: String) -> Option<serde_json::Value>,
+    NaiInstall = nai_install(id: String) -> serde_json::Value,
+    NaiUpdate = nai_update(id: String) -> serde_json::Value,
+    NaiUninstall = nai_uninstall(id: String) -> serde_json::Value,
+    NaiStoreLaunch = nai_store_launch(id: String) -> serde_json::Value,
+
+    // NAI activities, capsules and model gateway contract
+    NaiActivities = nai_activities() -> Vec<serde_json::Value>,
+    NaiCapsules = nai_capsules() -> Vec<serde_json::Value>,
+    NaiGatewayModels = nai_gateway_models() -> serde_json::Value,
+    NaiSemanticSearch = nai_semantic_search(query: String, limit: Option<usize>) -> serde_json::Value,
+
+    // NAI Shorts / media engine
+    NaiShortsSearch = nai_shorts_search(query: String, limit: Option<usize>) -> serde_json::Value,
+    NaiShortsEnqueue = nai_shorts_enqueue(video_id: String, reason: Option<String>) -> serde_json::Value,
+    NaiShortsNext = nai_shorts_next() -> serde_json::Value,
+    NaiShortsQueue = nai_shorts_queue() -> serde_json::Value,
+    NaiPipContract = nai_pip_contract() -> serde_json::Value,
+
+    // NAI social fabric
+    NaiSocialTimeline = nai_social_timeline(limit: Option<usize>) -> serde_json::Value,
+    NaiSocialNotifications = nai_social_notifications(limit: Option<usize>) -> serde_json::Value,
+    NaiSocialLocal = nai_social_local(limit: Option<usize>) -> serde_json::Value,
+    NaiSocialCompose = nai_social_compose(status: String) -> serde_json::Value,
+    NaiV271Chat = nai_v271_chat(prompt: String) -> serde_json::Value,
+    NaiSemanticUpsert = nai_semantic_upsert(id: String, vector: Vec<f32>) -> serde_json::Value,
+
     // Windows Manager
     WmGetRenderTree = wm_get_render_tree() -> TwmGlobalRuntimeTree,
     SetAppWindowsPositions = set_app_windows_positions(positions: HashMap<isize, Rect>),

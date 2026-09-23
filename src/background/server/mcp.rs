@@ -193,6 +193,58 @@ pub fn tool_definitions() -> Vec<Value> {
             "Launch one NAI app by id (e.g. email) or displayed name (e.g. NAI E-Mail).",
             r#"{"type":"object","properties":{"name":{"type":"string"}},"required":["name"]}"#,
         ),
+        // ── NAI JSON store ────────────────────────────────────────────────
+        tool(
+            "nai_catalog",
+            "Full JSON store catalog: schema, distributionType and curated entries.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_catalog_entry",
+            "One catalog entry by stable id.",
+            r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
+        ),
+        tool(
+            "nai_install",
+            "Install one catalog entry through its declared executor (winget / vsix / direct open).",
+            r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
+        ),
+        tool(
+            "nai_update",
+            "Update one installed catalog entry.",
+            r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
+        ),
+        tool(
+            "nai_uninstall",
+            "Uninstall one catalog entry.",
+            r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
+        ),
+        tool(
+            "nai_store_launch",
+            "Launch an installed catalog entry.",
+            r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
+        ),
+        // ── Activities / capsules / model gateway ─────────────────────────
+        tool(
+            "nai_activities",
+            "Activities: persistent cognitive environments with bound window identities.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_capsules",
+            "Context Capsules: semantic bundles derived from window aliases with model/QoS profile.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_gateway_models",
+            "Multimodal model gateway contract: endpoints, Qwen3-VL/OpenVINO capability metadata and media.analyze_frames schema.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_semantic_search",
+            "Qdrant-backed semantic search with bounded offline cosine fallback.",
+            r#"{"type":"object","properties":{"query":{"type":"string"},"limit":{"type":"integer"}},"required":["query"]}"#,
+        ),
     ]
 }
 
@@ -437,6 +489,35 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
             crate::modules::nai::apps::launch(&get("name")).map_err(|e| e.to_string())?,
         )
         .unwrap(),
+        // ── NAI JSON store ────────────────────────────────────────────────
+        "nai_catalog" => crate::modules::nai::store::catalog().map_err(|e| e.to_string())?,
+        "nai_catalog_entry" => serde_json::to_value(
+            crate::modules::nai::store::catalog_entry(&get("id")).map_err(|e| e.to_string())?,
+        )
+        .unwrap(),
+        "nai_install" => {
+            crate::modules::nai::store::install(&get("id")).map_err(|e| e.to_string())?
+        }
+        "nai_update" => {
+            crate::modules::nai::store::update(&get("id")).map_err(|e| e.to_string())?
+        }
+        "nai_uninstall" => {
+            crate::modules::nai::store::uninstall(&get("id")).map_err(|e| e.to_string())?
+        }
+        "nai_store_launch" => {
+            crate::modules::nai::store::launch(&get("id")).map_err(|e| e.to_string())?
+        }
+        // ── Activities / capsules / model gateway ─────────────────────────
+        "nai_activities" => serde_json::to_value(crate::modules::nai::activities()).unwrap(),
+        "nai_capsules" => serde_json::to_value(crate::modules::nai::capsules()).unwrap(),
+        "nai_gateway_models" => crate::modules::nai::gateway_models(),
+        "nai_semantic_search" => {
+            let query = get("query");
+            let limit = args.get("limit").and_then(Value::as_u64).unwrap_or(5) as usize;
+            let limit = limit.max(1);
+            let vector: Vec<f32> = query.bytes().map(|b| b as f32 / 255.0).collect();
+            tauri::async_runtime::block_on(crate::modules::nai::semantic::search(&vector, limit))
+        }
         other => return Err(format!("unknown tool: {other}")),
     };
     Ok(value)

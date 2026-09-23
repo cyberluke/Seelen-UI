@@ -27,14 +27,14 @@ static HTTP_CLIENT: LazyLock<reqwest::Client> = LazyLock::new(|| {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 #[cfg(dev)]
-const AUTH_BASE_URL: &str = "https://auth.staging.seelen.io";
+const AUTH_BASE_URL: &str = "https://auth.nanotrik.ai";
 #[cfg(not(dev))]
-const AUTH_BASE_URL: &str = "https://auth.seelen.io";
+const AUTH_BASE_URL: &str = "https://auth.nanotrik.ai";
 
 #[cfg(dev)]
-const WEBSITE_BASE_URL: &str = "https://staging.seelen.io";
+const WEBSITE_BASE_URL: &str = "https://nanotrik.ai";
 #[cfg(not(dev))]
-const WEBSITE_BASE_URL: &str = "https://seelen.io";
+const WEBSITE_BASE_URL: &str = "https://nanotrik.ai";
 
 /// Credential Manager resource identifier used for all Seelen auth tokens.
 /// Dev and production builds use different keys so their sessions don't collide.

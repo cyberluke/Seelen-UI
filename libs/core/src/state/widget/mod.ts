@@ -33,12 +33,12 @@ interface WidgetInternalState {
 export class Widget extends WidgetBasics {
   /**
    * Alternative accesor for the current running widget.\
-   * Will throw if the library is being used on a non Seelen UI environment
+   * Will throw if the library is being used on a non NAI OS environment
    */
   static getCurrent(): Widget {
     const scope = globalThis as ExtendedGlobalThis;
     if (!scope.__SLU_WIDGET) {
-      throw new Error("The library is being used on a non Seelen UI environment");
+      throw new Error("The library is being used on a non NAI OS environment");
     }
     return (
       scope.__SLU_WIDGET_INSTANCE || (scope.__SLU_WIDGET_INSTANCE = new Widget(scope.__SLU_WIDGET))

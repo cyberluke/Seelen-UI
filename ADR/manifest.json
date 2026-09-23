@@ -1,0 +1,96 @@
+{
+  "project": "NAI OS 2027 full scope",
+  "generated_at": "2026-09-21",
+  "files": [
+    {
+      "file": "00_P0_RECOVERY_BOOT_LIVENESS.md",
+      "bytes": 8648,
+      "sha256": "b349119338bb7dd717acefae0d3da7d731e0bbe723e60bf5740bbf5655e18160"
+    },
+    {
+      "file": "01_VISION_AND_PRODUCT_DOGMA.md",
+      "bytes": 3818,
+      "sha256": "46234cfad883071f7398d8bf0f7ed2f0d600cf819bdff29697ad42a257b3741d"
+    },
+    {
+      "file": "02_CORE_ARCHITECTURE.md",
+      "bytes": 4603,
+      "sha256": "6ec58a72a14d54cc217d1d71e51b5eea88849390218c40624b5096ebdad67355"
+    },
+    {
+      "file": "03_TOP_10_PLATFORM_FEATURES.md",
+      "bytes": 2739,
+      "sha256": "3f7a5458010b2560aa0a9d96d42ad194924b52166d33156577aac70cb4ce3a5a"
+    },
+    {
+      "file": "04_50_DESIGN_FEATURES.md",
+      "bytes": 6546,
+      "sha256": "c35ff3f223708ea34097c3d6861278c92509b2e3aff4a9481ca2d34d30a45c49"
+    },
+    {
+      "file": "05_APP_INTEGRATIONS.md",
+      "bytes": 3994,
+      "sha256": "babe344a4e3af63cdcb12ed647bbd0d267d4eec5696a3abd68b097096a1fc7c7"
+    },
+    {
+      "file": "06_YOUTUBE_SHORTS_VISUAL_ENGINE.md",
+      "bytes": 4223,
+      "sha256": "e01cadab5b9cb3d167bf7705fc2c9c0cdede5284c40a91d8387139a9be7a1283"
+    },
+    {
+      "file": "07_NAI_APP_STORE.md",
+      "bytes": 3134,
+      "sha256": "1a1922fb9d539baf5a43abf979d4089e2bfea9c95f7bf16629fcfe5b58834ed1"
+    },
+    {
+      "file": "08_V271_MASTODON_SOCIAL_FABRIC.md",
+      "bytes": 2395,
+      "sha256": "5a9cd19decaf67d0a5e0e1165652c7d3d52eb20f72513189d7ebd1faaf8ce482"
+    },
+    {
+      "file": "09_AGENT_RUNTIME_SECURITY_QOS.md",
+      "bytes": 2452,
+      "sha256": "202cd95a1b0e225be26879ac42b85211f307e5f1cf428a6ee77a8600597326ee"
+    },
+    {
+      "file": "10_DEVELOPER_PLATFORM_APIS.md",
+      "bytes": 2340,
+      "sha256": "4de62246abc19ebb2e91edf0456eabae1f7d41719ae7dd8e669523c71ae78c06"
+    },
+    {
+      "file": "11_ROADMAP_AND_ACCEPTANCE.md",
+      "bytes": 3794,
+      "sha256": "ccaa782a1e5de674c6b7d70ed325f762028932f5ea8efd778b78ece5302b236b"
+    },
+    {
+      "file": "12_RESEARCH_NOTES_AND_SOURCES.md",
+      "bytes": 3582,
+      "sha256": "89d2f3a3f01c42f342fdc6e96398f03220046c67fa8fae87b0339367336e18ca"
+    },
+    {
+      "file": "13_CODING_AGENT_MASTER_INSTRUCTIONS.md",
+      "bytes": 1357,
+      "sha256": "0aeae69ba21f85e4c3a02696ff6a7d123493ca672397327e8c10d779f85c5099"
+    },
+    {
+      "file": "14_FULL_SCOPE_BINDING_ADDENDUM.md",
+      "bytes": 23670,
+      "sha256": "26f9037029ba6af712298129f96c373dcdd984329bcc4fa15df335c9d6362717"
+    },
+    {
+      "file": "15_DELIVERY_ACCEPTANCE_MATRIX.md",
+      "bytes": 4368,
+      "sha256": "71eb7fb92f9b5abcaefcd09d526bb4bb445e700cd89563d253de87c6301f8582"
+    },
+    {
+      "file": "16_CURRENT_SOURCE_ANCHORS.md",
+      "bytes": 1982,
+      "sha256": "a2f4e10806e143e6c41352f131b75aa2b89c8c2ef4db856fc61f54803f44a09a"
+    },
+    {
+      "file": "README.md",
+      "bytes": 5039,
+      "sha256": "6f60c731f6d1a3c8230537aac8754e807405a37ecd01c1f1ff3a61708cddbc29"
+    }
+  ]
+}

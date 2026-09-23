@@ -6,7 +6,11 @@
 //! logical identities. UI stores are views, never the source of truth.
 
 pub mod apps;
+pub mod fabric;
 pub mod infrastructure;
+pub mod semantic;
+pub mod shorts;
+pub mod store;
 
 use std::sync::{LazyLock, Mutex};
 
@@ -162,6 +166,147 @@ pub fn capabilities() -> Vec<CapabilityDescriptor> {
             "interactive",
         ),
     ]
+}
+
+// ============================ activities ============================
+
+/// A persistent cognitive environment (ADR/02 §10): more than a virtual
+/// desktop — binds windows, capsules, media policy and model profile.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Activity {
+    pub id: &'static str,
+    pub name: &'static str,
+    /// window logical identities currently bound to this activity
+    pub objects: Vec<String>,
+}
+
+/// Built-in activity catalog (stable ids survive restarts).
+const ACTIVITY_PRESETS: &[(&str, &str)] = &[
+    ("development", "Development"),
+    ("research", "Research"),
+    ("operations", "Operations"),
+    ("media", "Media"),
+    ("communication", "Communication"),
+    ("presentation", "Presentation"),
+    ("deep-focus", "Deep Focus"),
+];
+
+/// Current activities with live window bindings resolved from the graph.
+pub fn activities() -> Vec<Activity> {
+    let entries = crate::modules::weg_core::application::window_entries();
+    ACTIVITY_PRESETS
+        .iter()
+        .map(|(id, name)| Activity {
+            id,
+            name,
+            objects: entries
+                .iter()
+                .filter(|e| {
+                    e.alias
+                        .as_deref()
+                        .is_some_and(|alias| alias.eq_ignore_ascii_case(name))
+                })
+                .map(|e| e.logical_identity.clone())
+                .collect(),
+        })
+        .collect()
+}
+
+// ============================ context capsules ============================
+
+/// Compact semantic bundle (ADR/02 §8): named object set + model/QoS profile.
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ContextCapsule {
+    pub id: String,
+    pub name: String,
+    pub activity: &'static str,
+    pub objects: Vec<String>,
+    pub model_profile: &'static str,
+    pub qos_profile: &'static str,
+}
+
+/// Capsules derived from window aliases: each distinct alias forms one
+/// capsule, so voice references ("the XeOm capsule") resolve deterministically.
+pub fn capsules() -> Vec<ContextCapsule> {
+    let entries = crate::modules::weg_core::application::window_entries();
+    let mut capsules: Vec<ContextCapsule> = Vec::new();
+    for entry in &entries {
+        let Some(alias) = entry.alias.as_deref() else {
+            continue;
+        };
+        if let Some(capsule) = capsules
+            .iter_mut()
+            .find(|c| c.name.eq_ignore_ascii_case(alias))
+        {
+            capsule.objects.push(entry.logical_identity.clone());
+            continue;
+        }
+        capsules.push(ContextCapsule {
+            id: format!("capsule:{alias}"),
+            name: alias.to_string(),
+            activity: match alias.to_ascii_lowercase().as_str() {
+                "development" | "coding" => "development",
+                "media" => "media",
+                "operations" | "ops" => "operations",
+                _ => "research",
+            },
+            objects: vec![entry.logical_identity.clone()],
+            model_profile: "coding",
+            qos_profile: "hot",
+        });
+    }
+    capsules
+}
+
+// ============================ model gateway contract ============================
+
+/// Versioned contract of the NAI multimodal model gateway (ADR/14 §8).
+/// The existing OpenVINO Qwen3-VL runtime binds to this contract; the
+/// connection itself is the named next-task binding.
+pub fn gateway_models() -> serde_json::Value {
+    serde_json::json!({
+        "schema": "nai.gateway/v1",
+        "endpoints": {
+            "models": "GET /v1/models",
+            "chat": "POST /v1/chat/completions",
+            "mediaAnalyzeFrames": "POST /v1/media/analyze_frames"
+        },
+        "transport": ["loopback-http", "named-pipe"],
+        "streaming": "SSE when the backend supports it",
+        "models": [{
+            "id": "qwen3-vl",
+            "backend": "openvino",
+            "capabilities": ["text", "vision"],
+            "maxImages": 8,
+            "maxImageBytes": 4194304,
+            "acceptedMime": ["image/png", "image/jpeg", "image/webp"],
+            "contextTokens": 32768,
+            "outputTokens": 4096,
+            "streaming": true
+        }],
+        "mediaAnalyzeFrames": {
+            "request": {
+                "videoId": "string",
+                "source": "string",
+                "timestamps": [0.0],
+                "images": ["data-url|path"],
+                "samplingPolicy": { "frames": 8, "intervalMs": 500, "maxResolution": 512 }
+            },
+            "response": {
+                "requestId": "string",
+                "results": [{
+                    "timestamp": 0.0,
+                    "ocr": ["string"],
+                    "scene": "string",
+                    "answer": "string",
+                    "evidence": ["string"]
+                }]
+            }
+        },
+        "fallback": "none (explicitly no silent provider/model fallback)"
+    })
 }
 
 // ============================ graph ============================
@@ -410,6 +555,39 @@ pub fn process_cli(cli: NaiCli) -> Result<Option<String>> {
         }
         NaiCommand::Apps => serde_json::to_value(apps::apps()).unwrap(),
         NaiCommand::Launch { name } => apps::launch(&name)?,
+        NaiCommand::Catalog => store::catalog()?,
+        NaiCommand::CatalogEntry { id } => {
+            store::catalog_entry(&id)?.unwrap_or(serde_json::Value::Null)
+        }
+        NaiCommand::Install { id } => store::install(&id)?,
+        NaiCommand::Update { id } => store::update(&id)?,
+        NaiCommand::Uninstall { id } => store::uninstall(&id)?,
+        NaiCommand::Activities => serde_json::to_value(activities()).unwrap(),
+        NaiCommand::Capsules => serde_json::to_value(capsules()).unwrap(),
+        NaiCommand::GatewayModels => gateway_models(),
+        NaiCommand::SemanticSearch { query, limit } => {
+            let vector: Vec<f32> = query.bytes().map(|b| b as f32 / 255.0).collect();
+            let limit = limit.unwrap_or(5).max(1);
+            tauri::async_runtime::block_on(semantic::search(&vector, limit))
+        }
+        NaiCommand::ShortsSearch { query, limit } => {
+            tauri::async_runtime::block_on(shorts::search(&query, limit.unwrap_or(10)))
+                .unwrap_or_else(|err| serde_json::json!({ "error": err }))
+        }
+        NaiCommand::ShortsEnqueue { video_id, reason } => {
+            shorts::enqueue(&video_id, &reason.unwrap_or_default())
+        }
+        NaiCommand::ShortsNext => shorts::next(),
+        NaiCommand::ShortsQueue => shorts::queue_state(),
+        NaiCommand::PipContract => shorts::pip_contract(),
+        NaiCommand::SocialTimeline { limit } => {
+            tauri::async_runtime::block_on(fabric::timeline_home(limit.unwrap_or(10)))
+                .unwrap_or_else(|err| serde_json::json!({ "error": err }))
+        }
+        NaiCommand::SocialNotifications { limit } => {
+            tauri::async_runtime::block_on(fabric::notifications(limit.unwrap_or(10)))
+                .unwrap_or_else(|err| serde_json::json!({ "error": err }))
+        }
     };
     Ok(Some(value.to_string()))
 }

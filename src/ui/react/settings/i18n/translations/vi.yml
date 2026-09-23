@@ -37,7 +37,7 @@ apps_configurations:
   export: Xuất khẩu
   export_full: Cài đặt xuất theo ứng dụng
   extra_info: >-
-    Seelen UI chỉ sử dụng một định danh cho mỗi ứng dụng (tìm thấy trận đấu đầu
+    NAI OS chỉ sử dụng một định danh cho mỗi ứng dụng (tìm thấy trận đấu đầu
     tiên) vì vậy thứ tự được cụ thể là quan trọng, phần được thêm mới nhất sẽ
     được ưu tiên, vì ghi chú được sắp xếp theo mặc định từ mới nhất đến cũ.
   identifier:
@@ -118,7 +118,7 @@ devtools:
     widget_id: ID tiện ích
 discord_banner:
   message: >-
-    Kết nối với những người dùng Seelen UI khác, nhận trợ giúp, chia sẻ chủ đề
+    Kết nối với những người dùng NAI OS khác, nhận trợ giúp, chia sẻ chủ đề
     và cập nhật những tin tức mới nhất.
   title: Tham gia cộng đồng của chúng tôi
 extras:
@@ -169,7 +169,7 @@ general:
     plugged: Cắm hoặc sạc
   polling_interval: Khoảng thời gian thăm dò hệ thống
   polling_interval_description: >-
-    Tần suất (tính bằng giây) Seelen UI kiểm tra các tài nguyên hệ thống như
+    Tần suất (tính bằng giây) NAI OS kiểm tra các tài nguyên hệ thống như
     hoạt động của CPU, RAM, mạng và ổ đĩa. Số lượng nhỏ hơn có nghĩa là cập nhật
     thường xuyên hơn nhưng mức sử dụng tài nguyên cao hơn một chút.
   saturday: Thứ bảy
@@ -237,7 +237,7 @@ resources:
   included_plugins: Các plugin đi kèm
   open_folder: Mở thư mục tài nguyên
   outdated: >-
-    Tài nguyên này được thiết kế cho phiên bản cũ của SEELEN UI và có thể không
+    Tài nguyên này được thiết kế cho phiên bản cũ của NAI OS và có thể không
     hoạt động đúng.
   see_on_website: Xem trên trang web
   update_now: Cập nhật
@@ -407,13 +407,13 @@ weg:
 welcome:
   give_a_review: Đưa ra đánh giá
   message: >-
-    Seelen UI là môi trường máy tính để bàn nguồn mở và miễn phí dành cho
+    NAI OS là môi trường máy tính để bàn nguồn mở và miễn phí dành cho
     Windows. Tại đây, bạn có toàn quyền kiểm soát giao diện và hoạt động của màn
     hình, cho phép bạn tùy chỉnh mọi chi tiết để phù hợp với quy trình làm việc
     và phong cách của mình.
   ok: Hãy bắt đầu!
   review: >-
-    Nếu bạn thích sử dụng Seelen UI, hãy cân nhắc để lại đánh giá trên cửa hàng
+    Nếu bạn thích sử dụng NAI OS, hãy cân nhắc để lại đánh giá trên cửa hàng
     - phản hồi của bạn sẽ giúp dự án phát triển và cải thiện.
   title: Chào mừng bạn đến với giao diện người dùng Seelen!
 widget:

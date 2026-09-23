@@ -21,7 +21,7 @@ pub trait SluCliCommand {
 
 /// NAI OS Command Line Interface
 #[derive(Debug, clap::Parser)]
-#[command(version, name = "NAI OS")]
+#[command(version, name = "seelen-ui")]
 pub struct AppCli {
     /// Prints some extra information on the console.
     #[arg(long, default_value_t)]
@@ -147,7 +147,7 @@ pub enum ResourceSubCommand {
         kind: ClapResourceKind,
         path: PathBuf,
     },
-    /// Translates a resource text file to all the supported languages by Seelen UI
+    /// Translates a resource text file to all the supported languages by NAI OS
     /// this file should contain the source language key and value in order to be translated.
     ///
     /// Example:
@@ -310,6 +310,71 @@ pub enum NaiCommand {
     Launch {
         /// app id (e.g. email) or displayed name (e.g. "NAI E-Mail")
         name: String,
+    },
+    /// JSON store catalog (schema + curated entries)
+    Catalog,
+    /// One catalog entry by id
+    CatalogEntry {
+        /// stable catalog id
+        id: String,
+    },
+    /// Install one catalog entry through its executor
+    Install {
+        /// stable catalog id
+        id: String,
+    },
+    /// Update one installed catalog entry
+    Update {
+        /// stable catalog id
+        id: String,
+    },
+    /// Uninstall one catalog entry
+    Uninstall {
+        /// stable catalog id
+        id: String,
+    },
+    /// Activities (persistent cognitive environments)
+    Activities,
+    /// Context Capsules
+    Capsules,
+    /// Multimodal model gateway contract (models + capability metadata)
+    GatewayModels,
+    /// Qdrant-backed semantic search with offline cosine fallback
+    SemanticSearch {
+        /// query text
+        query: String,
+        /// result count
+        limit: Option<usize>,
+    },
+    /// Shorts candidate search (YouTube Data API)
+    ShortsSearch {
+        /// query text
+        query: String,
+        /// result count
+        limit: Option<usize>,
+    },
+    /// Enqueue a Shorts candidate with queue reason
+    ShortsEnqueue {
+        /// video id
+        video_id: String,
+        /// queue reason / provenance
+        reason: Option<String>,
+    },
+    /// Next item of the vertical queue
+    ShortsNext,
+    /// Full queue state
+    ShortsQueue,
+    /// PiP shell-object contract
+    PipContract,
+    /// Mastodon home timeline
+    SocialTimeline {
+        /// result count
+        limit: Option<usize>,
+    },
+    /// Mastodon notifications
+    SocialNotifications {
+        /// result count
+        limit: Option<usize>,
     },
 }
 
