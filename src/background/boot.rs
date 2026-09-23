@@ -54,6 +54,8 @@ struct StageRecord {
     delta_ns: u128,
     unix_ms: u64,
     source: &'static str, // "backend" | "frontend"
+    /// pod generation this record belongs to (0 for global stages)
+    generation: u64,
 }
 
 #[derive(Debug, Default)]
@@ -109,6 +111,7 @@ pub fn record_global(stage: &'static str) {
             delta_ns: delta,
             unix_ms: unix_ms(),
             source: "backend",
+            generation: 0,
         },
     );
 }
@@ -142,6 +145,7 @@ fn record_pod_inner(label: &str, stage: &str, source: &'static str) {
         delta_ns: delta,
         unix_ms: unix_ms(),
         source,
+        generation: pod.generation,
     });
     pod.last_ns = Some(at);
 }
@@ -196,10 +200,11 @@ pub fn record_gave_up(label: &str) {
 
 // ============================ expected pipelines ============================
 
-const BACKEND_PIPELINE: [&str; 6] = [
+const BACKEND_PIPELINE: [&str; 7] = [
     "process.started",
     "single_instance.acquired",
     "integrity.complete",
+    "bundle.complete",
     "resources.complete",
     "state.complete",
     "widget.reconcile.complete",
@@ -296,10 +301,15 @@ pub fn snapshot(label: Option<&str>) -> Value {
             "gaveUp": pod.gave_up,
             "livenessRtt": percentiles(&pod.rtt_us),
             "stages": pod.stages.iter().map(stage_json).collect::<Vec<_>>(),
+            // generation-scoped analysis: only the stages recorded for the
+            // CURRENT generation count; a fully rolled ring for this generation
+            // is reported via `ringEmptyForGeneration` instead of being mixed
+            // with older generations' stages.
             "firstMissingStage": first_missing(
                 &POD_BACKEND_PIPELINE.into_iter().chain(POD_FRONTEND_PIPELINE).collect::<Vec<_>>(),
-                &pod.stages.iter().cloned().collect::<Vec<_>>(),
+                &pod.stages.iter().filter(|r| r.generation == pod.generation).cloned().collect::<Vec<_>>(),
             ),
+            "ringEmptyForGeneration": !pod.stages.iter().any(|r| r.generation == pod.generation),
         }),
         None => serde_json::json!({
             "pid": std::process::id(),

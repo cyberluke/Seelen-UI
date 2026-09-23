@@ -333,6 +333,16 @@ pub enum NaiCommand {
         /// stable catalog id
         id: String,
     },
+    /// Independent install-state detection for one catalog entry
+    AppStatus {
+        /// stable catalog id
+        id: String,
+    },
+    /// Open NAI OS settings on a route (e.g. /, /general, /widget)
+    OpenSettings {
+        /// settings route path
+        route: String,
+    },
     /// Activities (persistent cognitive environments)
     Activities,
     /// Context Capsules

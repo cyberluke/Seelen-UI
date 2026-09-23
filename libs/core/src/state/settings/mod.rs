@@ -386,6 +386,7 @@ pub struct WindowPreviewSettings {
     /// auto-compute columns from available space
     pub auto_grid: bool,
     /// preferred number of columns when auto grid computes within bounds
+    #[serde(alias = "columns")]
     pub preferred_columns: u32,
     /// minimum columns clamp
     pub min_columns: u32,
@@ -394,8 +395,10 @@ pub struct WindowPreviewSettings {
     /// maximum rows before the list scrolls
     pub max_rows: u32,
     /// popup maximum width in px
+    #[serde(alias = "maxPopupWidth")]
     pub max_width: u32,
     /// popup maximum height in px
+    #[serde(alias = "maxPopupHeight")]
     pub max_height: u32,
     /// gap between cards in px
     pub gap: u32,

@@ -187,7 +187,7 @@ header:
     developer: For developers
     extras: Extras
     general: General
-    home: Home
+    home: NAI OS Launcher
     iconpack: Icon Packs
     monitors: Monitors
     plugin: Plugins
@@ -195,6 +195,7 @@ header:
     session: Account
     shortcuts: Shortcuts
     soundpack: Sound Packs
+    store: AI Apps Store
     specific_apps: Settings by Application
     theme: Themes
     virtual_desk: Virtual Desktops
@@ -204,10 +205,27 @@ home:
   new_resources: New Resources
 inherit: Inherit
 inProgress: In Progress...
+install: Install
 insert: Insert
 join_us: Join us!
 loading: Loading...
 miscellaneous: Miscellaneous
+nai:
+  apps: NAI Apps
+  gateway: Model Gateway
+  installed: Installed
+  nai_apps: NAI Apps
+  not_installed: Not installed
+  open_jarvis: Open Jarvis
+  pinned: Pinned
+  recent: Recent
+  restart: Restart NAI OS
+  running: Running
+  store: AI Apps Store
+  system: System shortcuts
+  tagline: AI-native Windows workstation
+  unknown: Unknown
+  update: Update
 monitors_configurations:
   label: Monitor {{index}}
 more: More

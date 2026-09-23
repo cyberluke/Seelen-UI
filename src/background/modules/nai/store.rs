@@ -202,6 +202,71 @@ pub fn uninstall(id: &str) -> Result<Value> {
     Ok(serde_json::json!({ "id": id, "executor": executor, "success": success, "output": output }))
 }
 
+/// Independent installed-state detection (never inferred from an install click).
+/// Returns one of: `Installed`, `NotInstalled`, `Unknown`.
+pub fn status(id: &str) -> Result<Value> {
+    let entry = catalog_entry(id)?.ok_or_else(|| format!("unknown catalog id: {id}"))?;
+    let executor = executor_of(&entry)?;
+
+    let state = match executor {
+        "package-manager" => match source_id_of(&entry).ok() {
+            Some(src) if !src.is_empty() => {
+                let out = Command::new("winget")
+                    .args(["list", "--id", &src, "-e", "--accept-source-agreements"])
+                    .output();
+                match out {
+                    Ok(o) if o.status.success() => {
+                        let text = String::from_utf8_lossy(&o.stdout);
+                        if text
+                            .to_ascii_lowercase()
+                            .contains(&src.to_ascii_lowercase())
+                        {
+                            "Installed".to_string()
+                        } else {
+                            "NotInstalled".to_string()
+                        }
+                    }
+                    Ok(_) => "NotInstalled".to_string(),
+                    Err(_) => "Unknown".to_string(),
+                }
+            }
+            _ => "Unknown".to_string(),
+        },
+        "vsix" => match source_id_of(&entry).ok() {
+            Some(src) => {
+                let out = Command::new("code").args(["--list-extensions"]).output();
+                match out {
+                    Ok(o) if o.status.success() => {
+                        let text = String::from_utf8_lossy(&o.stdout);
+                        let found = text.lines().any(|l| l.eq_ignore_ascii_case(&src));
+                        if found {
+                            "Installed".to_string()
+                        } else {
+                            "NotInstalled".to_string()
+                        }
+                    }
+                    _ => "Unknown".to_string(),
+                }
+            }
+            _ => "Unknown".to_string(),
+        },
+        "direct" | "manifest" => entry
+            .get("executablePath")
+            .and_then(Value::as_str)
+            .map(|p| {
+                if std::path::Path::new(p).exists() {
+                    "Installed".to_string()
+                } else {
+                    "NotInstalled".to_string()
+                }
+            })
+            .unwrap_or_else(|| "Unknown".to_string()),
+        _ => "Unknown".to_string(),
+    };
+
+    Ok(serde_json::json!({ "id": id, "state": state }))
+}
+
 /// Launch an installed entry: prefer the resolved executable, fall back to
 /// the download/open URL for `web`-type entries.
 pub fn launch(id: &str) -> Result<Value> {

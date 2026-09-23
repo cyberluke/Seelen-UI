@@ -224,6 +224,16 @@ pub fn tool_definitions() -> Vec<Value> {
             "Launch an installed catalog entry.",
             r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
         ),
+        tool(
+            "nai_app_status",
+            "Independent install-state detection for one catalog entry (Installed / NotInstalled / Unknown).",
+            r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
+        ),
+        tool(
+            "nai_open_settings",
+            "Open the NAI OS settings on a route (e.g. /, /general, /resources, /widget, ...).",
+            r#"{"type":"object","properties":{"route":{"type":"string"}},"required":["route"]}"#,
+        ),
         // ── Activities / capsules / model gateway ─────────────────────────
         tool(
             "nai_activities",
@@ -506,6 +516,13 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
         }
         "nai_store_launch" => {
             crate::modules::nai::store::launch(&get("id")).map_err(|e| e.to_string())?
+        }
+        "nai_app_status" => {
+            crate::modules::nai::store::status(&get("id")).map_err(|e| e.to_string())?
+        }
+        "nai_open_settings" => {
+            crate::widgets::show_settings_at(&get("route")).map_err(|e| e.to_string())?;
+            json!({ "opened": get("route") })
         }
         // ── Activities / capsules / model gateway ─────────────────────────
         "nai_activities" => serde_json::to_value(crate::modules::nai::activities()).unwrap(),

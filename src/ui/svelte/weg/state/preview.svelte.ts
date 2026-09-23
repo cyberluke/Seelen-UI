@@ -24,12 +24,12 @@ export interface RawPreviewSettings {
   aspectRatioNum?: number;
   aspectRatioDen?: number;
   autoGrid?: boolean;
-  columns?: number;
+  preferredColumns?: number;
   minColumns?: number;
   maxColumns?: number;
   maxRows?: number;
-  maxPopupWidth?: number;
-  maxPopupHeight?: number;
+  maxWidth?: number;
+  maxHeight?: number;
   gap?: number;
   padding?: number;
   borderRadius?: number;
@@ -67,12 +67,12 @@ const FALLBACK: Required<RawPreviewSettings> = {
   aspectRatioNum: 16,
   aspectRatioDen: 9,
   autoGrid: true,
-  columns: 3,
+  preferredColumns: 3,
   minColumns: 1,
   maxColumns: 8,
   maxRows: 4,
-  maxPopupWidth: 800,
-  maxPopupHeight: 560,
+  maxWidth: 800,
+  maxHeight: 560,
   gap: 10,
   padding: 10,
   borderRadius: 10,
@@ -100,13 +100,33 @@ const FALLBACK: Required<RawPreviewSettings> = {
 /// `$derived` expressions and `state_unsafe_mutation` is triggered otherwise.
 let _previewSettingsReads = 0;
 
+/// The backend serializes preview settings with canonical camelCase keys
+/// (`maxWidth`, `preferredColumns`, ...), while older settings files and the
+/// Settings UI patches use the legacy spellings (`maxPopupWidth`, `columns`,
+/// ...). Resolve both into the canonical shape so every consumer sees one
+/// consistent model.
+function normalizePreview(raw: RawPreviewSettings): Required<RawPreviewSettings> {
+  const legacy = raw as Record<string, unknown>;
+  const merged: Required<RawPreviewSettings> = { ...FALLBACK, ...raw };
+  const pick = (canonical: number | undefined, oldKey: string): number => {
+    if (typeof canonical === "number") return canonical;
+    const legacyValue = legacy[oldKey];
+    if (typeof legacyValue === "number") return legacyValue;
+    return FALLBACK[oldKey as keyof typeof FALLBACK] as number ?? canonical ?? 0;
+  };
+  merged.maxWidth = pick(raw.maxWidth, "maxPopupWidth");
+  merged.maxHeight = pick(raw.maxHeight, "maxPopupHeight");
+  merged.preferredColumns = pick(raw.preferredColumns, "columns");
+  return merged;
+}
+
 export function previewSettings(): Required<RawPreviewSettings> {
   _previewSettingsReads += 1;
   const raw = (settingsState.value as any)?.preview as RawPreviewSettings | undefined;
   if (!raw) {
     return FALLBACK;
   }
-  return { ...FALLBACK, ...raw };
+  return normalizePreview(raw);
 }
 
 export function previewSettingsReads(): number {
@@ -127,8 +147,8 @@ export function computePreviewLayout(
   const s = previewSettings();
   const scale = monitor.scaleFactor || 1;
 
-  const maxPopupW = Math.round(s.maxPopupWidth * scale);
-  const maxPopupH = Math.round(s.maxPopupHeight * scale);
+  const maxPopupW = Math.round(s.maxWidth * scale);
+  const maxPopupH = Math.round(s.maxHeight * scale);
   const gap = Math.round(s.gap * scale);
   const padding = Math.round(s.padding * scale);
   const borderRadius = Math.round(s.borderRadius * scale);
@@ -152,7 +172,7 @@ export function computePreviewLayout(
   if (vertical) {
     columns = 1;
   } else if (!s.autoGrid || s.ordering !== "Manual") {
-    columns = clamp(s.columns, s.minColumns, s.maxColumns);
+    columns = clamp(s.preferredColumns, s.minColumns, s.maxColumns);
   } else {
     columns = clamp(
       Math.floor((innerW + gap) / (cardWidth + gap)),

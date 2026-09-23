@@ -145,6 +145,8 @@ export enum SeelenCommand {
   NaiUpdate = "nai_update",
   NaiUninstall = "nai_uninstall",
   NaiStoreLaunch = "nai_store_launch",
+  NaiAppStatus = "nai_app_status",
+  NaiOpenSettings = "nai_open_settings",
   NaiActivities = "nai_activities",
   NaiCapsules = "nai_capsules",
   NaiGatewayModels = "nai_gateway_models",

@@ -286,6 +286,8 @@ slu_commands_declaration! {
     NaiUpdate = nai_update(id: String) -> serde_json::Value,
     NaiUninstall = nai_uninstall(id: String) -> serde_json::Value,
     NaiStoreLaunch = nai_store_launch(id: String) -> serde_json::Value,
+    NaiAppStatus = nai_app_status(id: String) -> serde_json::Value,
+    NaiOpenSettings = nai_open_settings(route: String),
 
     // NAI activities, capsules and model gateway contract
     NaiActivities = nai_activities() -> Vec<serde_json::Value>,

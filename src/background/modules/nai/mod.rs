@@ -562,6 +562,11 @@ pub fn process_cli(cli: NaiCli) -> Result<Option<String>> {
         NaiCommand::Install { id } => store::install(&id)?,
         NaiCommand::Update { id } => store::update(&id)?,
         NaiCommand::Uninstall { id } => store::uninstall(&id)?,
+        NaiCommand::AppStatus { id } => store::status(&id)?,
+        NaiCommand::OpenSettings { route } => {
+            crate::widgets::show_settings_at(&route)?;
+            serde_json::json!({ "opened": route })
+        }
         NaiCommand::Activities => serde_json::to_value(activities()).unwrap(),
         NaiCommand::Capsules => serde_json::to_value(capsules()).unwrap(),
         NaiCommand::GatewayModels => gateway_models(),

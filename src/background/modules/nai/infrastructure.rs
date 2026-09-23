@@ -89,6 +89,20 @@ pub fn nai_store_launch(id: String) -> Result<serde_json::Value> {
     nai::store::launch(&id)
 }
 
+/// Independent install-state detection for one catalog entry
+/// (`Installed` / `NotInstalled` / `Unknown`).
+#[tauri::command(async)]
+pub fn nai_app_status(id: String) -> Result<serde_json::Value> {
+    nai::store::status(&id)
+}
+
+/// Deterministic settings-route opener for Jarvis/Kelvin/MCP bridging:
+/// focuses the settings widget and navigates it to `route`.
+#[tauri::command(async)]
+pub fn nai_open_settings(route: String) -> Result<()> {
+    crate::widgets::show_settings_at(&route)
+}
+
 /// Activities: persistent cognitive environments.
 #[tauri::command(async)]
 pub fn nai_activities() -> Result<Vec<nai::Activity>> {

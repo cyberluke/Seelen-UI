@@ -10,7 +10,7 @@ import { Shortcuts } from "./modules/shortcuts/infrastructure.tsx";
 
 import { Layout } from "./components/layout/index.tsx";
 import { RoutePath } from "./components/navigation/routes.tsx";
-import { Home } from "./modules/Home/index.tsx";
+import { NaiLauncher, NaiStore } from "./modules/NAI/View.tsx";
 import { ThemeView } from "./modules/resources/Theme/View.tsx";
 import { SingleWallpaperView } from "./modules/resources/Wallpapers/View.tsx";
 import { WidgetView } from "./modules/resources/Widget/View.tsx";
@@ -19,7 +19,8 @@ export function Routing() {
   return (
     <Routes>
       <Route Component={Layout}>
-        <Route index Component={Home} />
+        <Route index Component={NaiLauncher} />
+        <Route path={RoutePath.Store} Component={NaiStore} />
         <Route path={RoutePath.General} Component={General} />
         <Route path={RoutePath.Resource + "/*"} Component={ResourcesView} />
         <Route path={RoutePath.SettingsByMonitor} Component={SettingsByMonitor} />
