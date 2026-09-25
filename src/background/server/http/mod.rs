@@ -327,6 +327,12 @@ async fn v1_nai_gateway_models(res: &mut Response) {
     write_json(res, &crate::modules::nai::gateway_models());
 }
 
+/// GET /v1/nai/telemetry
+#[handler]
+async fn v1_nai_telemetry(res: &mut Response) {
+    write_json(res, &crate::modules::nai::telemetry::sample());
+}
+
 /// GET /v1/nai/semantic/{query}  (optional ?limit=)
 #[handler]
 async fn v1_nai_semantic(req: &mut Request, res: &mut Response) {
@@ -348,6 +354,110 @@ async fn v1_nai_apps(res: &mut Response) {
 async fn v1_nai_app_launch(req: &mut Request, res: &mut Response) {
     let id = req.param::<String>("id").unwrap_or_default();
     write_result(res, crate::modules::nai::apps::launch(&id));
+}
+
+// ── Media / Shorts engine ───────────────────────────────────────────────────
+
+/// GET /v1/nai/shorts/{query}  (optional ?limit=)
+#[handler]
+async fn v1_nai_shorts(req: &mut Request, res: &mut Response) {
+    let query = req.param::<String>("query").unwrap_or_default();
+    let limit = req.query::<usize>("limit").unwrap_or(10);
+    match crate::modules::nai::shorts::search(&query, limit).await {
+        Ok(value) => write_json(res, &value),
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err));
+        }
+    }
+}
+
+/// POST /v1/nai/shorts/enqueue/{id}  (optional ?reason=)
+#[handler]
+async fn v1_nai_shorts_enqueue(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    let reason = req.query::<String>("reason").unwrap_or_default();
+    let value = crate::modules::nai::shorts::enqueue(&id, &reason);
+    write_json(res, &value);
+}
+
+/// POST /v1/nai/shorts/next
+#[handler]
+async fn v1_nai_shorts_next(res: &mut Response) {
+    write_json(res, &crate::modules::nai::shorts::next());
+}
+
+/// GET /v1/nai/shorts/queue
+#[handler]
+async fn v1_nai_shorts_queue(res: &mut Response) {
+    write_json(res, &crate::modules::nai::shorts::queue_state());
+}
+
+/// GET /v1/nai/pip
+#[handler]
+async fn v1_nai_pip(res: &mut Response) {
+    write_json(res, &crate::modules::nai::shorts::pip_contract());
+}
+
+// ── Social fabric (Mastodon / v271) ─────────────────────────────────────────
+
+/// GET /v1/nai/social/{lane}  lane = home|local|notifications (optional ?limit=)
+#[handler]
+async fn v1_nai_social(req: &mut Request, res: &mut Response) {
+    let lane = req.param::<String>("lane").unwrap_or_default();
+    let limit = req.query::<usize>("limit").unwrap_or(10);
+    let result = match lane.as_str() {
+        "home" => crate::modules::nai::fabric::timeline_home(limit).await,
+        "local" => crate::modules::nai::fabric::timeline_local(limit).await,
+        "notifications" => crate::modules::nai::fabric::notifications(limit).await,
+        other => Err(format!("unknown social lane: {other}")),
+    };
+    match result {
+        Ok(value) => write_json(res, &value),
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err));
+        }
+    }
+}
+
+/// POST /v1/nai/social/compose  (?status=)
+#[handler]
+async fn v1_nai_social_compose(req: &mut Request, res: &mut Response) {
+    let status = req.query::<String>("status").unwrap_or_default();
+    match crate::modules::nai::fabric::compose(&status).await {
+        Ok(value) => write_json(res, &value),
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err));
+        }
+    }
+}
+
+/// POST /v1/nai/v271/{prompt}
+#[handler]
+async fn v1_nai_v271(req: &mut Request, res: &mut Response) {
+    let prompt = req.param::<String>("prompt").unwrap_or_default();
+    match crate::modules::nai::fabric::v271_chat(&prompt).await {
+        Ok(value) => write_json(res, &value),
+        Err(err) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(err));
+        }
+    }
+}
+
+/// GET /v1/nai/semantic-upsert/{id}  (?v=1,2,3)
+#[handler]
+async fn v1_nai_semantic_upsert(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    let raw = req.query::<String>("v").unwrap_or_default();
+    let vector: Vec<f32> = raw
+        .split(',')
+        .filter_map(|part| part.trim().parse::<f32>().ok())
+        .collect();
+    let value = crate::modules::nai::semantic::upsert(&id, &vector).await;
+    write_json(res, &value);
 }
 
 /// GET /v1/store/catalog
@@ -393,6 +503,32 @@ async fn v1_store_uninstall(req: &mut Request, res: &mut Response) {
 async fn v1_store_launch(req: &mut Request, res: &mut Response) {
     let id = req.param::<String>("id").unwrap_or_default();
     write_result(res, crate::modules::nai::store::launch(&id));
+}
+
+/// GET /v1/store/{id}/status  (independent install-state detection)
+#[handler]
+async fn v1_store_status(req: &mut Request, res: &mut Response) {
+    let id = req.param::<String>("id").unwrap_or_default();
+    write_result(res, crate::modules::nai::store::status(&id));
+}
+
+/// GET /v1/store/jobs  (recent background package jobs, newest first)
+#[handler]
+async fn v1_store_jobs(res: &mut Response) {
+    write_result(res, crate::modules::nai::store::jobs());
+}
+
+/// POST /v1/store/jobs/{jobId}/cancel  (kill + reap the direct child)
+#[handler]
+async fn v1_store_job_cancel(req: &mut Request, res: &mut Response) {
+    let raw = req.param::<String>("jobId").unwrap_or_default();
+    match raw.parse::<u64>() {
+        Ok(job_id) => write_json(res, &crate::modules::nai::store::cancel(job_id)),
+        Err(_) => {
+            res.status_code(StatusCode::BAD_REQUEST);
+            res.render(Text::Plain(format!("invalid job id: {raw}")));
+        }
+    }
 }
 
 // ============================ v1 system tray ============================
@@ -588,7 +724,27 @@ async fn run_http_server() {
                 .push(Router::with_path("activities").get(v1_nai_activities))
                 .push(Router::with_path("capsules").get(v1_nai_capsules))
                 .push(Router::with_path("gateway/models").get(v1_nai_gateway_models))
+                .push(Router::with_path("telemetry").get(v1_nai_telemetry))
                 .push(Router::with_path("semantic/{query}").get(v1_nai_semantic))
+                .push(
+                    Router::with_path("semantic-upsert/{id}")
+                        .post(v1_nai_semantic_upsert)
+                        .get(v1_nai_semantic_upsert),
+                )
+                .push(Router::with_path("pip").get(v1_nai_pip))
+                .push(
+                    Router::with_path("shorts")
+                        .push(Router::with_path("queue").get(v1_nai_shorts_queue))
+                        .push(Router::with_path("next").post(v1_nai_shorts_next))
+                        .push(Router::with_path("enqueue/{id}").post(v1_nai_shorts_enqueue))
+                        .push(Router::with_path("{query}").get(v1_nai_shorts)),
+                )
+                .push(
+                    Router::with_path("social")
+                        .push(Router::with_path("compose").post(v1_nai_social_compose))
+                        .push(Router::with_path("{lane}").get(v1_nai_social)),
+                )
+                .push(Router::with_path("v271/{prompt}").post(v1_nai_v271))
                 .push(
                     Router::with_path("apps").get(v1_nai_apps).push(
                         Router::with_path("{id}")
@@ -601,11 +757,17 @@ async fn run_http_server() {
                 .push(Router::with_path("catalog").get(v1_store_catalog))
                 .push(Router::with_path("catalog/{id}").get(v1_store_catalog_entry))
                 .push(
+                    Router::with_path("jobs")
+                        .get(v1_store_jobs)
+                        .push(Router::with_path("{jobId}").post(v1_store_job_cancel)),
+                )
+                .push(
                     Router::with_path("{id}")
                         .push(Router::with_path("install").post(v1_store_install))
                         .push(Router::with_path("update").post(v1_store_update))
                         .push(Router::with_path("uninstall").post(v1_store_uninstall))
-                        .push(Router::with_path("launch").post(v1_store_launch)),
+                        .push(Router::with_path("launch").post(v1_store_launch))
+                        .push(Router::with_path("status").get(v1_store_status)),
                 ),
         );
 

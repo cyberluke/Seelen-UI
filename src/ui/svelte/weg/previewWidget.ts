@@ -196,6 +196,7 @@ export function triggerPreviewWidget(
   const signature = signatureOf(windows);
   const anchor = computeAnchor(itemEl);
   const anchorKey = `${anchor.x},${anchor.y}`;
+  const geom = snapshotTriggerGeometry(itemEl);
 
   cancelHide();
 
@@ -211,7 +212,7 @@ export function triggerPreviewWidget(
       return;
     }
     // only the anchor moved: refresh position without rebuilding the session
-    sendTrigger(groupKey, signature, current.id, windows, preview, anchor, t0Date);
+    sendTrigger(groupKey, signature, current.id, windows, preview, anchor, t0Date, geom);
     session.lastAnchorKey = anchorKey;
     debug("preview-request", { reason: "anchor-moved" });
     return;
@@ -222,19 +223,57 @@ export function triggerPreviewWidget(
   session.lastAnchorKey = anchorKey;
   session.phase = "Opening";
   session.pointerInsidePreview = false;
-  sendTrigger(groupKey, signature, previewSessionId, windows, preview, anchor, t0Date);
+  sendTrigger(groupKey, signature, previewSessionId, windows, preview, anchor, t0Date, geom);
   session.phase = "Open";
   debug("preview-request", { reason: "new-session" });
 }
 
+/**
+ * Geometry correlated with one trigger, taken at each authoritative layer:
+ * icon DOM rect (dock frontend), physical icon rect (after scale/monitor
+ * conversion), monitor rect and the dock's own native window rect (taskbar
+ * body surface). Forwarded inside the trigger payload so the preview webview
+ * folds everything into a single atomic frame trace for the same session.
+ */
+interface TriggerGeometry {
+  iconDomRect: { left: number; top: number; width: number; height: number };
+  iconPhysicalRect: { x: number; y: number; width: number; height: number };
+  monitor: { left: number; top: number; right: number; bottom: number };
+  taskbarRect: { x: number; y: number; width: number; height: number };
+  taskbarVisible: boolean;
+  scaleFactor: number;
+}
+
+function snapshotTriggerGeometry(itemEl: HTMLElement): TriggerGeometry {
+  const scaleFactor = systemState.currentMonitor.scaleFactor || globalThis.devicePixelRatio || 1;
+  const hitbox = settingsState.widgetRect.hitboxRect;
+  const dom = itemEl.getBoundingClientRect();
+  const frame = Widget.self.frame;
+  return {
+    iconDomRect: { left: dom.left, top: dom.top, width: dom.width, height: dom.height },
+    iconPhysicalRect: {
+      x: hitbox.left + Math.round(dom.left * scaleFactor),
+      y: hitbox.top + Math.round(dom.top * scaleFactor),
+      width: Math.round(dom.width * scaleFactor),
+      height: Math.round(dom.height * scaleFactor),
+    },
+    monitor: { ...systemState.currentMonitor.rect },
+    // the dock's own native window is the taskbar body surface
+    taskbarRect: { x: frame.x, y: frame.y, width: frame.width, height: frame.height },
+    taskbarVisible: true,
+    scaleFactor,
+  };
+}
+
 function sendTrigger(
-  _groupKey: string,
+  groupKey: string,
   _signature: string,
   previewSessionId: string,
   windows: UserAppWindow[],
   preview: ReturnType<typeof previewSettings>,
   anchor: PreviewAnchor,
   t0Date?: number,
+  geom?: TriggerGeometry,
 ): void {
   invoke(SeelenCommand.TriggerWidget, {
     payload: {
@@ -244,11 +283,13 @@ function sendTrigger(
       alignY: anchor.alignY,
       customArgs: {
         previewSessionId,
+        groupKey,
         hwnds: windows.map((w) => w.hwnd),
         position: settingsState.position,
         t0Date,
         animated: preview.animated,
         animationDuration: preview.animationDuration,
+        geometry: geom,
       },
     },
   });

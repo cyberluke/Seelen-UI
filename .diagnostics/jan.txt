@@ -1,0 +1,1 @@
+{"executor":"winget","exitCode":-1978335212,"id":"jan","jobId":30,"output":"No package found matching input criteria.","state":"failed","success":false}

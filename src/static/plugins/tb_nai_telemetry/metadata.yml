@@ -1,0 +1,9 @@
+id: "@default/nai-telemetry"
+metadata:
+  displayName: !extend i18n/display_name.yml
+icon: PiCpuBold
+target: "@seelen/fancy-toolbar"
+plugin:
+  scopes:
+    - NaiTelemetry
+  template: !include plugin/template.js

@@ -434,7 +434,8 @@ pub struct WindowPreviewSettings {
     pub cache_enabled: bool,
     /// max thumbnails kept per cache tier
     pub thumbnail_cache_size: u32,
-    /// cache memory budget in KiB
+    /// prepared-entry budget: how many cards of one popup keep a hot
+    /// thumbnail resolution before the rest fall back to the icon placeholder
     pub cache_memory_budget: u32,
     /// show stale thumbnails immediately and refresh asynchronously
     pub stale_while_refresh: bool,

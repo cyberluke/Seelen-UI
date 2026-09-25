@@ -1,0 +1,10 @@
+{
+  "buildId": "c64c8483d552e6c13723a80734c40b8dfeaf2a57-2026-09-23T12:15:33+02:00",
+  "gitSha": "c64c8483d552e6c13723a80734c40b8dfeaf2a57",
+  "buildTimestamp": "2026-09-23T12:15:33+02:00",
+  "profile": "release",
+  "tauriMode": "custom-protocol",
+  "features": [
+    "custom-protocol"
+  ]
+}

@@ -70,7 +70,8 @@ $effect.root(() => {
 export async function onTriggered(cursorPosition?: { x: number; y: number } | null) {
   desiredPosition = cursorPosition ?? null;
 
-  globalState.view = StartView.Favorites;
+  // ADR/14 §4: first paint of the launcher is the NAI apps hero.
+  globalState.view = StartView.Home;
   globalState.version++; // trigger reactive updates
 
   await Widget.self.show();

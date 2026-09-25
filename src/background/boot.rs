@@ -337,16 +337,66 @@ pub fn snapshot(label: Option<&str>) -> Value {
 /// Build provenance for the running executable + bundled frontend.
 pub fn provenance() -> Value {
     serde_json::json!({
+        "buildId": option_env!("SUL_BUILD_ID").unwrap_or("unknown"),
         "gitSha": option_env!("SUL_GIT_SHA").unwrap_or("unknown"),
         "dirty": option_env!("SUL_GIT_DIRTY").map(|v| v == "1").unwrap_or(true),
         "profile": if cfg!(debug_assertions) { "debug" } else { "release" },
         "tauriMode": if tauri::is_dev() { "development" } else { "custom-protocol" },
+        "features": {
+            "customProtocol": option_env!("SUL_CUSTOM_PROTOCOL").unwrap_or("unknown"),
+            "dev": tauri::is_dev(),
+        },
         "frontendBundleHash": option_env!("SUL_FRONTEND_HASH").unwrap_or("unknown"),
         "staticResourceHash": option_env!("SUL_STATIC_HASH").unwrap_or("unknown"),
         "buildTimestamp": option_env!("SUL_BUILD_TIME").unwrap_or("unknown"),
         "target": option_env!("SUL_TARGET").unwrap_or("unknown"),
         "packageVersion": env!("CARGO_PKG_VERSION"),
     })
+}
+
+/// Startup identity diagnostics: makes a wrong Tauri mode obvious immediately.
+/// Returns `Err` (fail closed) when a release binary is in development mode or
+/// when native and bundled static artifacts disagree.
+pub fn startup_diagnostics(resource_dir: &std::path::Path) -> std::result::Result<(), String> {
+    let dev = tauri::is_dev();
+    let mode = if dev { "development" } else { "custom-protocol" };
+    log::info!(
+        "runtime identity: tauriMode={} profile={} buildId={} customProtocol={}",
+        mode,
+        if cfg!(debug_assertions) { "debug" } else { "release" },
+        option_env!("SUL_BUILD_ID").unwrap_or("unknown"),
+        option_env!("SUL_CUSTOM_PROTOCOL").unwrap_or("unknown"),
+    );
+
+    if !cfg!(debug_assertions) {
+        if dev {
+            let msg = format!(
+                "FATAL: production runtime is using Tauri development asset mode. Expected custom-protocol. \
+                 tauriMode={mode}, profile=release, buildId={}, resolved dev URL = {}",
+                option_env!("SUL_BUILD_ID").unwrap_or("unknown"),
+                "http://localhost:3579/"
+            );
+            log::error!("{msg}");
+            return Err(msg);
+        }
+        // artifact skew: native build id vs bundled `_build-id.json`
+        let native_id = option_env!("SUL_BUILD_ID").unwrap_or("unknown");
+        let manifest_path = resource_dir.join("static").join("_build-id.json");
+        if let Ok(raw) = std::fs::read(&manifest_path)
+            && let Ok(value) = serde_json::from_slice::<Value>(&raw)
+        {
+            let manifest_id = value.get("buildId").and_then(|v| v.as_str()).unwrap_or("unknown");
+            if native_id != "unknown" && manifest_id != "unknown" && native_id != manifest_id {
+                let msg = format!(
+                    "FATAL: artifact skew: nativeBuildId={native_id} != manifestBuildId={manifest_id}. \
+                     No fallback to mismatched assets."
+                );
+                log::error!("{msg}");
+                return Err(msg);
+            }
+        }
+    }
+    Ok(())
 }
 
 /// Runtime instance identity for `slu runtime instance`.

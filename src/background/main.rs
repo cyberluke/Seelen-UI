@@ -135,7 +135,19 @@ async fn main() -> std::process::ExitCode {
 }
 
 async fn setup(app_handle: &tauri::AppHandle<tauri::Wry>) -> Result<()> {
+    use tauri::Manager;
+
     print_initial_information();
+
+    // Fail fast & loud on the known bootstrap regressions (dev-mode release,
+    // native/frontend/static artifact skew). No fallback to mismatched assets.
+    boot::startup_diagnostics(
+        &app_handle
+            .path()
+            .resource_dir()
+            .unwrap_or_else(|_| std::env::current_dir().unwrap_or_default()),
+    )?;
+
     create_main_folders()?;
 
     SelfPipe::start_listener()?;

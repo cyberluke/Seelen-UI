@@ -273,7 +273,7 @@ class State {
   mergeFolders = mergeFolders;
   disbandFolder = disbandFolder;
 
-  view = $state(StartView.Favorites);
+  view = $state(StartView.Home);
 
   version = $state<number>(0);
 

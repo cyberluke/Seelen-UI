@@ -11,6 +11,7 @@ pub mod infrastructure;
 pub mod semantic;
 pub mod shorts;
 pub mod store;
+pub mod telemetry;
 
 use std::sync::{LazyLock, Mutex};
 
@@ -563,6 +564,8 @@ pub fn process_cli(cli: NaiCli) -> Result<Option<String>> {
         NaiCommand::Update { id } => store::update(&id)?,
         NaiCommand::Uninstall { id } => store::uninstall(&id)?,
         NaiCommand::AppStatus { id } => store::status(&id)?,
+        NaiCommand::Jobs => store::jobs()?,
+        NaiCommand::Cancel { job_id } => store::cancel(job_id),
         NaiCommand::OpenSettings { route } => {
             crate::widgets::show_settings_at(&route)?;
             serde_json::json!({ "opened": route })
@@ -593,6 +596,22 @@ pub fn process_cli(cli: NaiCli) -> Result<Option<String>> {
             tauri::async_runtime::block_on(fabric::notifications(limit.unwrap_or(10)))
                 .unwrap_or_else(|err| serde_json::json!({ "error": err }))
         }
+        NaiCommand::SocialLocal { limit } => {
+            tauri::async_runtime::block_on(fabric::timeline_local(limit.unwrap_or(10)))
+                .unwrap_or_else(|err| serde_json::json!({ "error": err }))
+        }
+        NaiCommand::SocialCompose { status } => {
+            tauri::async_runtime::block_on(fabric::compose(&status))
+                .unwrap_or_else(|err| serde_json::json!({ "error": err }))
+        }
+        NaiCommand::V271Chat { prompt } => {
+            tauri::async_runtime::block_on(fabric::v271_chat(&prompt))
+                .unwrap_or_else(|err| serde_json::json!({ "error": err }))
+        }
+        NaiCommand::SemanticUpsert { id, vector } => {
+            tauri::async_runtime::block_on(semantic::upsert(&id, &vector))
+        }
+        NaiCommand::Telemetry => telemetry::sample(),
     };
     Ok(Some(value.to_string()))
 }

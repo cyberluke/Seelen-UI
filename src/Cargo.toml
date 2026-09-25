@@ -24,6 +24,9 @@ path = "service/main.rs"
 [build-dependencies]
 tauri-build = { workspace = true, features = [] }
 slu-utils = { workspace = true }
+seelen-core = { workspace = true }
+serde_json = { workspace = true }
+tokio = { workspace = true, features = ["rt", "fs", "macros", "time"] }
 
 [dependencies]
 slu-ipc = { workspace = true }
@@ -100,6 +103,7 @@ windows = { workspace = true, features = [
     "Win32_UI_Controls",
     "Win32_UI_Notifications",
     "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dxgi",
     "Win32_Graphics_Dwm",
     "Win32_Graphics_Gdi",
     "Win32_UI_HiDpi",

@@ -15,8 +15,16 @@ use crate::{
 /// Returns `Some(json)` for data commands (`List`, `Boot`).
 pub fn run(cmd: WidgetCli) -> Result<Option<String>> {
     match cmd.command {
-        WidgetCommand::Trigger { widget_id } => {
-            trigger_widget(WidgetTriggerPayload::new(widget_id.into()))?;
+        WidgetCommand::Trigger { widget_id, args } => {
+            let mut payload = WidgetTriggerPayload::new(widget_id.into());
+            if let Some(raw) = args {
+                let parsed: std::collections::HashMap<String, serde_json::Value> =
+                    serde_json::from_str(&raw).map_err(|e| format!("invalid customArgs json: {e}"))?;
+                for (key, value) in parsed {
+                    payload.add_custom_arg(key, value);
+                }
+            }
+            trigger_widget(payload)?;
         }
         WidgetCommand::List => {
             let mut result: Vec<WidgetDebugInfo> = Vec::new();

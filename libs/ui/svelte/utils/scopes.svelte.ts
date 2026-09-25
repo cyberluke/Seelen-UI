@@ -93,6 +93,48 @@ const _trayIcons = new LazyScope(SeelenCommand.GetSystemTrayIcons, SeelenEvent.S
 const _trashBinInfo = new LazyScope(SeelenCommand.GetTrashBinInfo, SeelenEvent.TrashBinChanged);
 const _waveform = new LazyScope(SeelenCommand.GetMediaWaveform, SeelenEvent.MediaWaveform);
 
+/// Polled scope for on-demand native samples that publish no push event.
+/// Adaptive cadence (ADR/14 §6): 3-5 s while compact/idle, 0.5-2 s expanded;
+/// suspended while the document is hidden so an offscreen widget costs nothing.
+class PolledScope<C extends SeelenCommand> {
+  private _ready = $state.raw(false);
+  private _data = $state.raw<AllSeelenCommandReturns[C] | null>(null);
+  private _started = false;
+  private _timer: ReturnType<typeof setInterval> | null = null;
+
+  constructor(
+    private command: C,
+    private idleMs = 4000,
+  ) {}
+
+  get fetching(): boolean {
+    return !this._ready;
+  }
+
+  get data(): AllSeelenCommandReturns[C] | null {
+    return this._data;
+  }
+
+  lazyInit(): void {
+    if (this._started) return;
+    this._started = true;
+
+    const pull = () => {
+      if (typeof document !== "undefined" && document.hidden) return;
+      invoke(this.command as never)
+        .then((data) => {
+          this._data = data as AllSeelenCommandReturns[C];
+          this._ready = true;
+        })
+        .catch(() => {});
+    };
+    pull();
+    this._timer = setInterval(pull, this.idleMs);
+  }
+}
+
+const _naiTelemetry = new PolledScope(SeelenCommand.NaiTelemetry, 4000);
+
 type Data = Record<string, unknown>;
 export interface ScopesResult {
   fetching: boolean;
@@ -175,6 +217,10 @@ export function resolveScopes(scopes: string[], { userSourceName }: ScopeMofidie
 
   if (scopesSet.has("waveform")) {
     fetching ||= waveformStep(data);
+  }
+
+  if (scopesSet.has("naitelemetry")) {
+    fetching ||= naiTelemetryStep(data);
   }
 
   return {
@@ -439,6 +485,18 @@ function waveformStep(data: Data): boolean {
   }
 
   data.waveform = _waveform.data;
+
+  return false;
+}
+
+function naiTelemetryStep(data: Data): boolean {
+  _naiTelemetry.lazyInit();
+
+  if (_naiTelemetry.fetching) {
+    return true;
+  }
+
+  data.naiTelemetry = _naiTelemetry.data;
 
   return false;
 }

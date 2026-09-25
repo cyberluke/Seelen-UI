@@ -96,6 +96,18 @@ pub fn nai_app_status(id: String) -> Result<serde_json::Value> {
     nai::store::status(&id)
 }
 
+/// Recent package-manager jobs (newest first) with real lifecycle state.
+#[tauri::command(async)]
+pub fn nai_store_jobs() -> Result<serde_json::Value> {
+    nai::store::jobs()
+}
+
+/// Cancel one package job by id (kills + reaps the direct child).
+#[tauri::command(async)]
+pub fn nai_store_cancel(job_id: u64) -> Result<serde_json::Value> {
+    Ok(nai::store::cancel(job_id))
+}
+
 /// Deterministic settings-route opener for Jarvis/Kelvin/MCP bridging:
 /// focuses the settings widget and navigates it to `route`.
 #[tauri::command(async)]
@@ -119,6 +131,12 @@ pub fn nai_capsules() -> Result<Vec<nai::ContextCapsule>> {
 #[tauri::command(async)]
 pub fn nai_gateway_models() -> Result<serde_json::Value> {
     Ok(nai::gateway_models())
+}
+
+/// Hardware + AI-residency telemetry sample (ADR/14 §6).
+#[tauri::command(async)]
+pub fn nai_telemetry() -> Result<serde_json::Value> {
+    Ok(nai::telemetry::sample())
 }
 
 /// Qdrant-backed semantic search with bounded offline cosine fallback.

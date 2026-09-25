@@ -28,7 +28,7 @@
     "beforeBuildCommand": "npm run build:ui -- --production",
     "devUrl": "http://localhost:3579/",
     "frontendDist": "../dist",
-    "features": []
+    "features": ["custom-protocol"]
   },
   "bundle": {
     "active": true,

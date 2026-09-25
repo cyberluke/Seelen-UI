@@ -51,17 +51,19 @@ const ENTRIES: &[Entry] = &[
         kind: AppKind::Exe,
         capabilities: &["browser.open"],
         candidates: &[
+            r"D:\_SATIN_AI\BrowserOS\packages\browseros\.venv\Scripts\browseros.exe",
             r"D:\_SATIN_AI\BrowserOS\packages\browseros\out\BrowserOS.exe",
             r"C:\Program Files\BrowserOS\BrowserOS.exe",
         ],
     },
     Entry {
         id: "browser-neo",
-        name: "NAI Browser neo",
+        name: "NAI Browser Agent",
         description: "BrowserOS neo: agent browser with persistent logins, MCP and session replay",
         kind: AppKind::Exe,
         capabilities: &["browser.capture", "browser.navigate", "mcp.neo"],
         candidates: &[
+            r"D:\_SATIN_AI\BrowserOS\packages\browseros-agent\apps\cli\browseros-cli.exe",
             r"D:\_SATIN_AI\BrowserOS\packages\browseros-agent\out\no\Neo.exe",
             r"C:\Program Files\BrowserOS\Neo.exe",
         ],
@@ -110,7 +112,7 @@ const ENTRIES: &[Entry] = &[
         description: "searxng: local search fabric (docker compose)",
         kind: AppKind::Compose,
         capabilities: &["search.hybrid"],
-        candidates: &[r"D:\_SATIN_AI\searxng\docker-compose.yml"],
+        candidates: &[r"D:\_SATIN_AI\searxng\container\docker-compose.yml"],
     },
     Entry {
         id: "qos",
@@ -138,19 +140,29 @@ const ENTRIES: &[Entry] = &[
     },
     Entry {
         id: "workstation",
-        name: "NAI Workstation",
-        description: "Kelvin workstation docs / plans",
+        name: "Kelvin Workstation AI",
+        description: "Kelvin AI Workstation plan / capability engine docs",
         kind: AppKind::Docs,
         capabilities: &[],
         candidates: &[r"D:\_SATIN_AI\KelvinAIWorkstation"],
     },
     Entry {
         id: "harness",
-        name: "NAI Workstation Harness",
-        description: "Kelvin harness docs / plans",
+        name: "Kelvin Clyne",
+        description: "Kelvin workstation harness: gallery, playground, geniex",
         kind: AppKind::Docs,
         capabilities: &[],
         candidates: &[r"D:\_SATIN_AI\KelvinAIWorkstationHarness"],
+    },
+    Entry {
+        id: "beellama",
+        name: "BeeLlama",
+        description: "llama.cpp fork: local OpenAI-compatible model server",
+        kind: AppKind::Exe,
+        capabilities: &["model.host", "gateway.openai"],
+        candidates: &[
+            r"D:\_SATIN_AI_2\beellama\build-x64-windows-msvc-release\bin\llama-server.exe",
+        ],
     },
 ];
 

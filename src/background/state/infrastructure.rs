@@ -116,8 +116,33 @@ pub fn state_request_wallpaper_addition() -> Result<()> {
 }
 
 #[tauri::command(async)]
-pub fn state_add_icon_to_custom_icon_pack(_icon: IconPackEntry) -> Result<()> {
-    todo!()
+pub async fn state_add_icon_to_custom_icon_pack(icon: IconPackEntry) -> Result<()> {
+    use seelen_core::{
+        resource::{ResourceKind, SluResource},
+        state::IconPack,
+    };
+
+    let dir = SEELEN_COMMON
+        .user_icons_path()
+        .join("__user_custom_icons");
+    let mut pack = if dir.exists() {
+        IconPack::load(&dir).await?
+    } else {
+        let mut pack = IconPack {
+            id: "@user/custom-icons".into(),
+            ..Default::default()
+        };
+        pack.metadata.internal.path = dir.clone();
+        pack
+    };
+    pack.add_entry(icon);
+    pack.save().await?;
+
+    crate::resources::RESOURCES
+        .load(&ResourceKind::IconPack, &dir)
+        .await?;
+    crate::resources::RESOURCES.emit_icon_packs();
+    Ok(())
 }
 
 #[tauri::command(async)]

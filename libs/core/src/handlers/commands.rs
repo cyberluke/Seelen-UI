@@ -287,6 +287,8 @@ slu_commands_declaration! {
     NaiUninstall = nai_uninstall(id: String) -> serde_json::Value,
     NaiStoreLaunch = nai_store_launch(id: String) -> serde_json::Value,
     NaiAppStatus = nai_app_status(id: String) -> serde_json::Value,
+    NaiStoreJobs = nai_store_jobs() -> serde_json::Value,
+    NaiStoreCancel = nai_store_cancel(job_id: u64) -> serde_json::Value,
     NaiOpenSettings = nai_open_settings(route: String),
 
     // NAI activities, capsules and model gateway contract
@@ -309,6 +311,7 @@ slu_commands_declaration! {
     NaiSocialCompose = nai_social_compose(status: String) -> serde_json::Value,
     NaiV271Chat = nai_v271_chat(prompt: String) -> serde_json::Value,
     NaiSemanticUpsert = nai_semantic_upsert(id: String, vector: Vec<f32>) -> serde_json::Value,
+    NaiTelemetry = nai_telemetry() -> serde_json::Value,
 
     // Windows Manager
     WmGetRenderTree = wm_get_render_tree() -> TwmGlobalRuntimeTree,

@@ -191,6 +191,18 @@ export function NaiLauncher() {
             </Button>
           </div>
           <div className={cs.row}>
+            <span>{t("header.labels.agent")}</span>
+            <Button size="small" onClick={() => navigate("/agent")}>
+              {t("open")}
+            </Button>
+          </div>
+          <div className={cs.row}>
+            <span>{t("header.labels.platform")}</span>
+            <Button size="small" onClick={() => navigate("/platform")}>
+              {t("open")}
+            </Button>
+          </div>
+          <div className={cs.row}>
             <span>{t("header.labels.developer")}</span>
             <Button size="small" onClick={() => navigate("/developer")}>
               {t("open")}
@@ -215,6 +227,228 @@ export function NaiLauncher() {
         </div>
       </section>
       <Icon iconName="TbHome" />
+    </>
+  );
+}
+
+interface CapabilityDescriptor {
+  id: string;
+  risk: string;
+  interactiveConfirmation: string;
+  undo: string;
+  latencyClass: string;
+  providerPriority: string[];
+}
+
+interface ActivityItem {
+  id: string;
+  name: string;
+  objects: string[];
+}
+
+interface CapsuleItem {
+  id: string;
+  name: string;
+  activity: string;
+  objects: string[];
+  modelProfile: string;
+  qosProfile: string;
+}
+
+interface Source<T> {
+  ok: boolean;
+  value: T | null;
+  error: string | null;
+}
+
+async function source<T>(command: (typeof SeelenCommand)[keyof typeof SeelenCommand], arg?: unknown): Promise<Source<T>> {
+  try {
+    const value = (await invoke(command as never, arg as never)) as T;
+    return { ok: true, value: value ?? null, error: null };
+  } catch (error) {
+    return { ok: false, value: null, error: String(error) };
+  }
+}
+
+/** Agent runtime, security policy and QoS/model-residency surface (ADR/09). */
+export function NaiAgent() {
+  const { t } = useTranslation();
+  const [caps, setCaps] = useState<Source<CapabilityDescriptor[]> | null>(null);
+  const [activities, setActivities] = useState<Source<ActivityItem[]> | null>(null);
+  const [capsules, setCapsules] = useState<Source<CapsuleItem[]> | null>(null);
+  const [gateway, setGateway] = useState<Source<Record<string, unknown>> | null>(null);
+  const [trace, setTrace] = useState<unknown[]>([]);
+
+  async function refresh() {
+    const [c, a, k, g] = await Promise.all([
+      source<CapabilityDescriptor[]>(SeelenCommand.NaiCapabilities),
+      source<ActivityItem[]>(SeelenCommand.NaiActivities),
+      source<CapsuleItem[]>(SeelenCommand.NaiCapsules),
+      source<Record<string, unknown>>(SeelenCommand.NaiGatewayModels),
+    ]);
+    setCaps(c);
+    setActivities(a);
+    setCapsules(k);
+    setGateway(g);
+    setTrace((await source<unknown[]>(SeelenCommand.DebugGetWidgetsStatuses).catch(() => null))?.value ?? []);
+  }
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  async function activate(id: string) {
+    await invoke(SeelenCommand.NaiActivate, { identification: id });
+    refresh();
+  }
+
+  async function undo() {
+    await invoke(SeelenCommand.NaiUndoLast);
+    refresh();
+  }
+
+  return (
+    <>
+      {!caps && <Skeleton active paragraph={{ rows: 4 }} />}
+      <section className={cs.group}>
+        <h2>
+          {t("nai.capabilities")}
+          <Button size="small" onClick={undo} disabled={!caps?.value?.length}>
+            {t("nai.undo")}
+          </Button>
+        </h2>
+        {caps && !caps.ok && <p className={cs.meta}>{caps.error}</p>}
+        <div className={cs.rows}>
+          {(caps?.value ?? []).map((cap) => (
+            <div key={cap.id} className={cs.row}>
+              <span>{cap.id}</span>
+              <span className={cs.meta}>
+                {cap.risk} · {cap.latencyClass} · {cap.undo} · {cap.providerPriority.join("/")}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={cs.group}>
+        <h2>{t("nai.activities")}</h2>
+        {activities && !activities.ok && <p className={cs.meta}>{activities.error}</p>}
+        <div className={cs.rows}>
+          {(activities?.value ?? []).map((activity) => (
+            <div key={activity.id} className={cs.row}>
+              <span>{activity.name}</span>
+              <div>
+                <span className={cs.meta}>{activity.objects.length}</span>
+                <Button size="small" onClick={() => activate(activity.id)}>
+                  {t("open")}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={cs.group}>
+        <h2>{t("nai.capsules")}</h2>
+        {capsules && !capsules.ok && <p className={cs.meta}>{capsules.error}</p>}
+        <div className={cs.rows}>
+          {(capsules?.value ?? []).map((capsule) => (
+            <div key={capsule.id} className={cs.row}>
+              <span>{capsule.name}</span>
+              <span className={cs.meta}>
+                {capsule.activity} · {capsule.modelProfile} · {capsule.qosProfile}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={cs.group}>
+        <h2>{t("nai.gateway")}</h2>
+        {gateway && !gateway.ok && <p className={cs.meta}>{gateway.error}</p>}
+        {gateway?.value && (
+          <pre className={cs.meta}>{JSON.stringify(gateway.value, null, 2)}</pre>
+        )}
+      </section>
+
+      {trace.length > 0 && (
+        <section className={cs.group}>
+          <h2>{t("devtools.widgets_debug.tab")}</h2>
+          <div className={cs.rows}>
+            {(trace as { widgetId?: string; status?: string }[]).map((row, i) => (
+              <div key={`${row.widgetId}-${i}`} className={cs.row}>
+                <span>{row.widgetId}</span>
+                <span className={cs.meta}>{row.status}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  );
+}
+
+/** Developer platform surface: control planes + live semantic graph (ADR/10). */
+export function NaiPlatform() {
+  const { t } = useTranslation();
+  const [gateway, setGateway] = useState<Source<Record<string, unknown>> | null>(null);
+  const [graph, setGraph] = useState<Source<{ nodes: { id: string; kind: string; title: string }[] }> | null>(null);
+
+  async function refresh() {
+    const [g, n] = await Promise.all([
+      source<Record<string, unknown>>(SeelenCommand.NaiGatewayModels),
+      source<{ nodes: { id: string; kind: string; title: string }[] }>(SeelenCommand.NaiGraph),
+    ]);
+    setGateway(g);
+    setGraph(n);
+  }
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  const nodes = graph?.value?.nodes ?? [];
+
+  return (
+    <>
+      {!gateway && !graph && <Skeleton active paragraph={{ rows: 4 }} />}
+      <section className={cs.group}>
+        <h2>{t("nai.gateway")}</h2>
+        {gateway && !gateway.ok && <p className={cs.meta}>{gateway.error}</p>}
+        {gateway?.value && <pre className={cs.meta}>{JSON.stringify(gateway.value, null, 2)}</pre>}
+      </section>
+
+      <section className={cs.group}>
+        <h2>{t("nai.control_planes")}</h2>
+        <div className={cs.rows}>
+          <div className={cs.row}>
+            <span>MCP</span>
+            <span className={cs.meta}>/mcp (JSON-RPC 2.0, tools/list + tools/call)</span>
+          </div>
+          <div className={cs.row}>
+            <span>REST</span>
+            <span className={cs.meta}>/v1/nai/*, /v1/store/*</span>
+          </div>
+          <div className={cs.row}>
+            <span>CLI</span>
+            <span className={cs.meta}>slu nai &lt;subcommand&gt;</span>
+          </div>
+        </div>
+      </section>
+
+      <section className={cs.group}>
+        <h2>{t("nai.semantic_graph")}</h2>
+        {graph && !graph.ok && <p className={cs.meta}>{graph.error}</p>}
+        {nodes.length === 0 && <p className={cs.meta}>{t("nai.no_results")}</p>}
+        <div className={cs.rows}>
+          {nodes.map((node) => (
+            <div key={node.id} className={cs.row}>
+              <span title={node.title}>{node.title}</span>
+              <span className={cs.meta}>{node.kind}</span>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 }

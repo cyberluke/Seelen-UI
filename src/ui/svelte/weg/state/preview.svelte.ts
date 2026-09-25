@@ -265,6 +265,11 @@ interface StageModel {
 
 let stages: StageModel | null = null;
 
+/// Snapshot of the live stage model (for the atomic acceptance trace).
+export function stagesSnapshot(): StageModel | null {
+  return stages;
+}
+
 /// t0Date comes from the dock webview `Date.now()` at pointer enter.
 /// This module runs in the preview webview; cross-context deltas are based on
 /// `performance.timeOrigin` (epoch ms) and intra-context on `performance.now()`.

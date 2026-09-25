@@ -265,7 +265,12 @@ pub struct WidgetCli {
 #[derive(Debug, Serialize, Deserialize, clap::Subcommand)]
 pub enum WidgetCommand {
     /// Triggers a widget
-    Trigger { widget_id: String },
+    Trigger {
+        /// widget id (e.g. @seelen/weg-preview)
+        widget_id: String,
+        /// optional JSON object merged as `customArgs` (e.g. t0Date, hwnds)
+        args: Option<String>,
+    },
     /// List all widget instances with status, HWND and monitor/instance ids
     List,
     /// Print the boot pipeline flight recorder (all pods or one widget)
@@ -338,6 +343,13 @@ pub enum NaiCommand {
         /// stable catalog id
         id: String,
     },
+    /// Recent package-manager jobs (newest first, with lifecycle state)
+    Jobs,
+    /// Cancel one package job by numeric id
+    Cancel {
+        /// job id as reported by the install/update/uninstall result
+        job_id: u64,
+    },
     /// Open NAI OS settings on a route (e.g. /, /general, /widget)
     OpenSettings {
         /// settings route path
@@ -386,6 +398,30 @@ pub enum NaiCommand {
         /// result count
         limit: Option<usize>,
     },
+    /// Mastodon local (public) timeline
+    SocialLocal {
+        /// result count
+        limit: Option<usize>,
+    },
+    /// Compose a Mastodon status
+    SocialCompose {
+        /// status text
+        status: String,
+    },
+    /// v271 agentic chat with typed context
+    V271Chat {
+        /// prompt text
+        prompt: String,
+    },
+    /// Upsert one semantic vector (mirrored to the offline snapshot)
+    SemanticUpsert {
+        /// logical id
+        id: String,
+        /// vector components
+        vector: Vec<f32>,
+    },
+    /// Hardware + AI-residency telemetry sample (CPU/RAM/NPU/iGPU/dGPU/models)
+    Telemetry,
 }
 
 // ===== Popups =====

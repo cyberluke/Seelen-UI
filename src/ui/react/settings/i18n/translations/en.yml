@@ -183,6 +183,7 @@ general:
 global: Global
 header:
   labels:
+    agent: Agent Runtime
     config: Configurations
     developer: For developers
     extras: Extras
@@ -190,6 +191,7 @@ header:
     home: NAI OS Launcher
     iconpack: Icon Packs
     monitors: Monitors
+    platform: Developer Platform
     plugin: Plugins
     resources: Resources
     session: Account
@@ -211,19 +213,26 @@ join_us: Join us!
 loading: Loading...
 miscellaneous: Miscellaneous
 nai:
+  activities: Activities
   apps: NAI Apps
+  capabilities: Capability registry
+  capsules: Context Capsules
+  control_planes: Control planes
   gateway: Model Gateway
   installed: Installed
   nai_apps: NAI Apps
+  no_results: No objects in the semantic graph yet
   not_installed: Not installed
   open_jarvis: Open Jarvis
   pinned: Pinned
   recent: Recent
   restart: Restart NAI OS
   running: Running
+  semantic_graph: Semantic desktop graph
   store: AI Apps Store
   system: System shortcuts
   tagline: AI-native Windows workstation
+  undo: Undo last action
   unknown: Unknown
   update: Update
 monitors_configurations:

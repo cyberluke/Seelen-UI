@@ -230,6 +230,16 @@ pub fn tool_definitions() -> Vec<Value> {
             r#"{"type":"object","properties":{"id":{"type":"string"}},"required":["id"]}"#,
         ),
         tool(
+            "nai_store_jobs",
+            "Recent background package-manager jobs (newest first) with real lifecycle state (queued/running/succeeded/failed/cancelled).",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_store_cancel",
+            "Cancel one package job by id: kills and reaps the direct child process.",
+            r#"{"type":"object","properties":{"jobId":{"type":"integer"}},"required":["jobId"]}"#,
+        ),
+        tool(
             "nai_open_settings",
             "Open the NAI OS settings on a route (e.g. /, /general, /resources, /widget, ...).",
             r#"{"type":"object","properties":{"route":{"type":"string"}},"required":["route"]}"#,
@@ -254,6 +264,68 @@ pub fn tool_definitions() -> Vec<Value> {
             "nai_semantic_search",
             "Qdrant-backed semantic search with bounded offline cosine fallback.",
             r#"{"type":"object","properties":{"query":{"type":"string"},"limit":{"type":"integer"}},"required":["query"]}"#,
+        ),
+        tool(
+            "nai_semantic_upsert",
+            "Upsert one semantic vector (always mirrored to the bounded offline snapshot).",
+            r#"{"type":"object","properties":{"id":{"type":"string"},"vector":{"type":"array","items":{"type":"number"}}},"required":["id","vector"]}"#,
+        ),
+        // ── Media / Shorts engine ───────────────────────────────────────────
+        tool(
+            "nai_shorts_search",
+            "YouTube Shorts candidate search (videoDuration=short is a candidate signal, not a Shorts identity).",
+            r#"{"type":"object","properties":{"query":{"type":"string"},"limit":{"type":"integer"}},"required":["query"]}"#,
+        ),
+        tool(
+            "nai_shorts_enqueue",
+            "Enqueue a Shorts candidate with its queue reason (provenance).",
+            r#"{"type":"object","properties":{"videoId":{"type":"string"},"reason":{"type":"string"}},"required":["videoId"]}"#,
+        ),
+        tool(
+            "nai_shorts_next",
+            "Dequeue the next item of the bounded vertical queue (FIFO).",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_shorts_queue",
+            "Full queue state: capacity plus items with their queue reason.",
+            r#"{"type":"object"}"#,
+        ),
+        tool(
+            "nai_pip_contract",
+            "PiP shell-object contract: state fields, magnet zones, activity following.",
+            r#"{"type":"object"}"#,
+        ),
+        // ── Social fabric (Mastodon / v271) ─────────────────────────────────
+        tool(
+            "nai_social_timeline",
+            "Mastodon home timeline projected into NAI graph objects.",
+            r#"{"type":"object","properties":{"limit":{"type":"integer"}}}"#,
+        ),
+        tool(
+            "nai_social_local",
+            "Mastodon local (public) timeline projected into NAI graph objects.",
+            r#"{"type":"object","properties":{"limit":{"type":"integer"}}}"#,
+        ),
+        tool(
+            "nai_social_notifications",
+            "Mastodon notifications projected into NAI graph objects.",
+            r#"{"type":"object","properties":{"limit":{"type":"integer"}}}"#,
+        ),
+        tool(
+            "nai_social_compose",
+            "Compose a Mastodon status; returns created id and visibility provenance.",
+            r#"{"type":"object","properties":{"status":{"type":"string"}},"required":["status"]}"#,
+        ),
+        tool(
+            "nai_v271_chat",
+            "v271 agentic chat with typed context; returns a V271Conversation object.",
+            r#"{"type":"object","properties":{"prompt":{"type":"string"}},"required":["prompt"]}"#,
+        ),
+        tool(
+            "nai_telemetry",
+            "Hardware + AI-residency sample: CPU, RAM, NPU, iGPU/dGPU budget and model process attribution.",
+            r#"{"type":"object"}"#,
         ),
     ]
 }
@@ -520,6 +592,14 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
         "nai_app_status" => {
             crate::modules::nai::store::status(&get("id")).map_err(|e| e.to_string())?
         }
+        "nai_store_jobs" => crate::modules::nai::store::jobs().map_err(|e| e.to_string())?,
+        "nai_store_cancel" => {
+            let job_id = args
+                .get("jobId")
+                .and_then(Value::as_u64)
+                .ok_or_else(|| "missing jobId".to_string())?;
+            crate::modules::nai::store::cancel(job_id)
+        }
         "nai_open_settings" => {
             crate::widgets::show_settings_at(&get("route")).map_err(|e| e.to_string())?;
             json!({ "opened": get("route") })
@@ -535,6 +615,65 @@ fn call_tool(name: &str, args: Option<&Value>) -> Result<Value, String> {
             let vector: Vec<f32> = query.bytes().map(|b| b as f32 / 255.0).collect();
             tauri::async_runtime::block_on(crate::modules::nai::semantic::search(&vector, limit))
         }
+        "nai_semantic_upsert" => {
+            let id = get("id");
+            let vector: Vec<f32> = args
+                .get("vector")
+                .and_then(Value::as_array)
+                .map(|list| {
+                    list.iter()
+                        .filter_map(|v| v.as_f64().map(|n| n as f32))
+                        .collect()
+                })
+                .unwrap_or_default();
+            tauri::async_runtime::block_on(crate::modules::nai::semantic::upsert(&id, &vector))
+        }
+        // ── Media / Shorts engine ───────────────────────────────────────────
+        "nai_shorts_search" => {
+            let query = get("query");
+            let limit = args.get("limit").and_then(Value::as_u64).unwrap_or(10) as usize;
+            tauri::async_runtime::block_on(crate::modules::nai::shorts::search(&query, limit))
+                .map_err(|e| e)?
+        }
+        "nai_shorts_enqueue" => {
+            let video_id = get("videoId");
+            let reason = args
+                .get("reason")
+                .and_then(Value::as_str)
+                .unwrap_or_default()
+                .to_string();
+            crate::modules::nai::shorts::enqueue(&video_id, &reason)
+        }
+        "nai_shorts_next" => crate::modules::nai::shorts::next(),
+        "nai_shorts_queue" => crate::modules::nai::shorts::queue_state(),
+        "nai_pip_contract" => crate::modules::nai::shorts::pip_contract(),
+        // ── Social fabric ───────────────────────────────────────────────────
+        "nai_social_timeline" => {
+            let limit = args.get("limit").and_then(Value::as_u64).unwrap_or(10) as usize;
+            tauri::async_runtime::block_on(crate::modules::nai::fabric::timeline_home(limit))
+                .map_err(|e| e)?
+        }
+        "nai_social_local" => {
+            let limit = args.get("limit").and_then(Value::as_u64).unwrap_or(10) as usize;
+            tauri::async_runtime::block_on(crate::modules::nai::fabric::timeline_local(limit))
+                .map_err(|e| e)?
+        }
+        "nai_social_notifications" => {
+            let limit = args.get("limit").and_then(Value::as_u64).unwrap_or(10) as usize;
+            tauri::async_runtime::block_on(crate::modules::nai::fabric::notifications(limit))
+                .map_err(|e| e)?
+        }
+        "nai_social_compose" => {
+            let status = get("status");
+            tauri::async_runtime::block_on(crate::modules::nai::fabric::compose(&status))
+                .map_err(|e| e)?
+        }
+        "nai_v271_chat" => {
+            let prompt = get("prompt");
+            tauri::async_runtime::block_on(crate::modules::nai::fabric::v271_chat(&prompt))
+                .map_err(|e| e)?
+        }
+        "nai_telemetry" => crate::modules::nai::telemetry::sample(),
         other => return Err(format!("unknown tool: {other}")),
     };
     Ok(value)
